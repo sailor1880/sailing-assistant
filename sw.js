@@ -12,7 +12,7 @@ self.addEventListener('activate', e=>{
 });
 
 // map-tile / chart hosts -> cache-first (works offline; instant on revisit)
-const TILE_RE=/\/export\?|MaritimeChartService|charttools\.noaa|tile\.openstreetmap|basemaps\.cartocdn|tiles\.openseamap|mesonet\.agron\.iastate|arcgisonline/;
+const TILE_RE=/\/export\?|MaritimeChartService|charttools\.noaa|tile\.openstreetmap|basemaps\.cartocdn|tiles\.openseamap|mesonet\.agron\.iastate|arcgisonline|geoserver\/gwc\/service\/wmts/;
 
 self.addEventListener('fetch', e=>{
   const req=e.request; if(req.method!=='GET') return;
