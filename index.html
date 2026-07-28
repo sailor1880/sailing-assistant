@@ -705,6 +705,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <h3>Sailing Assistant</h3>
  <b style="font-size:12px">Chart base</b>
  <div id="bases"></div>
+ <div style="color:#c0392b;font-size:11px;margin:1px 0">&#9888; ENC depths &amp; heights are in <b>METERS</b> (not feet)</div>
  <button id="offlinebtn" style="font-size:11px;width:100%;margin:3px 0;cursor:pointer">&#11015; Save chart offline (this view)</button>
  <div id="offlinemsg" style="font-size:11px;color:#0a7d2c;min-height:12px"></div><hr>
  <b style="font-size:12px">Additional chart layers</b>
@@ -715,6 +716,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <label><input type="checkbox" id="sbchk"> South Bay Race Marks (labeled)</label>
  <label><input type="checkbox" id="clubschk"> Clubs &amp; services (&#9733;)</label>
  <label class="ez"><input type="checkbox" id="ezchk" checked> Cox Ledge / wind-farm exclusion</label>
+ <label><input type="checkbox" id="bathychk"> NOAA bathymetry (survey mosaic, hi-res)</label>
  <button id="bbabtn" style="font-size:11px;margin-top:3px;cursor:pointer;width:100%">Bay events (Better Bay Alliance) &#8599;</button>
  <hr>
  <div style="font-size:12px;margin-bottom:2px"><b>SOLO/TWIN race</b>
@@ -792,7 +794,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-28 11:37</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-28 14:45</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -1828,6 +1830,18 @@ function esriExportLayer(base, attr){
     }
   }))({attribution:attr, maxZoom:18});
 }
+function esriImageLayer(base, attr, opacity){    // ArcGIS ImageServer (bathymetry) as /exportImage tiles
+  return new (L.TileLayer.extend({
+    getTileUrl: function(c){
+      const R=20037508.342789244, n=Math.pow(2,c.z), sz=2*R/n;
+      const minx=-R+c.x*sz, maxx=-R+(c.x+1)*sz, maxy=R-c.y*sz, miny=R-(c.y+1)*sz;
+      return base+'/exportImage?bbox='+[minx,miny,maxx,maxy].join(',')+
+        '&bboxSR=3857&imageSR=3857&size=256,256&format=png&f=image';
+    }
+  }))({attribution:attr, maxZoom:18, opacity:opacity||0.65});
+}
+const bathyLayer = esriImageLayer('https://gis.ngdc.noaa.gov/arcgis/rest/services/bag_bathymetry/ImageServer',
+  'NOAA BAG survey bathymetry (NCEI)', 0.65);   // hi-res survey mosaic; covers surveyed channels/harbors
 
 // ---- Base layers (chart) ----
 // NOAA ENC Online (Maritime Chart Service) - full nautical chart, renderer confirmed working.
@@ -2283,7 +2297,7 @@ function restoreView(){ let v; try{ v=JSON.parse(localStorage.getItem('sa_view')
 restoreView();   // restore the last course selection on load
 ezLayer.addTo(map); finLayer.addTo(map); markLayer.addTo(map);
 const tog=(id,layer)=>document.getElementById(id).addEventListener('change',e=>{e.target.checked?layer.addTo(map):map.removeLayer(layer);});
-tog('ezchk',ezLayer); tog('finchk',finLayer); tog('skchk',seamark); tog('mkchk',markLayer);
+tog('ezchk',ezLayer); tog('finchk',finLayer); tog('skchk',seamark); tog('mkchk',markLayer); tog('bathychk',bathyLayer);
 ezpts.forEach(p=>bounds.push(p));
 map.fitBounds(bounds,{padding:[30,30]});
 
