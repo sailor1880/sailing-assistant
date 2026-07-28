@@ -706,6 +706,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <b style="font-size:12px">Chart base</b>
  <div id="bases"></div>
  <label><input type="checkbox" id="bathychk"> NOAA BlueTopo bathymetry (hi-res, meters)</label>
+ <div id="bathylegend" style="display:none;margin:1px 0 3px 4px">
+   <img alt="depth color scale" style="width:100%;max-width:272px;display:block;image-rendering:pixelated"
+        src="data:image/png;base64,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">
+   <div style="font-size:10px;color:#555;margin-top:1px">Elevation m (MLLW): blue=deep &rarr; tan=shoal. <b>Tap the chart for exact depth.</b></div>
+ </div>
  <div style="color:#c0392b;font-size:11px;margin:1px 0">&#9888; ENC depths &amp; heights are in <b>METERS</b> (not feet)</div>
  <button id="offlinebtn" style="font-size:11px;width:100%;margin:3px 0;cursor:pointer">&#11015; Save chart offline (this view)</button>
  <div id="offlinemsg" style="font-size:11px;color:#0a7d2c;min-height:12px"></div><hr>
@@ -794,7 +799,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-28 15:00</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-28 15:05</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -1817,7 +1822,8 @@ function showCoord(ll){ const s=ll.lat.toFixed(6)+', '+ll.lng.toFixed(6);
   L.popup().setLatLng(ll).setContent('<b>'+s+'</b><br><a href="#" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+s+'\');this.textContent=\'\\u2713 copied\';return false;">copy</a>').openOn(map); }
 map.on('click',e=>{ if(coordMode){ showCoord(e.latlng); return; }
   if(markMode){ placeMark(e.latlng); return; }
-  if(drawMode){ addRoutePoint(e.latlng); return; } setPanel(true); });  // coord / place mark / route pt / hide menu
+  if(drawMode){ addRoutePoint(e.latlng); return; }
+  if(map.hasLayer(bathyLayer)){ showBathyDepth(e.latlng); return; } setPanel(true); });  // coord / mark / route / bathy depth / hide menu
 
 // ---- Esri dynamic MapServer as tiles (renders all visible layers via /export) ----
 function esriExportLayer(base, attr){
@@ -1836,6 +1842,27 @@ function esriExportLayer(base, attr){
 const bathyLayer = L.tileLayer(
   'https://nowcoast.noaa.gov/geoserver/gwc/service/wmts/rest/bluetopo:bathymetry/nbs_elevation/EPSG:3857/EPSG:3857:{z}/{y}/{x}?format=image/png8',
   {attribution:'NOAA BlueTopo (National Bathymetric Source)', opacity:0.6, maxZoom:18, maxNativeZoom:16});
+// Tap-to-read exact BlueTopo depth via WMTS GetFeatureInfo (CORS-open). ELEVATION<0 = depth below MLLW.
+function showBathyDepth(ll){
+  const z=Math.min(map.getZoom(),16), n=Math.pow(2,z);
+  const fx=(ll.lng+180)/360*n, latr=ll.lat*Math.PI/180;
+  const fy=(1-Math.log(Math.tan(latr)+1/Math.cos(latr))/Math.PI)/2*n;
+  const X=Math.floor(fx), Y=Math.floor(fy), I=Math.floor((fx-X)*256), J=Math.floor((fy-Y)*256);
+  const url='https://nowcoast.noaa.gov/geoserver/gwc/service/wmts?service=WMTS&version=1.0.0&request=GetFeatureInfo'
+    +'&layer=bluetopo:bathymetry&style=nbs_elevation&format=image/png8&tilematrixset=EPSG:3857'
+    +'&TileMatrix=EPSG:3857:'+z+'&TileRow='+Y+'&TileCol='+X+'&J='+J+'&I='+I+'&infoformat=application/json';
+  const pop=L.popup().setLatLng(ll).setContent('BlueTopo depth…').openOn(map);
+  fetch(url).then(r=>r.json()).then(d=>{
+    const f=(d.features&&d.features[0]&&d.features[0].properties)||null;
+    if(!f||f.ELEVATION==null){ pop.setContent('<b>BlueTopo</b><br>no depth data here'); return; }
+    const e=f.ELEVATION, u=f.UNCERTAINTY;
+    let s = e<0 ? '<b>Depth '+(-e).toFixed(1)+' m</b> ('+(-e*3.28084).toFixed(0)+' ft)'
+                : '<b>Land +'+e.toFixed(1)+' m</b>';
+    if(u!=null) s+='<br><span style="color:#666">±'+u.toFixed(1)+' m uncertainty</span>';
+    s+='<br><span style="color:#888;font-size:10px">NOAA BlueTopo &middot; ref MLLW</span>';
+    pop.setContent(s);
+  }).catch(()=>pop.setContent('<b>BlueTopo</b><br>depth lookup failed'));
+}
 
 // ---- Base layers (chart) ----
 // NOAA ENC Online (Maritime Chart Service) - full nautical chart, renderer confirmed working.
@@ -2292,6 +2319,7 @@ restoreView();   // restore the last course selection on load
 ezLayer.addTo(map); finLayer.addTo(map); markLayer.addTo(map);
 const tog=(id,layer)=>document.getElementById(id).addEventListener('change',e=>{e.target.checked?layer.addTo(map):map.removeLayer(layer);});
 tog('ezchk',ezLayer); tog('finchk',finLayer); tog('skchk',seamark); tog('mkchk',markLayer); tog('bathychk',bathyLayer);
+document.getElementById('bathychk').addEventListener('change',e=>{ document.getElementById('bathylegend').style.display=e.target.checked?'block':'none'; });
 ezpts.forEach(p=>bounds.push(p));
 map.fitBounds(bounds,{padding:[30,30]});
 
