@@ -714,16 +714,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <label><input type="checkbox" id="trapchk"> Fish traps (RI&nbsp;DEM)</label>
  <label><input type="checkbox" id="sbchk"> South Bay Race Marks (labeled)</label>
  <label><input type="checkbox" id="clubschk"> Clubs &amp; services (&#9733;)</label>
+ <label class="ez"><input type="checkbox" id="ezchk" checked> Cox Ledge / wind-farm exclusion</label>
  <button id="bbabtn" style="font-size:11px;margin-top:3px;cursor:pointer;width:100%">Bay events (Better Bay Alliance) &#8599;</button>
  <hr>
  <div style="font-size:12px;margin-bottom:2px"><b>SOLO/TWIN race</b>
    <button id="allcourses" style="font-size:11px">all on</button>
    <button id="nocourses" style="font-size:11px">all off</button>
-   <div style="color:#888;font-size:11px">on/off = courses + marks + Cox Ledge + finish</div></div>
+   <div style="color:#888;font-size:11px">on/off = courses + marks + finish</div></div>
  <label style="font-size:12px"><input type="checkbox" id="revchk"> Reverse direction (SI 6.3)</label>
  <div id="list"></div>
  <label><input type="checkbox" id="mkchk" checked> Race marks &amp; labels</label>
- <label class="ez"><input type="checkbox" id="ezchk" checked> Cox Ledge Exclusion Zone</label>
  <label class="fin"><input type="checkbox" id="finchk" checked> Finish line (120&deg;/300&deg;)</label>
  <div id="mycourses"></div>
  <hr><b style="font-size:12px">South Bay Race Chart</b> <span style="color:#888;font-size:11px">coded courses &mdash; type a code</span>
@@ -792,7 +792,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-27 17:22</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-28 11:37</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2293,7 +2293,7 @@ function setAllCourses(on){
     cb.checked=on; const lyr=courseLayers[D.courses[i].code]; if(!lyr) return;
     on? lyr.addTo(map) : map.removeLayer(lyr);
   });
-  [['mkchk',markLayer],['ezchk',ezLayer],['finchk',finLayer]].forEach(([id,layer])=>{
+  [['mkchk',markLayer],['finchk',finLayer]].forEach(([id,layer])=>{   // Cox Ledge (ezLayer) is now a standalone permanent layer, not part of the race toggle
     const el=document.getElementById(id); if(el) el.checked=on;
     on? layer.addTo(map) : map.removeLayer(layer);
   });
