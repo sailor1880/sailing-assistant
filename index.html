@@ -778,6 +778,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <label class="wx"><input type="checkbox" id="precipchk"> Rain <b>forecast</b> (HRRR, follows slider)</label>
  <div id="precipleg" class="leg" style="display:none;margin:1px 0 2px 18px"><span style="background:#8fd18f"></span>light
    <span style="background:#e8e84a"></span>mod <span style="background:#f2a03a"></span>heavy <span style="background:#e6194b"></span>intense (mm/h)</div>
+ <div id="precipstat" style="display:none;margin:0 0 2px 18px;font-size:10px;color:#888"></div>
  <div id="tbox" style="font-size:11px;margin:3px 0;display:none">
    <span id="when">&nbsp;</span><br><input type="range" id="thr" min="0" max="47" value="0" style="width:100%"></div>
  <button id="windybtn" style="font-size:11px;margin-top:4px;cursor:pointer;width:100%">Windy view (in&nbsp;page)</button>
@@ -801,7 +802,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 15:15</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 16:10</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -1964,6 +1965,7 @@ function showTbox(){ const on=id=>document.getElementById(id).checked;   // per-
   document.getElementById('curleg').style.display=cArrow?'block':'none';          // discrete swatches = the arrow layers
   document.getElementById('curfieldleg').style.display=cField?'block':'none';      // gradient bar = the animated field
   document.getElementById('precipleg').style.display=pf?'block':'none';
+  document.getElementById('precipstat').style.display=pf?'block':'none';
   document.getElementById('gomofsleg').style.display=m?'block':'none'; }
 async function refreshWx(){           // rebuild grid for current view + refetch active layers
   buildGrid();
@@ -2064,13 +2066,30 @@ async function loadPrecip(){
     '&hourly=precipitation&models=ncep_hrrr_conus&forecast_days=2&timezone=UTC';
   const j=await (await fetch(u)).json(); PRECIP=Array.isArray(j)?j:[j];
   if(!TIMES && PRECIP[0] && PRECIP[0].hourly){ TIMES=PRECIP[0].hourly.time; document.getElementById('thr').max=TIMES.length-1; } }
+function precipRGBA(mm){                 // radar-style colour ramp -> [r,g,b,alpha]
+  if(mm<0.1) return [0,0,0,0];
+  const stops=[[0.2,150,210,255],[0.5,80,160,235],[1,40,120,200],[2.5,90,200,90],[5,240,220,60],[10,245,150,50],[20,230,40,60]];
+  let c=stops[stops.length-1]; for(const s of stops){ if(mm<=s[0]){ c=s; break; } }
+  return [c[1],c[2],c[3], Math.min(210, 80+mm*26)];
+}
 function drawPrecip(){ precipLayer.clearLayers(); if(!PRECIP||!GB) return;
   const h=idxAt(PRECIP[0]&&PRECIP[0].hourly&&PRECIP[0].hourly.time,targetMs());
-  const dLat=(GB.n-GB.s)/(GB.rows-1)/2, dLon=(GB.e-GB.w)/(GB.cols-1)/2;
-  PRECIP.forEach((w,i)=>{ if(!w.hourly) return; const mm=w.hourly.precipitation[h], col=precipColor(mm); if(!col) return;
-    const p=PTS[i];
-    L.rectangle([[p[0]-dLat,p[1]-dLon],[p[0]+dLat,p[1]+dLon]],{stroke:false,fillColor:col,fillOpacity:0.4})
-      .bindTooltip(mm.toFixed(1)+' mm/h',{sticky:true}).addTo(precipLayer); }); }
+  const cols=GB.cols, rows=GB.rows, g=new Array(cols*rows).fill(0); let mx=0;
+  PRECIP.forEach((w,i)=>{ const v=(w.hourly?w.hourly.precipitation[h]:0)||0; g[i]=v; if(v>mx) mx=v; });
+  const st=document.getElementById('precipstat');
+  if(st) st.textContent = mx<0.05 ? 'dry at this time — slide the time bar to find rain' : 'peak '+mx.toFixed(1)+' mm/h in view';
+  if(mx<0.05) return;                    // nothing to draw
+  const SC=16, W=cols*SC, H=rows*SC;      // upscale grid -> smooth blobs via bilinear interpolation
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d'), img=ctx.createImageData(W,H), d=img.data;
+  for(let py=0;py<H;py++){ const fy=py/(H-1)*(rows-1), r0=Math.floor(fy), ry=fy-r0, r1=Math.min(rows-1,r0+1);
+    for(let px=0;px<W;px++){ const fx=px/(W-1)*(cols-1), c0=Math.floor(fx), rx=fx-c0, c1=Math.min(cols-1,c0+1);
+      const v=g[r0*cols+c0]*(1-rx)*(1-ry)+g[r0*cols+c1]*rx*(1-ry)+g[r1*cols+c0]*(1-rx)*ry+g[r1*cols+c1]*rx*ry;
+      const q=precipRGBA(v), o=(py*W+px)*4; d[o]=q[0]; d[o+1]=q[1]; d[o+2]=q[2]; d[o+3]=q[3];
+    } }
+  ctx.putImageData(img,0,0);
+  L.imageOverlay(cv.toDataURL(), [[GB.s,GB.w],[GB.n,GB.e]], {opacity:0.6,interactive:false}).addTo(precipLayer);
+}
 document.getElementById('precipchk').addEventListener('change',async e=>{
   if(e.target.checked){ try{ buildGrid(); await loadPrecip(); setWhen(); drawPrecip(); precipLayer.addTo(map); }
     catch(err){ alert('HRRR precip unavailable here (US only): '+err); e.target.checked=false; } }
