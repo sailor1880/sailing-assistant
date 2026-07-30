@@ -771,7 +771,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
    <span style="color:#888">RI Sound / approaches only &mdash; not inside the bay</span><br>
    <span style="background:linear-gradient(90deg,#2166ac,#67a9cf,#f7f7f7,#ef8a62,#b2182b);display:inline-block;width:112px;height:9px;vertical-align:middle;border:1px solid #999"></span><br>
    <span style="color:#2166ac">ebb&nbsp;(S)</span> &larr; slack &rarr; <span style="color:#b2182b">flood&nbsp;(N)</span> &middot; &plusmn;2.3&nbsp;kt, N&ndash;S</div>
- <label class="wx"><input type="checkbox" id="curflowchk"> In-bay tidal current field (animated)</label>
+ <label class="wx"><input type="checkbox" id="curflowchk"> Tidal current field &mdash; bay, sounds, Cape Cod (animated)</label>
  <div id="curfieldleg" style="display:none;margin:1px 0 3px 18px;font-size:10px">
    <span style="background:linear-gradient(90deg,#e6f4ff,#8ec7ff,#3aa0e6,#1f6fb2,#1fae8f,#57c84d,#a8d13a,#f2d13b,#f6a020,#f2661f,#e0301e,#a11015);display:block;width:162px;height:11px;border:1px solid #999"></span>
    <div style="width:164px;display:flex;justify-content:space-between;color:#555"><span>0</span><span>0.5</span><span>1.0</span><span>1.5</span><span>2.0+</span></div>
@@ -804,7 +804,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 09:08</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 09:15</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -1349,7 +1349,9 @@ var Windy = function Windy(params) {
       header: uComp.header,
       //recipe: recipeFor("wind-" + uComp.header.surface1Value),
       data: function data(i) {
-        return [uData[i], vData[i]];
+        var u = uData[i];
+        if (u === null || u === undefined || u !== u) return null; // land / no-data -> suppress cell (no particles)
+        return [u, vData[i]];
       },
       interpolate: bilinearInterpolateVector
     };
@@ -2147,7 +2149,8 @@ function ymd(d){ return ''+d.getUTCFullYear()+String(d.getUTCMonth()+1).padStart
 async function loadCoops(){
   const u='https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json?type=currentpredictions';
   const j=await (await fetch(u)).json();
-  coopsStations=(j.stations||[]).filter(s=>s.lat>41.28&&s.lat<41.80&&s.lng>-71.50&&s.lng<-71.10).slice(0,30);
+  const seen=new Set();     // region: Narragansett Bay + Block Island/RI Sound + Buzzards + Vineyard/Nantucket Sound + Cape Cod; dedup by id
+  coopsStations=(j.stations||[]).filter(s=>s.lat>40.90&&s.lat<42.05&&s.lng>-71.75&&s.lng<-69.80&&!seen.has(s.id)&&seen.add(s.id)).slice(0,220);
   coopsStations.forEach(s=>{
     s.marker=L.circleMarker([s.lat,s.lng],{radius:4,color:'#023e8a',weight:1,fillColor:'#90e0ef',fillOpacity:1})
       .bindTooltip(s.name,{direction:'top'})
@@ -2199,22 +2202,26 @@ document.getElementById('coopschk').addEventListener('change',async e=>{
 let CMASK=null, curFlowLayer=null;
 const curFlowOn=()=>document.getElementById('curflowchk').checked;
 async function loadCMask(){ if(!CMASK) CMASK=await (await fetch('curmask.json')).json(); return CMASK; }
+const CUR_RANGE2=0.18*0.18;   // no data (blank) beyond ~18km from any station -> no phantom current in open water
 function curFieldData(){
   const g=CMASK; if(!g) return [{header:{},data:[]},{header:{},data:[]}];
-  const NX=g.nx, NY=g.ny, U=new Array(NX*NY).fill(0), V=new Array(NX*NY).fill(0), tgt=targetMs();
+  const NX=g.nx, NY=g.ny, U=new Array(NX*NY), V=new Array(NX*NY), tgt=targetMs();
   const st=[];                                    // CO-OPS station vectors at target time (m/s, SET/toward direction)
   (coopsStations||[]).forEach(s=>{ if(!s.series||!s.series.length) return; const c=curAt(s.series,tgt); if(!c) return;
     const spd=Math.abs(c.v)*0.514444, dir=(c.v>=0?c.fd:c.ed); if(isNaN(dir)) return; const r=dir*Math.PI/180;
     st.push({lat:s.lat,lon:s.lng,u:spd*Math.sin(r),v:spd*Math.cos(r)}); });
-  for(let iy=0; iy<NY; iy++){ const la=g.la1-iy*g.dy;
+  const NS=st.length, bd=new Float64Array(6), bs=new Array(6);   // nearest-6 tracker, allocated once
+  for(let iy=0; iy<NY; iy++){ const la=g.la1-iy*g.dy, cs=Math.cos(la*Math.PI/180);
     for(let ix=0; ix<NX; ix++){ const idx=iy*NX+ix;
-      if(g.mask[idx]==='1') continue;               // land cell -> velocity stays 0 (no particles cross land)
-      const lo=g.lo1+ix*g.dx, cs=Math.cos(la*Math.PI/180);
-      const near=st.map(s=>{ const dyy=la-s.lat, dxx=(lo-s.lon)*cs; return {s,d2:dxx*dxx+dyy*dyy}; })
-        .sort((a,b)=>a.d2-b.d2).slice(0,6);                          // nearest 6 stations only
+      if(g.mask[idx]==='1'){ U[idx]=null; V[idx]=null; continue; }   // land -> no data (particles never drawn on land)
+      const lo=g.lo1+ix*g.dx;
+      bd.fill(1/0); bs.fill(null);                                   // insertion-sort nearest 6 (no allocation)
+      for(let k=0;k<NS;k++){ const s=st[k], dyy=la-s.lat, dxx=(lo-s.lon)*cs, dd=dxx*dxx+dyy*dyy;
+        if(dd<bd[5]){ let p=5; while(p>0 && dd<bd[p-1]){ bd[p]=bd[p-1]; bs[p]=bs[p-1]; p--; } bd[p]=dd; bs[p]=s; } }
+      if(bd[0]>CUR_RANGE2){ U[idx]=null; V[idx]=null; continue; }     // too far from any station -> no data
       let wsum=0,ut=0,vt=0;
-      near.forEach(o=>{ const w=1/Math.pow(o.d2+1e-6,1.5); wsum+=w; ut+=w*o.s.u; vt+=w*o.s.v; });  // power-3 IDW preserves local peaks (power-2-over-all-stations smeared 1.5kt narrows down to ~0.6)
-      if(wsum>0){ U[idx]=ut/wsum; V[idx]=vt/wsum; }
+      for(let p=0;p<6;p++){ const s=bs[p]; if(!s) break; const w=1/Math.pow(bd[p]+1e-6,1.5); wsum+=w; ut+=w*s.u; vt+=w*s.v; }
+      U[idx]=ut/wsum; V[idx]=vt/wsum;   // power-3 IDW over nearest 6 preserves local peaks
     } }
   const hdr=(num,name)=>({parameterUnit:'m.s-1',parameterCategory:2,parameterNumber:num,parameterNumberName:name,
     nx:NX,ny:NY,lo1:g.lo1,la1:g.la1,lo2:g.lo2,la2:g.la2,dx:g.dx,dy:g.dy,refTime:'',forecastTime:0});
