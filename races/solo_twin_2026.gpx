@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="SOLO-TWIN-2026" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata><name>2026 New England SOLO/TWIN courses</name><desc>Fixed marks: USCG Light List Vol 1 (2025). Virtual marks &amp; Cox Ledge Exclusion Zone: Sailing Instructions.</desc></metadata>
+  <wpt lat="41.4621761" lon="-71.3629200"><name>CH</name><desc>Castle Hill Light; Light List #17795</desc><sym>Buoy</sym></wpt>
+  <wpt lat="41.1454881" lon="-71.6224689"><name>R4</name><desc>Southwest Point Lighted Whistle Buoy 4; Light List #19735</desc><sym>Buoy</sym></wpt>
+  <wpt lat="41.3076925" lon="-71.4724533"><name>R2</name><desc>Point Judith Lighted Buoy 2; Light List #19460</desc><sym>Buoy</sym></wpt>
+  <wpt lat="41.3680419" lon="-70.9569728"><name>R32</name><desc>Vineyard Sound Entrance Lighted Whistle Buoy 32; Light List #15613</desc><sym>Buoy</sym></wpt>
+  <wpt lat="41.2101708" lon="-71.5338581"><name>G5</name><desc>Block Island Northeast Whistle Buoy 5; Light List #19685</desc><sym>Buoy</sym></wpt>
+  <wpt lat="41.3969867" lon="-71.0346881"><name>BB</name><desc>Buzzards Bay Entrance Light; Light List #15985</desc><sym>Buoy</sym></wpt>
+  <wpt lat="41.3833428" lon="-71.3893006"><name>NB</name><desc>Narragansett Bay Entrance Lighted Whistle Buoy (Mo(A)W, AIS MMSI 993672153); Light List #17675</desc><sym>Buoy</sym></wpt>
+  <wpt lat="41.2573131" lon="-71.5759328"><name>G1BI</name><desc>Block Island North Reef Lighted Bell Buoy 1BI; Light List #19475</desc><sym>Buoy</sym></wpt>
+  <wpt lat="40.6333333" lon="-71.6166667"><name>VM1</name><desc>Virtual Mark 1 (SI: 40-38-00N / 071-37-00W)</desc><sym>Buoy</sym></wpt>
+  <wpt lat="40.7166667" lon="-71.1833333"><name>VM2</name><desc>Virtual Mark 2 (SI: 40-43-00N / 071-11-00W)</desc><sym>Buoy</sym></wpt>
+  <wpt lat="41.4915000" lon="-71.3360000"><name>START</name><desc>Start area - RC-set line west of Goat Island (SI 7.1); approximate, not a fixed aid</desc><sym>Buoy</sym></wpt>
+  <wpt lat="41.1583333" lon="-71.2666667"><name>EZ01</name><desc>Cox Ledge Exclusion Zone boundary (SI Appendix A)</desc><sym>Danger Area</sym></wpt>
+  <wpt lat="41.2316667" lon="-71.1750000"><name>EZ02</name><desc>Cox Ledge Exclusion Zone boundary (SI Appendix A)</desc><sym>Danger Area</sym></wpt>
+  <wpt lat="41.2316667" lon="-71.0583333"><name>EZ03</name><desc>Cox Ledge Exclusion Zone boundary (SI Appendix A)</desc><sym>Danger Area</sym></wpt>
+  <wpt lat="41.1333333" lon="-70.8333333"><name>EZ04</name><desc>Cox Ledge Exclusion Zone boundary (SI Appendix A)</desc><sym>Danger Area</sym></wpt>
+  <wpt lat="41.1116667" lon="-70.8316667"><name>EZ05</name><desc>Cox Ledge Exclusion Zone boundary (SI Appendix A)</desc><sym>Danger Area</sym></wpt>
+  <wpt lat="41.0750000" lon="-70.9416667"><name>EZ06</name><desc>Cox Ledge Exclusion Zone boundary (SI Appendix A)</desc><sym>Danger Area</sym></wpt>
+  <wpt lat="41.0716667" lon="-71.1933333"><name>EZ07</name><desc>Cox Ledge Exclusion Zone boundary (SI Appendix A)</desc><sym>Danger Area</sym></wpt>
+  <rte><name>Course A - 120 NM</name><desc>R4(p) VM1(p) VM2(p) R2(s); computed 123.9 NM</desc>
+    <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
+    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name></rtept>
+    <rtept lat="40.6333333" lon="-71.6166667"><name>VM1</name></rtept>
+    <rtept lat="40.7166667" lon="-71.1833333"><name>VM2</name></rtept>
+    <rtept lat="41.3076925" lon="-71.4724533"><name>R2</name></rtept>
+    <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
+  </rte>
+  <rte><name>Course B - 103 NM</name><desc>R4(p) R32(p) G5(s); computed 102.0 NM</desc>
+    <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
+    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name></rtept>
+    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name></rtept>
+    <rtept lat="41.2101708" lon="-71.5338581"><name>G5</name></rtept>
+    <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
+  </rte>
+  <rte><name>Course C - 93 NM</name><desc>R4(p) R32(p) R2(s); computed 91.4 NM</desc>
+    <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
+    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name></rtept>
+    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name></rtept>
+    <rtept lat="41.3076925" lon="-71.4724533"><name>R2</name></rtept>
+    <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
+  </rte>
+  <rte><name>Course D - 77.2 NM</name><desc>R4(p) BB(p) NB(s); computed 75.9 NM</desc>
+    <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
+    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name></rtept>
+    <rtept lat="41.3969867" lon="-71.0346881"><name>BB</name></rtept>
+    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name></rtept>
+    <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
+  </rte>
+  <rte><name>Course E - 70 NM</name><desc>G5(p) R32(p) NB(s); computed 71.2 NM</desc>
+    <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
+    <rtept lat="41.2101708" lon="-71.5338581"><name>G5</name></rtept>
+    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name></rtept>
+    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name></rtept>
+    <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
+  </rte>
+  <rte><name>Course F - 65 NM</name><desc>G1BI(p) BB(p) NB(s)  [NOR: 64.9 NM]; computed 64.4 NM</desc>
+    <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
+    <rtept lat="41.2573131" lon="-71.5759328"><name>G1BI</name></rtept>
+    <rtept lat="41.3969867" lon="-71.0346881"><name>BB</name></rtept>
+    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name></rtept>
+    <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
+  </rte>
+  <rte><name>Course G - 60 NM</name><desc>R2(p) R32(p) NB(s); computed 60.5 NM</desc>
+    <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
+    <rtept lat="41.3076925" lon="-71.4724533"><name>R2</name></rtept>
+    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name></rtept>
+    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name></rtept>
+    <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
+  </rte>
+  <rte><name>Cox Ledge Exclusion Zone</name><desc>Obstruction - do not enter (SI Appendix A)</desc>
+    <rtept lat="41.1583333" lon="-71.2666667"><name>EZ01</name></rtept>
+    <rtept lat="41.2316667" lon="-71.1750000"><name>EZ02</name></rtept>
+    <rtept lat="41.2316667" lon="-71.0583333"><name>EZ03</name></rtept>
+    <rtept lat="41.1333333" lon="-70.8333333"><name>EZ04</name></rtept>
+    <rtept lat="41.1116667" lon="-70.8316667"><name>EZ05</name></rtept>
+    <rtept lat="41.0750000" lon="-70.9416667"><name>EZ06</name></rtept>
+    <rtept lat="41.0716667" lon="-71.1933333"><name>EZ07</name></rtept>
+    <rtept lat="41.1583333" lon="-71.2666667"><name>EZ01</name></rtept>
+  </rte>
+  <rte><name>Finish line (Castle Hill, 120/300 deg)</name><desc>SI 13.1: Castle Hill Light = east end; line heads out 300 deg; finish when light bears 120 deg magnetic</desc>
+    <rtept lat="41.4621761" lon="-71.3629200"><name>Castle Hill Light</name></rtept>
+    <rtept lat="41.4648317" lon="-71.3757850"><name>Finish line (out 300deg)</name></rtept>
+  </rte>
+</gpx>
