@@ -774,7 +774,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <label class="wx"><input type="checkbox" id="curflowchk"> In-bay tidal current field (animated)</label>
  <div id="curfieldleg" style="display:none;margin:1px 0 3px 18px;font-size:10px">
    <span style="background:linear-gradient(90deg,#d9f0ff,#9ad4f0,#4aa3d8,#2166ac,#66bd63,#fdae61,#f46d43,#d73027);display:block;width:162px;height:11px;border:1px solid #999"></span>
-   <div style="width:164px;display:flex;justify-content:space-between;color:#555"><span>0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1.0+</span></div>
+   <div style="width:164px;display:flex;justify-content:space-between;color:#555"><span>0</span><span>0.4</span><span>0.8</span><span>1.1</span><span>1.5+</span></div>
    <div style="color:#888">kt &middot; near-white = slack, <b>warmer = faster</b>. Streaks also lengthen with speed.</div>
  </div>
  <label class="wx"><input type="checkbox" id="coopschk"> Tidal current arrows (NOAA stations)</label>
@@ -804,7 +804,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 08:34</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 08:57</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2206,9 +2206,11 @@ function curFieldData(){
   for(let iy=0; iy<NY; iy++){ const la=g.la1-iy*g.dy;
     for(let ix=0; ix<NX; ix++){ const idx=iy*NX+ix;
       if(g.mask[idx]==='1') continue;               // land cell -> velocity stays 0 (no particles cross land)
-      const lo=g.lo1+ix*g.dx; let wsum=0,ut=0,vt=0;
-      st.forEach(s=>{ const dyy=la-s.lat, dxx=(lo-s.lon)*Math.cos(la*Math.PI/180), d=Math.hypot(dxx,dyy);
-        const w=1/(d*d+4e-4); wsum+=w; ut+=w*s.u; vt+=w*s.v; });    // continuous IDW over ALL stations (no hard cutoff) -> smooth field
+      const lo=g.lo1+ix*g.dx, cs=Math.cos(la*Math.PI/180);
+      const near=st.map(s=>{ const dyy=la-s.lat, dxx=(lo-s.lon)*cs; return {s,d2:dxx*dxx+dyy*dyy}; })
+        .sort((a,b)=>a.d2-b.d2).slice(0,6);                          // nearest 6 stations only
+      let wsum=0,ut=0,vt=0;
+      near.forEach(o=>{ const w=1/Math.pow(o.d2+1e-6,1.5); wsum+=w; ut+=w*o.s.u; vt+=w*o.s.v; });  // power-3 IDW preserves local peaks (power-2-over-all-stations smeared 1.5kt narrows down to ~0.6)
       if(wsum>0){ U[idx]=ut/wsum; V[idx]=vt/wsum; }
     } }
   const hdr=(num,name)=>({parameterUnit:'m.s-1',parameterCategory:2,parameterNumber:num,parameterNumberName:name,
@@ -2221,9 +2223,9 @@ document.getElementById('curflowchk').addEventListener('change',async e=>{
       if(!coopsLoaded) await loadCoops();            // station tidal series (markers stay hidden unless Tidal-currents toggle is on)
       setWhen(); showTbox();
       curFlowLayer=L.velocityLayer({displayValues:false,data:curFieldData(),
-        maxVelocity:1.0,velocityScale:0.13,lineWidth:2.4,particleMultiplier:1/120,particleAge:90,
+        maxVelocity:1.5,velocityScale:0.13,lineWidth:2.4,particleMultiplier:1/120,particleAge:90,
         colorScale:['#d9f0ff','#9ad4f0','#4aa3d8','#2166ac','#66bd63','#fdae61','#f46d43','#d73027']}).addTo(map);
-        // max 1.0kt (bay currents are mostly slow) + 8 stops -> ~0.13kt per color band = far more granular
+        // max 1.5kt (real bay range: narrows peak ~1.55kt) + 8 stops -> ~0.19kt per color band
       setTimeout(()=>{ if(curFlowLayer&&CMASK) curFlowLayer.setData(curFieldData()); },2500);  // repaint once CO-OPS series arrive
     }catch(err){ alert('Current field unavailable: '+err); e.target.checked=false; } }
   else if(curFlowLayer){ map.removeLayer(curFlowLayer); curFlowLayer=null; }
