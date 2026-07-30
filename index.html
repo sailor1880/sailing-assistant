@@ -772,6 +772,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
    <span style="background:linear-gradient(90deg,#2166ac,#67a9cf,#f7f7f7,#ef8a62,#b2182b);display:inline-block;width:112px;height:9px;vertical-align:middle;border:1px solid #999"></span><br>
    <span style="color:#2166ac">ebb&nbsp;(S)</span> &larr; slack &rarr; <span style="color:#b2182b">flood&nbsp;(N)</span> &middot; &plusmn;2.3&nbsp;kt, N&ndash;S</div>
  <label class="wx"><input type="checkbox" id="curflowchk"> In-bay tidal current field (animated)</label>
+ <div id="curfieldleg" style="display:none;margin:1px 0 3px 18px;font-size:10px">
+   <span style="background:linear-gradient(90deg,#d9f0ff,#9ad4f0,#4aa3d8,#2166ac,#66bd63,#fdae61,#f46d43,#d73027);display:block;width:162px;height:11px;border:1px solid #999"></span>
+   <div style="width:164px;display:flex;justify-content:space-between;color:#555"><span>0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1.0+</span></div>
+   <div style="color:#888">kt &middot; near-white = slack, <b>warmer = faster</b>. Streaks also lengthen with speed.</div>
+ </div>
  <label class="wx"><input type="checkbox" id="coopschk"> Tidal current arrows (NOAA stations)</label>
  <label class="wx"><input type="checkbox" id="curchk"> Offshore current arrows (coarse model)</label>
  <div id="curleg" class="leg" style="display:none;margin:1px 0 2px 18px"><span style="background:#00b4d8"></span>&lt;0.5
@@ -799,7 +804,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 08:27</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 08:34</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -1952,10 +1957,11 @@ function drawCur(){ curLayer.clearLayers(); const h=idxAt(CUR[0]&&CUR[0].hourly&
 
 const flowOn=()=>document.getElementById('flowchk').checked;
 function showTbox(){ const on=id=>document.getElementById(id).checked;   // per-group legends; single shared time slider
-  const w=windOn()||flowOn()||windhOn(), c=on('curflowchk')||on('coopschk')||curOn(), m=on('gomofschk');
-  document.getElementById('tbox').style.display=(w||c||m)?'block':'none';
+  const w=windOn()||flowOn()||windhOn(), cField=on('curflowchk'), cArrow=on('coopschk')||curOn(), m=on('gomofschk');
+  document.getElementById('tbox').style.display=(w||cField||cArrow||m)?'block':'none';
   document.getElementById('windleg').style.display=w?'block':'none';
-  document.getElementById('curleg').style.display=c?'block':'none';
+  document.getElementById('curleg').style.display=cArrow?'block':'none';          // discrete swatches = the arrow layers
+  document.getElementById('curfieldleg').style.display=cField?'block':'none';      // gradient bar = the animated field
   document.getElementById('gomofsleg').style.display=m?'block':'none'; }
 async function refreshWx(){           // rebuild grid for current view + refetch active layers
   buildGrid();
@@ -2215,8 +2221,9 @@ document.getElementById('curflowchk').addEventListener('change',async e=>{
       if(!coopsLoaded) await loadCoops();            // station tidal series (markers stay hidden unless Tidal-currents toggle is on)
       setWhen(); showTbox();
       curFlowLayer=L.velocityLayer({displayValues:false,data:curFieldData(),
-        maxVelocity:1.6,velocityScale:0.12,lineWidth:2.2,particleMultiplier:1/120,particleAge:90,
-        colorScale:['#8ec7ff','#00b4d8','#0077b6','#7b2cbf','#e6194b']}).addTo(map);
+        maxVelocity:1.0,velocityScale:0.13,lineWidth:2.4,particleMultiplier:1/120,particleAge:90,
+        colorScale:['#d9f0ff','#9ad4f0','#4aa3d8','#2166ac','#66bd63','#fdae61','#f46d43','#d73027']}).addTo(map);
+        // max 1.0kt (bay currents are mostly slow) + 8 stops -> ~0.13kt per color band = far more granular
       setTimeout(()=>{ if(curFlowLayer&&CMASK) curFlowLayer.setData(curFieldData()); },2500);  // repaint once CO-OPS series arrive
     }catch(err){ alert('Current field unavailable: '+err); e.target.checked=false; } }
   else if(curFlowLayer){ map.removeLayer(curFlowLayer); curFlowLayer=null; }
