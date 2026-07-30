@@ -723,15 +723,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <label><input type="checkbox" id="clubschk"> Clubs &amp; services (&#9733;)</label>
  <label class="ez"><input type="checkbox" id="ezchk" checked> Cox Ledge / wind-farm exclusion</label>
  <button id="bbabtn" style="font-size:11px;margin-top:3px;cursor:pointer;width:100%">Bay events (Better Bay Alliance) &#8599;</button>
- <hr>
- <div style="font-size:12px;margin-bottom:2px"><b>SOLO/TWIN race</b>
-   <button id="allcourses" style="font-size:11px">all on</button>
-   <button id="nocourses" style="font-size:11px">all off</button>
-   <div style="color:#888;font-size:11px">on/off = courses + marks + finish</div></div>
- <label style="font-size:12px"><input type="checkbox" id="revchk"> Reverse direction (SI 6.3)</label>
- <div id="list"></div>
- <label><input type="checkbox" id="mkchk" checked> Race marks &amp; labels</label>
- <label class="fin"><input type="checkbox" id="finchk" checked> Finish line (120&deg;/300&deg;)</label>
  <div id="mycourses"></div>
  <hr><b style="font-size:12px">Races &amp; courses</b> <span style="color:#888;font-size:11px">by yacht club</span>
  <label style="font-size:12px;display:block;margin:2px 0">Pick a race / course set:
@@ -808,7 +799,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 09:29</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 12:03</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2056,8 +2047,7 @@ document.getElementById('windyclose').addEventListener('click',()=>{
   document.getElementById('windywrap').style.display='none';
   document.getElementById('windyframe').src='about:blank';
 });
-document.getElementById('windycourses').addEventListener('click',()=>{
-  if(typeof saveView==='function') saveView(); location.href='windy.html'; });
+document.getElementById('windycourses').addEventListener('click',()=>{ location.href='windy.html'; });
 
 // ---- Rain radar: current NEXRAD N0Q mosaic (IEM), keyless, self-refreshes every 5 min ----
 let radarLayer=null, radarTimer=null;
@@ -2284,48 +2274,12 @@ document.getElementById('gomofschk').addEventListener('change',e=>{
 });
 
 // ---- Courses ----
-const courseLayers = {};
-const bounds = [];
-const isRev=()=>document.getElementById('revchk').checked;
-function courseSeq(c){                 // reverse = same start/finish, middle marks in opposite order (SI 6.3)
-  if(!isRev() || c.seq.length<3) return c.seq;
-  return [c.seq[0], ...c.seq.slice(1,-1).reverse(), c.seq[c.seq.length-1]];
-}
-function coursePopup(c){ const s=courseSeq(c);
-  return `<b>Course ${c.code} &mdash; ${c.dist}${isRev()?' (reversed)':''}</b><br>${s.join(' → ')}<br>`+
-         (isRev()?'':`Rounding: ${c.rounding}<br>`)+`Computed length: ${c.calc} NM`; }
-D.courses.forEach(c=>{
-  c.seq.forEach(m=>{const k=D.marks[m];bounds.push([k.lat,k.lon]);});
-  courseLayers[c.code] = L.polyline(courseSeq(c).map(m=>{const k=D.marks[m];return [k.lat,k.lon];}),
-     {color:c.color,weight:3,opacity:.9}).bindPopup(coursePopup(c));
-});
-function redrawCourses(){ D.courses.forEach(c=>{
-  courseLayers[c.code].setLatLngs(courseSeq(c).map(m=>{const k=D.marks[m];return [k.lat,k.lon];}));
-  courseLayers[c.code].setPopupContent(coursePopup(c)); }); }
+const isRev=()=>false;   // reverse-direction feature retired with the hardcoded SOLO/TWIN race
 
 // ---- Exclusion zone ----
 const ezpts = D.ez.map(e=>[e.lat,e.lon]);
 const ezLayer = L.polygon(ezpts,{color:'#c00',weight:3,fillColor:'#c00',fillOpacity:.18})
    .bindPopup('<b>Cox Ledge Exclusion Zone</b><br>Obstruction &ndash; do NOT enter while racing (SI Appendix A)');
-
-// ---- Finish line ----
-const finLayer = L.polyline([D.finish.a,D.finish.b],{color:'#0033cc',weight:4,dashArray:'6 4'})
-   .bindPopup('<b>Finish line</b><br>Castle Hill Light = east end; line heads out 300&deg;.<br>Finish when the light bears 120&deg; magnetic (SI 13.1).');
-
-// ---- Marks ----
-const markLayer = L.layerGroup();
-Object.entries(D.marks).forEach(([id,m])=>{
-  const isV = id.startsWith('VM'), isS = id==='START';
-  L.circleMarker([m.lat,m.lon],{radius:isS?8:6,color:'#111',weight:1.5,
-     fillColor:isS?'#22c55e':(isV?'#ffd400':'#ff2d2d'),fillOpacity:1})
-   .bindPopup(`<b>${id} &mdash; ${m.short}</b><br>${m.name}${m.llnr?`<br>Light List #${m.llnr}`:''}<br>${m.lat.toFixed(6)}, ${m.lon.toFixed(6)}`)
-   .bindTooltip(id,{permanent:true,direction:'right',offset:[8,0]})
-   .addTo(markLayer);
-});
-D.ez.forEach(e=>{
-  L.circleMarker([e.lat,e.lon],{radius:4,color:'#c00',weight:1,fillColor:'#c00',fillOpacity:1})
-   .bindTooltip(e.id,{permanent:true,direction:'right',offset:[6,0]}).addTo(markLayer);
-});
 
 // ---- Base radio buttons ----
 const basesDiv = document.getElementById('bases');
@@ -2339,56 +2293,11 @@ Object.keys(bases).forEach((name,i)=>{
   });
 });
 
-// ---- Course checkboxes ----
-const list = document.getElementById('list');
-D.courses.forEach(c=>{
-  const lab=document.createElement('label');
-  lab.innerHTML=`<input type="checkbox" checked><span class="sw" style="background:${c.color}"></span>Course ${c.code} (${c.dist})`;
-  list.appendChild(lab);
-  courseLayers[c.code].addTo(map);
-  lab.querySelector('input').addEventListener('change',e=>{
-    e.target.checked?courseLayers[c.code].addTo(map):map.removeLayer(courseLayers[c.code]);
-    saveView();
-  });
-});
-document.getElementById('revchk').addEventListener('change',()=>{ redrawCourses(); redrawImported(); saveView(); });
-
-function restoreView(){ let v; try{ v=JSON.parse(localStorage.getItem('sa_view')||'null'); }catch(e){} if(!v) return;
-  if(typeof v.rev==='boolean')  document.getElementById('revchk').checked=v.rev;
-  const on=new Set(v.courses||[]);
-  document.querySelectorAll('#list input[type=checkbox]').forEach((cb,i)=>{ cb.checked=on.has(D.courses[i].code); });
-  redrawCourses();   // built-in courses only; imported races draw with correct reverse when they load later
-  document.querySelectorAll('#list input[type=checkbox]').forEach((cb,i)=>{
-    const lyr=courseLayers[D.courses[i].code]; if(!lyr) return; cb.checked?lyr.addTo(map):map.removeLayer(lyr); });
-}
-restoreView();   // restore the last course selection on load
-ezLayer.addTo(map); finLayer.addTo(map); markLayer.addTo(map);
+ezLayer.addTo(map);   // Cox Ledge / wind-farm exclusion is a standalone permanent layer
 const tog=(id,layer)=>document.getElementById(id).addEventListener('change',e=>{e.target.checked?layer.addTo(map):map.removeLayer(layer);});
-tog('ezchk',ezLayer); tog('finchk',finLayer); tog('skchk',seamark); tog('mkchk',markLayer); tog('bathychk',bathyLayer);
+tog('ezchk',ezLayer); tog('skchk',seamark); tog('bathychk',bathyLayer);
 document.getElementById('bathychk').addEventListener('change',e=>{ document.getElementById('bathylegend').style.display=e.target.checked?'block':'none'; });
-ezpts.forEach(p=>bounds.push(p));
-map.fitBounds(bounds,{padding:[30,30]});
-
-// ---- Master all-on/off for the whole SOLO/TWIN race: courses + marks + Cox Ledge + finish (per-item boxes still work individually) ----
-function setAllCourses(on){
-  document.querySelectorAll('#list input[type=checkbox]').forEach((cb,i)=>{
-    cb.checked=on; const lyr=courseLayers[D.courses[i].code]; if(!lyr) return;
-    on? lyr.addTo(map) : map.removeLayer(lyr);
-  });
-  [['mkchk',markLayer],['finchk',finLayer]].forEach(([id,layer])=>{   // Cox Ledge (ezLayer) is now a standalone permanent layer, not part of the race toggle
-    const el=document.getElementById(id); if(el) el.checked=on;
-    on? layer.addTo(map) : map.removeLayer(layer);
-  });
-  saveView();
-}
-function saveView(){ try{   // persist course selection + reverse (restored on reload; mirrored by windy.html)
-  const codes=[];
-  document.querySelectorAll('#list input[type=checkbox]').forEach((cb,i)=>{ if(cb.checked) codes.push(D.courses[i].code); });
-  localStorage.setItem('sa_view', JSON.stringify({courses:codes,
-    rev:document.getElementById('revchk').checked}));
-}catch(e){} }
-document.getElementById('allcourses').onclick=()=>setAllCourses(true);
-document.getElementById('nocourses').onclick =()=>setAllCourses(false);
+map.setView([41.52,-71.34],11);   // default view: Narragansett Bay (East Passage / Newport)
 
 // ---- Record GPS track (auto-saves to this device via localStorage) ----
 let trackPts=[], trackLine=null; const TKEY='solotwin_track';
@@ -2428,7 +2337,7 @@ function saveRoute(){ try{ localStorage.setItem('sa_route', JSON.stringify(route
 (function(){ try{ const r=JSON.parse(localStorage.getItem('sa_route')||'[]');
   if(r.length){ routePts=r.map(p=>L.latLng(p[0],p[1])); drawRoute(); } }catch(e){} })();
 function eachClickable(fn){                 // interactive overlays that would otherwise grab taps
-  Object.values(courseLayers).forEach(fn); markLayer.eachLayer(fn); fn(ezLayer); fn(finLayer);
+  fn(ezLayer);
   if(typeof races!=='undefined') races.forEach(r=>{ r.routes.forEach(rt=>fn(rt.layer)); r.extra.forEach(fn); });
   if(typeof coopsLayer!=='undefined') coopsLayer.eachLayer(fn);
 }
