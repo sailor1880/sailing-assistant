@@ -782,7 +782,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div id="curleg" class="leg" style="display:none;margin:1px 0 2px 18px"><span style="background:#00b4d8"></span>&lt;0.5
    <span style="background:#0077b6"></span>0.5-1 <span style="background:#7b2cbf"></span>1-2 <span style="background:#e6194b"></span>2+ kt</div>
  <div style="color:#888;font-size:11px;margin-top:2px">Radar</div>
- <label class="wx"><input type="checkbox" id="radarchk"> Rain radar (NEXRAD)</label>
+ <label class="wx"><input type="checkbox" id="radarchk"> Rain radar &mdash; <b>now</b> (NEXRAD)</label>
+ <label class="wx"><input type="checkbox" id="precipchk"> Rain <b>forecast</b> (HRRR, follows slider)</label>
+ <div id="precipleg" class="leg" style="display:none;margin:1px 0 2px 18px"><span style="background:#8fd18f"></span>light
+   <span style="background:#e8e84a"></span>mod <span style="background:#f2a03a"></span>heavy <span style="background:#e6194b"></span>intense (mm/h)</div>
  <div id="tbox" style="font-size:11px;margin:3px 0;display:none">
    <span id="when">&nbsp;</span><br><input type="range" id="thr" min="0" max="47" value="0" style="width:100%"></div>
  <button id="windybtn" style="font-size:11px;margin-top:4px;cursor:pointer;width:100%">Windy view (in&nbsp;page)</button>
@@ -804,7 +807,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 09:17</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 09:23</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -1961,21 +1964,23 @@ function drawCur(){ curLayer.clearLayers(); const h=idxAt(CUR[0]&&CUR[0].hourly&
 
 const flowOn=()=>document.getElementById('flowchk').checked;
 function showTbox(){ const on=id=>document.getElementById(id).checked;   // per-group legends; single shared time slider
-  const w=windOn()||flowOn()||windhOn(), cField=on('curflowchk'), cArrow=on('coopschk')||curOn(), m=on('gomofschk');
-  document.getElementById('tbox').style.display=(w||cField||cArrow||m)?'block':'none';
+  const w=windOn()||flowOn()||windhOn(), cField=on('curflowchk'), cArrow=on('coopschk')||curOn(), m=on('gomofschk'), pf=precipOn();
+  document.getElementById('tbox').style.display=(w||cField||cArrow||m||pf)?'block':'none';
   document.getElementById('windleg').style.display=w?'block':'none';
   document.getElementById('curleg').style.display=cArrow?'block':'none';          // discrete swatches = the arrow layers
   document.getElementById('curfieldleg').style.display=cField?'block':'none';      // gradient bar = the animated field
+  document.getElementById('precipleg').style.display=pf?'block':'none';
   document.getElementById('gomofsleg').style.display=m?'block':'none'; }
 async function refreshWx(){           // rebuild grid for current view + refetch active layers
   buildGrid();
   try{ if(windOn()){ await loadWind(); drawWind(); } }catch(e){}
   try{ if(windhOn()){ await loadWindH(); drawWindH(); } }catch(e){}
   try{ if(curOn()){ await loadCur();  drawCur();  } }catch(e){}
+  try{ if(precipOn()){ await loadPrecip(); drawPrecip(); } }catch(e){}
   setWhen();
 }
 let moveTimer=null;
-map.on('moveend',()=>{ if(!(windOn()||curOn()||windhOn())) return;
+map.on('moveend',()=>{ if(!(windOn()||curOn()||windhOn()||precipOn())) return;
   clearTimeout(moveTimer); moveTimer=setTimeout(refreshWx,500); });
 
 document.getElementById('windchk').addEventListener('change',async e=>{
@@ -1992,6 +1997,7 @@ document.getElementById('curchk').addEventListener('change',async e=>{
   else map.removeLayer(curLayer); showTbox(); });
 document.getElementById('thr').addEventListener('input',()=>{ setWhen();
   if(windOn()&&WIND) drawWind(); if(windhOn()&&WINDH) drawWindH(); if(curOn()&&CUR) drawCur();
+  if(precipOn()&&PRECIP) drawPrecip();
   if(flowOn()&&flowLayer&&WINDFLO) flowLayer.setData(flowData());
   if(typeof curFlowLayer!=='undefined'&&curFlowLayer&&CMASK) curFlowLayer.setData(curFieldData());
   if(typeof gomofsLayer!=='undefined'&&gomofsLayer) gomofsLayer.setParams({time:gomofsTime()});
@@ -2056,6 +2062,26 @@ document.getElementById('windycourses').addEventListener('click',()=>{
 let radarLayer=null, radarTimer=null;
 function radarUrl(){ return 'https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png?v='
   +Math.floor(Date.now()/300000); }   // ?v changes each 5 min -> forces fresh tiles
+// ---- Rain FORECAST overlay (HRRR precip via Open-Meteo, keyless) - viewport grid, follows the time slider ----
+const precipLayer=L.layerGroup(); let PRECIP=null;
+const precipOn=()=>document.getElementById('precipchk').checked;
+const precipColor=mm=> mm<0.1?null: mm<0.5?'#8fd18f': mm<1?'#2e9e2e': mm<2.5?'#e8e84a': mm<5?'#f2a03a': mm<10?'#e6194b':'#b010a0';
+async function loadPrecip(){
+  const u='https://api.open-meteo.com/v1/forecast?latitude='+latCSV+'&longitude='+lonCSV+
+    '&hourly=precipitation&models=ncep_hrrr_conus&forecast_days=2&timezone=UTC';
+  const j=await (await fetch(u)).json(); PRECIP=Array.isArray(j)?j:[j];
+  if(!TIMES && PRECIP[0] && PRECIP[0].hourly){ TIMES=PRECIP[0].hourly.time; document.getElementById('thr').max=TIMES.length-1; } }
+function drawPrecip(){ precipLayer.clearLayers(); if(!PRECIP||!GB) return;
+  const h=idxAt(PRECIP[0]&&PRECIP[0].hourly&&PRECIP[0].hourly.time,targetMs());
+  const dLat=(GB.n-GB.s)/(GB.rows-1)/2, dLon=(GB.e-GB.w)/(GB.cols-1)/2;
+  PRECIP.forEach((w,i)=>{ if(!w.hourly) return; const mm=w.hourly.precipitation[h], col=precipColor(mm); if(!col) return;
+    const p=PTS[i];
+    L.rectangle([[p[0]-dLat,p[1]-dLon],[p[0]+dLat,p[1]+dLon]],{stroke:false,fillColor:col,fillOpacity:0.4})
+      .bindTooltip(mm.toFixed(1)+' mm/h',{sticky:true}).addTo(precipLayer); }); }
+document.getElementById('precipchk').addEventListener('change',async e=>{
+  if(e.target.checked){ try{ buildGrid(); await loadPrecip(); setWhen(); drawPrecip(); precipLayer.addTo(map); }
+    catch(err){ alert('HRRR precip unavailable here (US only): '+err); e.target.checked=false; } }
+  else map.removeLayer(precipLayer); showTbox(); });
 document.getElementById('radarchk').addEventListener('change',e=>{
   if(e.target.checked){
     radarLayer=L.tileLayer(radarUrl(),{opacity:0.7,maxZoom:18,attribution:'NEXRAD (current) &copy; IEM / Iowa State'}).addTo(map);
