@@ -785,6 +785,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <hr><b style="font-size:12px">Tracking</b>
  <label><input type="checkbox" id="gpschk"> My position (boat) &#9973;</label>
  <label style="margin-left:18px;font-size:12px"><input type="checkbox" id="followchk" checked> keep centered</label>
+ <label><input type="checkbox" id="aischk"> AIS ships &mdash; live, within 10&nbsp;NM</label>
+ <div id="aismsg" style="margin-left:18px;font-size:11px;color:#888">needs a free <b>aisstream.io</b> key</div>
  <hr><b style="font-size:12px">Track &amp; route</b>
  <label><input type="checkbox" id="recchk"> Record my GPS track</label>
  <label><input type="checkbox" id="drawchk"> Draw a route (tap map)</label>
@@ -799,7 +801,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 12:03</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 15:15</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2073,6 +2075,61 @@ document.getElementById('precipchk').addEventListener('change',async e=>{
   if(e.target.checked){ try{ buildGrid(); await loadPrecip(); setWhen(); drawPrecip(); precipLayer.addTo(map); }
     catch(err){ alert('HRRR precip unavailable here (US only): '+err); e.target.checked=false; } }
   else map.removeLayer(precipLayer); showTbox(); });
+
+// ---- Live AIS ships (aisstream.io free key, wss:// - works from HTTPS PWA) ----
+// Bounded 3 ways so it never overloads: 10 NM box subscription + hard 10 NM circle filter + markers keyed by MMSI
+// (updated in place, pruned when stale), plus a 300-vessel cap.
+const aisLayer=L.layerGroup(); let aisWS=null, aisMarkers={}, aisMoveTimer=null;
+const aisOn=()=>document.getElementById('aischk').checked;
+function aisMsg(t){ const el=document.getElementById('aismsg'); if(el) el.innerHTML=t; }
+function aisKey(){ let k=localStorage.getItem('ais_key');
+  if(!k){ k=(prompt('Paste your free aisstream.io API key (register at aisstream.io):')||'').trim(); if(k) localStorage.setItem('ais_key',k); }
+  return k; }
+function aisBBox(){ const c=map.getCenter(), dLat=10/60, dLon=10/60/Math.cos(c.lat*Math.PI/180);   // 10 NM box around center
+  return [[c.lat-dLat,c.lng-dLon],[c.lat+dLat,c.lng+dLon]]; }
+function aisSubscribe(){ if(aisWS&&aisWS.readyState===1)
+  aisWS.send(JSON.stringify({APIKey:aisKey(),BoundingBoxes:[aisBBox()],FilterMessageTypes:['PositionReport']})); }
+function aisClear(){ aisLayer.clearLayers(); aisMarkers={}; }
+function aisConnect(){ const key=aisKey();
+  if(!key){ document.getElementById('aischk').checked=false; map.removeLayer(aisLayer); aisMsg('needs a free <b>aisstream.io</b> key'); return; }
+  aisMsg('connecting…');
+  try{ aisWS=new WebSocket('wss://stream.aisstream.io/v0/stream'); }catch(e){ aisMsg('connect failed'); return; }
+  aisWS.onopen=()=>{ aisSubscribe(); };
+  aisWS.onmessage=ev=>{ let d; try{ d=JSON.parse(ev.data); }catch(_){ return; }
+    if(d.error){ aisMsg('key rejected: '+d.error); return; }
+    if(d.MessageType!=='PositionReport') return;
+    const md=d.MetaData||{}, pr=(d.Message&&d.Message.PositionReport)||{};
+    const mmsi=md.MMSI||pr.UserID; if(!mmsi) return;
+    const lat=(md.latitude!=null?md.latitude:pr.Latitude), lon=(md.longitude!=null?md.longitude:pr.Longitude);
+    if(lat==null||lon==null) return;
+    if(map.distance([lat,lon],map.getCenter())/1852>10) return;      // hard 10 NM circle
+    aisPlot(mmsi,lat,lon,pr.Cog,pr.Sog,(md.ShipName||'').trim()||('MMSI '+mmsi)); };
+  aisWS.onclose=()=>{ aisWS=null; if(aisOn()) aisMsg('disconnected'); };
+  aisWS.onerror=()=>{ aisMsg('connection error (check key / internet)'); };
+}
+function aisPlot(mmsi,lat,lon,cog,sog,name){
+  const e=aisMarkers[mmsi];
+  if(!e && Object.keys(aisMarkers).length>=300) return;              // cap
+  const moving = sog!=null && sog>0.5 && cog!=null && cog<360;
+  const html = moving
+    ? '<svg width="22" height="22" viewBox="0 0 22 22" style="transform:rotate('+cog+'deg)"><polygon points="11,1 5,20 11,15.5 17,20" fill="#8e24aa" stroke="#fff" stroke-width="1"/></svg>'
+    : '<div style="width:11px;height:11px;border-radius:50%;background:#8e24aa;border:2px solid #fff"></div>';
+  const icon=L.divIcon({className:'',iconSize:[22,22],iconAnchor:[11,11],html:html});
+  const tip=name+(sog!=null?' · '+sog.toFixed(1)+' kt':'');
+  const pop='<b>'+name+'</b><br>MMSI '+mmsi+(sog!=null?'<br>'+sog.toFixed(1)+' kt':'')+(cog!=null&&cog<360?' · COG '+Math.round(cog)+'°':'');
+  if(e){ e.m.setLatLng([lat,lon]); e.m.setIcon(icon); e.m.setTooltipContent(tip);
+    if(e.m.getPopup()) e.m.setPopupContent(pop); e.t=Date.now(); }
+  else { const m=L.marker([lat,lon],{icon:icon,keyboard:false}).bindTooltip(tip).bindPopup(pop).addTo(aisLayer);
+    aisMarkers[mmsi]={m,t:Date.now()}; }
+}
+setInterval(()=>{ if(!aisOn()) return; const now=Date.now();          // prune vessels not heard from in 10 min + show count
+  Object.keys(aisMarkers).forEach(k=>{ if(now-aisMarkers[k].t>600000){ aisLayer.removeLayer(aisMarkers[k].m); delete aisMarkers[k]; } });
+  if(aisWS&&aisWS.readyState===1) aisMsg('live · '+Object.keys(aisMarkers).length+' ships within 10 NM'); },60000);
+document.getElementById('aischk').addEventListener('change',e=>{
+  if(e.target.checked){ aisClear(); aisLayer.addTo(map); aisConnect(); }
+  else { if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } map.removeLayer(aisLayer); aisClear(); aisMsg('needs a free <b>aisstream.io</b> key'); } });
+map.on('moveend',()=>{ if(!aisOn()) return; clearTimeout(aisMoveTimer);   // recentre the 10 NM box on pan (reconnect for a clean new box)
+  aisMoveTimer=setTimeout(()=>{ if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } aisClear(); aisConnect(); },900); });
 document.getElementById('radarchk').addEventListener('change',e=>{
   if(e.target.checked){
     radarLayer=L.tileLayer(radarUrl(),{opacity:0.7,maxZoom:18,attribution:'NEXRAD (current) &copy; IEM / Iowa State'}).addTo(map);
