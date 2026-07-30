@@ -799,7 +799,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-28 15:05</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 08:26</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2504,38 +2504,74 @@ document.getElementById('sbchk').addEventListener('change',async e=>{
   else if(sbLayer) map.removeLayer(sbLayer); });
 
 // ---- Course library picker (SBRC coded courses; set model also supports 'list' type for 20HC etc.) ----
-let COURSESETS=null, sbMarksData=null, courseLine=null, curSetIdx=0;
+let COURSESETS=null, sbMarksData=null, courseLine=null, curSetIdx=0, LANDMASK=null;
 async function getSBMarks(){ if(!sbMarksData){ sbMarksData=(await (await fetch('southbay_marks.json')).json()).marks; } return sbMarksData; }
+async function getLandMask(){ if(!LANDMASK){ try{ LANDMASK=await (await fetch('curmask.json')).json(); }catch(e){ LANDMASK=null; } } return LANDMASK; }
 async function loadCourseSets(){ if(COURSESETS) return COURSESETS;
   COURSESETS=(await (await fetch('courses.json')).json()).sets;
   const sel=document.getElementById('courseset'); sel.innerHTML='';
   COURSESETS.forEach((s,i)=>{ const o=document.createElement('option'); o.value=i;
     o.textContent=(s.club?s.club+' - ':'')+s.startArea+' ('+Object.keys(s.courses).length+')'; sel.appendChild(o); });
-  await getSBMarks(); fillCodes(0); return COURSESETS; }
+  await getSBMarks(); await getLandMask(); fillCodes(0); return COURSESETS; }
+// curmask.json: 1=land, row-major i*nx+j (la1=north, lo1=west)
+function landAt(lat,lon){ const m=LANDMASK; if(!m) return false;
+  const j=Math.round((lon-m.lo1)/m.dx), i=Math.round((m.la1-lat)/m.dy);
+  if(i<0||i>=m.ny||j<0||j>=m.nx) return false; return m.mask[i*m.nx+j]==='1'; }
+function legCrossesLand(a,b){ let n=0; for(let k=1;k<20;k++){ const t=k/20;
+  if(landAt(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t)) n++; } return n>=2; }  // >=2 interior samples -> ignore 1-cell coastline nicks
+// perpendicular distance (m) from point p to segment a-b, plus whether it projects ONTO the segment
+function segDistM(p,a,b){ const R=6371000, toR=Math.PI/180, latm=(a[0]+b[0])/2*toR;
+  const ax=a[1]*toR*Math.cos(latm), ay=a[0]*toR, bx=b[1]*toR*Math.cos(latm), by=b[0]*toR,
+        px=p[1]*toR*Math.cos(latm), py=p[0]*toR, dx=bx-ax, dy=by-ay, L2=dx*dx+dy*dy;
+  let t=L2?((px-ax)*dx+(py-ay)*dy)/L2:0; const inSeg=t>0.03&&t<0.97; t=Math.max(0,Math.min(1,t));
+  return {d:Math.hypot(px-(ax+t*dx),py-(ay+t*dy))*R, inSeg}; }
 function fillCodes(idx){ curSetIdx=idx; const dl=document.getElementById('coursecodes'); dl.innerHTML='';
   Object.keys(COURSESETS[idx].courses).forEach(c=>{ const o=document.createElement('option'); o.value=c; dl.appendChild(o); }); }
 function clearCourseLine(){ if(courseLine){ map.removeLayer(courseLine); courseLine=null; } }
 function drawCourse(code){ const set=COURSESETS[curSetIdx], c=set.courses[code], info=document.getElementById('courseinfo');
   if(!c){ info.textContent=''; return; }
   clearCourseLine();
-  const pts=[], parts=[], missing=[];
-  if(set.start) pts.push(set.start);
+  const parts=[], missing=[], nodes=[];           // nodes = ordered [lat,lon] incl start & finish
+  if(set.start) nodes.push(set.start);
   c.seq.forEach(([mk,side])=>{ const m=sbMarksData[mk];
-    if(m){ pts.push([m.lat,m.lon]); parts.push(mk+'('+(side==='fin'?'F':side)+')'); }
+    if(m){ nodes.push([m.lat,m.lon]); parts.push(mk+'('+(side==='fin'?'F':side)+')'); }
     else { missing.push(mk); parts.push(mk+'?'); } });
   const last=c.seq[c.seq.length-1];
-  if(set.start && !(last&&last[1]==='fin')) pts.push(set.start); // non-(FIN) courses finish back at the start line
+  let finPt=null;
+  if(set.finish){ const fm=sbMarksData[set.finish.mark];                   // JYC: end AT mark F (finish = F -> dock)
+    if(fm){ finPt=[fm.lat,fm.lon]; if(!(last && last[0]===set.finish.mark)){ nodes.push(finPt); parts.push(set.finish.mark+'(F)'); } } }
+  else if(set.start && !(last&&last[1]==='fin')){ nodes.push(set.start); } // other sets: finish back at the start line
   courseLine=L.layerGroup();
-  L.polyline(pts,{color:'#d500f9',weight:3,opacity:.9}).addTo(courseLine);
-  c.seq.forEach(([mk,side])=>{ const m=sbMarksData[mk]; if(!m) return;
+  let landLegs=0;                                  // draw legs; red-dash any that appear to cross land
+  for(let i=0;i<nodes.length-1;i++){ const a=nodes[i], b=nodes[i+1], bad=legCrossesLand(a,b); if(bad) landLegs++;
+    const pl=L.polyline([a,b], bad?{color:'#ff3b30',weight:4,opacity:.95,dashArray:'8 5'}:{color:'#d500f9',weight:3,opacity:.9});
+    if(bad) pl.bindTooltip('Leg may cross land - route around',{sticky:true}); pl.addTo(courseLine); }
+  c.seq.forEach(([mk,side])=>{ const m=sbMarksData[mk]; if(!m) return;   // course marks (magenta)
     L.circleMarker([m.lat,m.lon],{radius:5,color:'#6a0080',weight:2,fillColor:'#e040fb',fillOpacity:1})
       .bindTooltip(mk+(side==='fin'?' (finish)':side==='p'?' (port)':' (stbd)'),{direction:'top'}).addTo(courseLine); });
+  const inCourse=new Set(c.seq.map(x=>x[0])); if(set.finish) inCourse.add(set.finish.mark);   // OTHER marks lying on a leg
+  const flagged=new Set();
+  Object.keys(sbMarksData).forEach(mk=>{ if(inCourse.has(mk)) return; const m=sbMarksData[mk];
+    for(let i=0;i<nodes.length-1;i++){ const r=segDistM([m.lat,m.lon],nodes[i],nodes[i+1]);
+      if(r.inSeg && r.d<200){ flagged.add(mk);
+        L.circleMarker([m.lat,m.lon],{radius:6,color:'#7a3b00',weight:2,fillColor:'#ff9500',fillOpacity:1})
+          .bindTooltip('Mark '+mk+' on your track - honor correct side, do not pass inside',{direction:'top'}).addTo(courseLine);
+        break; } } });
   if(set.start) L.circleMarker(set.start,{radius:6,color:'#fff',weight:2,fillColor:'#22c55e',fillOpacity:1})
     .bindTooltip('Start: '+set.startArea,{direction:'top'}).addTo(courseLine);
+  if(set.finish && finPt && set.finish.dock){                              // finish line: F -> Jamestown dock
+    L.polyline([finPt,set.finish.dock],{color:'#0033cc',weight:4,dashArray:'6 4'})
+      .bindTooltip(set.finish.name+(set.finish.dockApprox?' (dock approx)':''),{direction:'top'}).addTo(courseLine);
+    L.circleMarker(set.finish.dock,{radius:5,color:'#001a66',weight:2,fillColor:'#3355ff',fillOpacity:1})
+      .bindTooltip('Jamestown dock (finish)',{direction:'top'}).addTo(courseLine); }
   courseLine.addTo(map);
+  let warn=''; if(flagged.size) warn+='<br><span style="color:#c60">on track (honor side): '+[...flagged].join(', ')+'</span>';
+  if(landLegs) warn+='<br><span style="color:#c00">'+landLegs+' leg(s) may cross land (1km grid, approx)</span>';
   info.innerHTML='<b>'+code+'</b>: '+parts.join(' &rarr; ')+' &middot; <b>'+(c.dist||'?')+' NM</b>'
-    +(missing.length?'<br><span style="color:#c00">unplaced marks: '+missing.join(', ')+'</span>':'');
-  if(pts.length>1) map.fitBounds(pts,{padding:[40,40]});
+    +(set.finish?' &middot; finish at '+set.finish.mark:'')
+    +(missing.length?'<br><span style="color:#c00">unplaced marks: '+missing.join(', ')+'</span>':'')+warn;
+  const fb=nodes.slice(); if(set.finish&&set.finish.dock) fb.push(set.finish.dock);
+  if(fb.length>1) map.fitBounds(fb,{padding:[40,40]});
   persistCourse(code);
 }
 function persistCourse(code){ try{ if(code) localStorage.setItem('sa_course',JSON.stringify({set:curSetIdx,code})); else localStorage.removeItem('sa_course'); }catch(e){} }
