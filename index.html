@@ -804,7 +804,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 09:02</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 09:08</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -1901,12 +1901,14 @@ const windOn=()=>document.getElementById('windchk').checked;
 const windhOn=()=>document.getElementById('windhchk').checked;
 const curOn =()=>document.getElementById('curchk').checked;
 
-function arrow(deg,color){            // arrow points UP by default -> rotate to compass bearing
-  return L.divIcon({className:'',iconSize:[22,22],iconAnchor:[11,11],html:
-    `<svg width="22" height="22" viewBox="0 0 22 22" style="transform:rotate(${deg}deg)">
-       <line x1="11" y1="19" x2="11" y2="5" stroke="${color}" stroke-width="2"/>
-       <polygon points="11,2 7,10 15,10" fill="${color}"/></svg>`});
+function arrow(deg,color,size){       // arrow points UP by default -> rotate to compass bearing; size in px (default 22)
+  const s=size||22;
+  return L.divIcon({className:'',iconSize:[s,s],iconAnchor:[s/2,s/2],html:
+    `<svg width="${s}" height="${s}" viewBox="0 0 22 22" style="transform:rotate(${deg}deg)">
+       <line x1="11" y1="19" x2="11" y2="5" stroke="${color}" stroke-width="2.4"/>
+       <polygon points="11,1 6,10 16,10" fill="${color}"/></svg>`});
 }
+function coopsArrowSize(){ const z=map.getZoom(); return Math.max(24,Math.min(60,Math.round(24+(z-11)*6))); } // bigger + scales with zoom
 const spdColor=s=> s<8?'#2c7fb8': s<16?'#41ab5d': s<22?'#f0a020':'#e6194b';
 const hour=()=>+document.getElementById('thr').value;   // slider = hours from NOW (0 = now)
 function idxAt(times,tgt){ if(!times||!times.length) return 0; let b=0,bd=1/0;   // nearest index in a forecast time array to an absolute time
@@ -2178,13 +2180,14 @@ function curAt(sr,tgt){          // cosine-interpolate signed velocity between s
   const a=sr[i-1], b=sr[i], f=(tgt-a.t)/(b.t-a.t);
   return {v:a.v+(b.v-a.v)*(1-Math.cos(f*Math.PI))/2, fd:a.fd, ed:a.ed};
 }
-function drawCoopsArrows(){ coopsArrows.clearLayers(); const tgt=targetMs();
+function drawCoopsArrows(){ coopsArrows.clearLayers(); const tgt=targetMs(), sz=coopsArrowSize();
   coopsStations.forEach(s=>{ if(!s.series||!s.series.length) return;
     const c=curAt(s.series,tgt); if(!c) return;
     const spd=Math.abs(c.v), dir=(c.v>=0?c.fd:c.ed); if(isNaN(dir)||spd<0.1) return;
-    L.marker([s.lat,s.lng],{icon:arrow(dir,curColor(spd)),keyboard:false})
+    L.marker([s.lat,s.lng],{icon:arrow(dir,curColor(spd),sz),keyboard:false})
       .bindTooltip(spd.toFixed(1)+' kt '+(c.v>=0?'flood':'ebb'),{direction:'top'}).addTo(coopsArrows); });
 }
+map.on('zoomend',()=>{ if(document.getElementById('coopschk').checked&&coopsLoaded) drawCoopsArrows(); });  // rescale arrows on zoom
 document.getElementById('coopschk').addEventListener('change',async e=>{
   if(e.target.checked){ try{ if(!coopsLoaded) await loadCoops(); coopsLayer.addTo(map); coopsArrows.addTo(map);
       drawCoopsArrows(); showTbox(); }
