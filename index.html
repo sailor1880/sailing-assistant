@@ -804,7 +804,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 09:15</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 09:17</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -1998,7 +1998,7 @@ document.getElementById('thr').addEventListener('input',()=>{ setWhen();
   if(document.getElementById('coopschk').checked&&coopsLoaded) drawCoopsArrows(); });
 
 // ---- Animated wind flow on the ENC (leaflet-velocity + Open-Meteo, keyless) ----
-const FLO={la1:41.65,la2:40.45,lo1:-71.80,lo2:-70.60,dx:0.08,dy:0.08};
+const FLO={la1:43.60,la2:40.40,lo1:-71.95,lo2:-68.00,dx:0.15,dy:0.15};  // bay -> Gulf of Maine (Biddeford ME) -> Cultivator Shoal; wind is smooth so 0.15deg is fine
 let FLOLATS=[],FLOLONS=[],WINDFLO=null,flowLayer=null;
 function floCSV(){
   FLOLATS=[];FLOLONS=[];
