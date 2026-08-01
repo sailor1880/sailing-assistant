@@ -802,7 +802,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-07-30 16:10</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-08-01 09:21</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2645,7 +2645,14 @@ const CLUBS=[
 ["Rhode Island YC","","(401) 941-0220",41.76795,-71.38601],
 ["Wickford YC","","(401) 294-9010",41.57717,-71.4475],
 ["Bristol YC","","(401) 253-2922",41.67605,-71.28986],
-["Brown & Howard Wharf Marina","09","",41.48217,-71.31552],["Goat Island Marina","09","(401) 849-5655",41.4894,-71.3264],["Newport Yachting Center","09","(401) 846-1600",41.48523,-71.31669],["Safe Harbor Cowesett","71","(401) 884-0544",41.68433,-71.44762],["Fairwinds Marina","71","(401) 921-1955",41.68824,-71.39324],["Block Island Harbormaster","12","(401) 466-3204",41.17333,-71.556],["Narragansett Harbormaster","09","(401) 640-1038",41.447,-71.453],["South Kingstown Harbormaster","09","(401) 783-3321",41.443,-71.499],];
+["Brown & Howard Wharf Marina","09","",41.48217,-71.31552],["Goat Island Marina","09","(401) 849-5655",41.4894,-71.3264],["Newport Yachting Center","09","(401) 846-1600",41.48523,-71.31669],["Safe Harbor Cowesett","71","(401) 884-0544",41.68433,-71.44762],["Fairwinds Marina","71","(401) 921-1955",41.68824,-71.39324],["Block Island Harbormaster","12","(401) 466-3204",41.17333,-71.556],["Narragansett Harbormaster","09","(401) 640-1038",41.447,-71.453],["South Kingstown Harbormaster","09","(401) 783-3321",41.443,-71.499],
+// Block Island / Great Salt Pond (New Harbor) + Old Harbor marinas
+["Champlin's Marina & Resort","11","(401) 466-7777",41.18360,-71.58520],
+["Payne's Dock (New Harbor, no monitored VHF)","","(401) 466-5572",41.19030,-71.57880],
+["Block Island Boat Basin / The Oar","09","(401) 466-2631",41.18880,-71.58080],
+["Block Island Pumpout boat (hail VHF 73)","73","",41.18750,-71.58250],
+["Oldport Launch (New Harbor)","68","(401) 847-9109",41.18860,-71.58050],
+["Ballard's Marina (Old Harbor)","","(401) 466-2231",41.16900,-71.55480],];
 const clubIcon=L.divIcon({className:'',iconSize:[22,22],iconAnchor:[11,11],
   html:'<div style="color:#1565c0;font-size:20px;line-height:22px;text-align:center;text-shadow:0 0 2px #fff,0 0 3px #fff">★</div>'});
 let clubsLayer=null;
