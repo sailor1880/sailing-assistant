@@ -3,7 +3,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Sailing Assistant Windy">
 <title>Sailing Assistant &mdash; Windy</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"/>
+<!-- NB: do NOT load Leaflet CSS here - Windy loads its own fixed styles; the Leaflet CSS hides Windy's overlay/timeline/menu toolbars -->
 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
 <script src="https://api.windy.com/assets/map-forecast/libBoot.js"></script>
 <style>
@@ -57,5 +57,5 @@ else windyInit({key:KEY, verbose:false, lat:41.1, lon:-71.3, zoom:9}, windyAPI=>
       else bm.setLatLng(ll); if(first){ map.setView(ll,10); first=false; } }, ()=>{}, {enableHighAccuracy:true,maximumAge:3000}); }
 });
 </script>
-<div style="position:absolute;bottom:2px;right:4px;z-index:9999;font:11px system-ui;color:#bbb">build 2026-08-01 09:21</div>
+<div style="position:absolute;bottom:2px;right:4px;z-index:9999;font:11px system-ui;color:#bbb">build 2026-08-01 10:17</div>
 </body></html>
