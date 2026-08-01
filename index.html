@@ -802,7 +802,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-08-01 10:17</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-08-01 10:54</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2684,21 +2684,24 @@ const CCOL=['#e6194b','#3cb44b','#4363d8','#f58231','#911eb4','#00b4d8','#f032e6
 let races=[];   // {name,color,bounds,routes:[{name,pts,layer,on}], extra:[layer]}
 const racesOn=()=>document.getElementById('raceschk').checked;
 function revPts(pts){ return (isRev() && pts.length>2) ? [pts[0], ...pts.slice(1,-1).reverse(), pts[pts.length-1]] : pts; }
-function buildRace(text,name,idx){
+function raceLinksHtml(links){ return (links&&links.length)
+  ? '<br>'+links.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener">'+l.name+' ↗</a>').join(' &middot; ') : ''; }
+function buildRace(text,name,idx,links){
   const xml=new DOMParser().parseFromString(text,'application/xml');
   if(xml.getElementsByTagName('parsererror').length) throw new Error('not valid GPX/XML');
   const col=RCOL[idx%RCOL.length], b=[];
   const tag=(el,t)=>Array.from(el.getElementsByTagNameNS('*',t));
   const nm=el=>{ const x=tag(el,'name')[0]; return x?x.textContent:''; };
   const collect=els=>els.map(p=>{ const la=+p.getAttribute('lat'),lo=+p.getAttribute('lon'); b.push([la,lo]); return [la,lo]; });
-  const race={name,color:col,bounds:b,routes:[],extra:[]};
+  const race={name,color:col,bounds:b,routes:[],extra:[],links:links||null};
+  const lh=raceLinksHtml(links);                       // NOR/SI/club links appended to every course popup
   let ncourse=0;
-  const addRoute=(pts,label)=>{ if(pts.length>1){ const t=(label||'').toLowerCase(); let rc,layer;
+  const addRoute=(pts,label)=>{ if(pts.length>1){ const t=(label||'').toLowerCase(); let rc,layer; const pop='<b>'+(label||name)+'</b>'+lh;
     if(/exclus|restrict|prohibit|keep ?out|danger|no.?go/.test(t)){        // exclusion zone -> filled polygon
-      rc='#c00'; layer=L.polygon(revPts(pts),{color:rc,weight:2,fillColor:rc,fillOpacity:0.15,dashArray:'4 3'}).bindPopup(label||name); }
-    else if(/finish/.test(t)){ rc='#0033cc'; layer=L.polyline(revPts(pts),{color:rc,weight:4,dashArray:'6 4'}).bindPopup(label||name); }
-    else if(/start/.test(t)){  rc='#0a7d2c'; layer=L.polyline(revPts(pts),{color:rc,weight:4,dashArray:'6 4'}).bindPopup(label||name); }
-    else { rc=CCOL[(ncourse++)%CCOL.length]; layer=L.polyline(revPts(pts),{color:rc,weight:3}).bindPopup(label||name); }  // each course option its own colour
+      rc='#c00'; layer=L.polygon(revPts(pts),{color:rc,weight:2,fillColor:rc,fillOpacity:0.15,dashArray:'4 3'}).bindPopup(pop); }
+    else if(/finish/.test(t)){ rc='#0033cc'; layer=L.polyline(revPts(pts),{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
+    else if(/start/.test(t)){  rc='#0a7d2c'; layer=L.polyline(revPts(pts),{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
+    else { rc=CCOL[(ncourse++)%CCOL.length]; layer=L.polyline(revPts(pts),{color:rc,weight:3}).bindPopup(pop); }  // each course option its own colour
     race.routes.push({name:label||('course '+(race.routes.length+1)),pts,layer,on:true,color:rc}); } };
   tag(xml,'rte').forEach(r=>addRoute(collect(tag(r,'rtept')),nm(r)));
   tag(xml,'trk').forEach(t=>{ let pts=[]; tag(t,'trkseg').forEach(sg=>pts=pts.concat(collect(tag(sg,'trkpt'))));
@@ -2719,6 +2722,9 @@ function renderRaceList(){ const box=document.getElementById('racelist'); box.in
       const mk=(txt,val)=>{ const b=document.createElement('button'); b.textContent=txt; b.style.fontSize='10px'; b.style.marginLeft='3px';
         b.onclick=()=>{ r.routes.forEach(rt=>rt.on=val); applyRaceVisibility(); renderRaceList(); }; return b; };
       h.appendChild(mk('all',true)); h.appendChild(mk('none',false)); }
+    if(r.links&&r.links.length){ const ls=document.createElement('div'); ls.style.cssText='font-size:10px;margin:1px 0 0 2px';  // NOR / SI / club links
+      ls.innerHTML='&#128196; '+r.links.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener">'+l.name+' ↗</a>').join(' &middot; ');
+      h.appendChild(ls); }
     const bX=document.createElement('button'); bX.textContent='✕'; bX.title='remove this race'; // remove just this one race
     bX.style.fontSize='10px'; bX.style.marginLeft='4px'; bX.style.color='#c00';
     bX.onclick=()=>{ r.routes.forEach(rt=>map.removeLayer(rt.layer)); r.extra.forEach(l=>map.removeLayer(l));
@@ -2731,7 +2737,7 @@ function renderRaceList(){ const box=document.getElementById('racelist'); box.in
       lab.innerHTML='<input type="checkbox" '+(rt.on?'checked':'')+'> <span style="display:inline-block;width:14px;height:0;border-top:3px solid '+(rt.color||'#888')+';vertical-align:middle;margin:0 4px"></span>'+rt.name;
       lab.querySelector('input').addEventListener('change',e=>{ rt.on=e.target.checked; applyRaceVisibility(); });
       box.appendChild(lab); }); }); }
-function addRace(text,name,idx,fit){ try{ const r=buildRace(text,name,idx); races.push(r); applyRaceVisibility();
+function addRace(text,name,idx,fit,links){ try{ const r=buildRace(text,name,idx,links); races.push(r); applyRaceVisibility();
     if(fit&&r.bounds.length) map.fitBounds(r.bounds,{padding:[30,30]}); }
   catch(e){ alert('Could not read GPX "'+name+'": '+e.message); } }
 function saveRaces(){ try{ localStorage.setItem(RKEY,JSON.stringify(racesRaw)); }catch(e){ alert('Too large to save on device; shows until reload.'); } }
@@ -2748,8 +2754,9 @@ document.getElementById('clrgpx').onclick=()=>{ if(!racesRaw.length) return; if(
   races=[]; racesRaw=[]; try{ localStorage.removeItem(RKEY); }catch(e){} renderRaceList(); };
 document.getElementById('raceschk').addEventListener('change',applyRaceVisibility);
 (function(){ try{ racesRaw=JSON.parse(localStorage.getItem(RKEY)||'[]'); }catch(e){ racesRaw=[]; }
-  racesRaw.forEach((r,i)=>{ try{ races.push(buildRace(r.text,r.name,i)); }catch(e){} }); applyRaceVisibility(); renderRaceList(); })();
+  racesRaw.forEach((r,i)=>{ try{ races.push(buildRace(r.text,r.name,i,r.links)); }catch(e){} }); applyRaceVisibility(); renderRaceList(); })();
 // ---- Bundled race catalog (races.json manifest -> pick to load bundled GPX via the same path) ----
+const RACE_LINKS={};     // file -> NOR/SI/club links (from races.json)
 (function(){ const sel=document.getElementById('racecat'); if(!sel) return;
   Promise.all([fetch('races.json').then(r=>r.json()),
                fetch('courses.json').then(r=>r.json()).catch(()=>({sets:[]}))])
@@ -2763,6 +2770,7 @@ document.getElementById('raceschk').addEventListener('change',applyRaceVisibilit
     const byClub={}; list.forEach(r=>{ const k=r.club||'Other'; (byClub[k]=byClub[k]||[]).push(r); });   // then club races
     Object.keys(byClub).sort().forEach(club=>{ const og=document.createElement('optgroup'); og.label=club;
       byClub[club].forEach(r=>{ const o=document.createElement('option'); o.value='gpx:'+r.file; o.dataset.name=r.name;
+        if(r.links) RACE_LINKS[r.file]=r.links;
         o.textContent=r.name.replace(/^20HC\s+/,'')+(r.year?' ('+r.year+')':''); og.appendChild(o); }); sel.appendChild(og); });
   }).catch(()=>{ sel.innerHTML='<option value="">catalog unavailable</option>'; });
   sel.addEventListener('change',async e=>{ const val=e.target.value; if(!val) return;
@@ -2773,9 +2781,9 @@ document.getElementById('raceschk').addEventListener('change',applyRaceVisibilit
       e.target.value=''; return; }
     const file=val.slice(0,4)==='gpx:'?val.slice(4):val, name=e.target.selectedOptions[0].dataset.name||file;
     if(racesRaw.some(r=>r.name===name)){ alert(name+' is already loaded'); e.target.value=''; return; }
-    try{ const text=await (await fetch(file)).text(); racesRaw.push({name,text}); saveRaces();
+    try{ const text=await (await fetch(file)).text(); const links=RACE_LINKS[file]||null; racesRaw.push({name,text,links}); saveRaces();
       if(!document.getElementById('raceschk').checked) document.getElementById('raceschk').checked=true;
-      addRace(text,name,racesRaw.length-1,true); renderRaceList(); }
+      addRace(text,name,racesRaw.length-1,true,links); renderRaceList(); }
     catch(err){ alert('Could not load '+name+': '+err); }
     e.target.value=''; });
 })();

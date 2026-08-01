@@ -34,6 +34,21 @@ else windyInit({key:KEY, verbose:false, lat:41.1, lon:-71.3, zoom:9}, windyAPI=>
   try{ (JSON.parse(localStorage.getItem('sa_courses')||'[]')).forEach((c,i)=>{ if(c.on===false) return;
     const col=['#d00','#0a0','#06c','#c60','#909','#0aa'][i%6];
     L.polyline(c.pts,{color:col,weight:3}).bindPopup('Course: '+c.name).addTo(map); }); }catch(e){}
+  // Loaded catalog / imported races (sa_races): parse GPX, draw each course option + start/finish/EZ + marks
+  try{ const CCOL=['#e6194b','#3cb44b','#4363d8','#f58231','#911eb4','#00b4d8','#f032e6','#7cb342','#e6ab02','#469990','#9a6324','#1f78b4','#b15928','#6a3d9a'];
+    (JSON.parse(localStorage.getItem('sa_races')||'[]')).forEach(r=>{
+      let xml; try{ xml=new DOMParser().parseFromString(r.text,'application/xml'); }catch(_){ return; }
+      if(xml.getElementsByTagName('parsererror').length) return;
+      const tg=(el,t)=>Array.from(el.getElementsByTagNameNS('*',t)), nm=el=>{ const x=tg(el,'name')[0]; return x?x.textContent:''; };
+      let ci=0;
+      tg(xml,'rte').forEach(rt=>{ const pts=tg(rt,'rtept').map(p=>[+p.getAttribute('lat'),+p.getAttribute('lon')]); if(pts.length<2) return;
+        const lbl=nm(rt), t=lbl.toLowerCase(), pop='<b>'+r.name+' - '+(lbl||'course')+'</b>';
+        if(/exclus|restrict|prohibit|keep ?out|danger|no.?go/.test(t)) L.polygon(pts,{color:'#c00',weight:2,fillColor:'#c00',fillOpacity:0.15,dashArray:'4 3'}).bindPopup(pop).addTo(map);
+        else if(/finish/.test(t)) L.polyline(pts,{color:'#0033cc',weight:4,dashArray:'6 4'}).bindPopup(pop).addTo(map);
+        else if(/start/.test(t)) L.polyline(pts,{color:'#0a7d2c',weight:4,dashArray:'6 4'}).bindPopup(pop).addTo(map);
+        else L.polyline(pts,{color:CCOL[(ci++)%CCOL.length],weight:3}).bindPopup(pop).addTo(map); });
+      tg(xml,'wpt').forEach(w=>{ L.circleMarker([+w.getAttribute('lat'),+w.getAttribute('lon')],{radius:4,color:'#333',weight:1,fillColor:'#fff',fillOpacity:1}).bindTooltip(nm(w),{direction:'right'}).addTo(map); });
+    }); }catch(e){}
   // South Bay picked course (from the main-page Course library picker)
   try{ const pc=JSON.parse(localStorage.getItem('sa_course')||'null');
     if(pc && pc.code){ Promise.all([fetch('courses.json').then(r=>r.json()),fetch('southbay_marks.json').then(r=>r.json())])
@@ -57,5 +72,5 @@ else windyInit({key:KEY, verbose:false, lat:41.1, lon:-71.3, zoom:9}, windyAPI=>
       else bm.setLatLng(ll); if(first){ map.setView(ll,10); first=false; } }, ()=>{}, {enableHighAccuracy:true,maximumAge:3000}); }
 });
 </script>
-<div style="position:absolute;bottom:2px;right:4px;z-index:9999;font:11px system-ui;color:#bbb">build 2026-08-01 10:17</div>
+<div style="position:absolute;bottom:2px;right:4px;z-index:9999;font:11px system-ui;color:#bbb">build 2026-08-01 10:54</div>
 </body></html>
