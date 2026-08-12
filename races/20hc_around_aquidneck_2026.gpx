@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
-<metadata><name>20HC Around Aquidneck</name><desc>Start at G3 Mitchell Rock. Bridges are gates (pass center span).</desc></metadata>
-<wpt lat="41.50440" lon="-71.34940"><name>Newport (Pell) Bridge center</name><sym>Buoy</sym></wpt>
+<metadata><name>20HC Around Aquidneck</name><desc>USER-CONFIRMED course: start in Mt Hope Bay (between Hog I Shoal Lt &amp; Mt Hope Bay Appr Bell), CCW around Aquidneck via Pell Bridge center span, finish at Sakonnet RN12.</desc></metadata>
+<wpt lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center</name><sym>Buoy</sym></wpt>
 <wpt lat="41.49992" lon="-71.34582"><name>R12A East Passage</name><sym>Buoy</sym></wpt>
 <wpt lat="41.49451" lon="-71.34468"><name>R12 East Passage (Rose I.)</name><sym>Buoy</sym></wpt>
 <wpt lat="41.45754" lon="-71.36639"><name>R6 East Passage</name><sym>Buoy</sym></wpt>
@@ -9,13 +9,12 @@
 <wpt lat="41.45445" lon="-71.24489"><name>G1 Cormorant Reef (Sakonnet)</name><sym>Buoy</sym></wpt>
 <wpt lat="41.55292" lon="-71.22803"><name>R6 Sakonnet River</name><sym>Buoy</sym></wpt>
 <wpt lat="41.60317" lon="-71.21644"><name>RN12 Sakonnet R. (S Gould)</name><sym>Buoy</sym></wpt>
-<wpt lat="41.53330" lon="-71.34450"><name>Gould Island (center)</name><sym>Buoy</sym></wpt>
-<wpt lat="41.64070" lon="-71.25540"><name>Mount Hope Bridge center</name><sym>Buoy</sym></wpt>
-<wpt lat="41.65895" lon="-71.21897"><name>R4 Tiverton Channel</name><sym>Buoy</sym></wpt>
-<wpt lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name><sym>Buoy</sym></wpt>
-<rte><name>A - Standard 27.7 NM</name>
-<rtept lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name></rtept>
-<rtept lat="41.50440" lon="-71.34940"><name>Newport (Pell) Bridge center</name></rtept>
+<wpt lat="41.63115" lon="-71.27238"><name>Start (btwn Hog I Shoal Lt &amp; Mt Hope Bay Appr Bell)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.63241" lon="-71.27325"><name>Hog Island Shoal Light</name><sym>Buoy</sym></wpt>
+<wpt lat="41.62988" lon="-71.27150"><name>Mount Hope Bay Approach Bell (LL#18140)</name><sym>Buoy</sym></wpt>
+<rte><name>Standard - 27.7 NM (CCW)</name>
+<rtept lat="41.63115" lon="-71.27238"><name>Start (btwn Hog I Shoal Lt &amp; Mt Hope Bay Appr Bell)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center</name></rtept>
 <rtept lat="41.49992" lon="-71.34582"><name>R12A East Passage</name></rtept>
 <rtept lat="41.49451" lon="-71.34468"><name>R12 East Passage (Rose I.)</name></rtept>
 <rtept lat="41.45754" lon="-71.36639"><name>R6 East Passage</name></rtept>
@@ -23,11 +22,5 @@
 <rtept lat="41.45445" lon="-71.24489"><name>G1 Cormorant Reef (Sakonnet)</name></rtept>
 <rtept lat="41.55292" lon="-71.22803"><name>R6 Sakonnet River</name></rtept>
 <rtept lat="41.60317" lon="-71.21644"><name>RN12 Sakonnet R. (S Gould)</name></rtept>
-</rte>
-<rte><name>B - Short (Gould I.) 17.4 NM</name>
-<rtept lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name></rtept>
-<rtept lat="41.53330" lon="-71.34450"><name>Gould Island (center)</name></rtept>
-<rtept lat="41.64070" lon="-71.25540"><name>Mount Hope Bridge center</name></rtept>
-<rtept lat="41.65895" lon="-71.21897"><name>R4 Tiverton Channel</name></rtept>
 </rte>
 </gpx>
