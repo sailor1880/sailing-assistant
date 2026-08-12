@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>East Greenwich YC Annual Regatta (short)</name><desc>West Passage pursuit; SHORT courses are all government marks. Long courses add a drop inflatable (not drawn).</desc></metadata>
+<wpt lat="41.58158" lon="-71.39701"><name>G7 Quonset Channel</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.60811" lon="-71.36002"><name>G1 Despair Island (green)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.66094" lon="-71.37280"><name>R8 Patience Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.63780" lon="-71.38220"><name>Start (1.45 NM SSW of Patience R8)</name><sym>Buoy</sym></wpt>
+<rte><name>Spin/Non-Spin Short - 11.6 NM</name>
+<rtept lat="41.63780" lon="-71.38220"><name>Start (1.45 NM SSW of Patience R8)</name></rtept>
+<rtept lat="41.58158" lon="-71.39701"><name>G7 Quonset Channel</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name></rtept>
+<rtept lat="41.60811" lon="-71.36002"><name>G1 Despair Island (green)</name></rtept>
+<rtept lat="41.66094" lon="-71.37280"><name>R8 Patience Island</name></rtept>
+<rtept lat="41.63780" lon="-71.38220"><name>Start (1.45 NM SSW of Patience R8)</name></rtept>
+</rte>
+</gpx>

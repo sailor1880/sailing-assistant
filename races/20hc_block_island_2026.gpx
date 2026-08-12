@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
-<metadata><name>20HC Block Island Race</name><desc>Two-leg series (Newport ↔ Block Island Great Salt Pond).</desc></metadata>
+<metadata><name>20HC Block Island Race</name><desc>Two-leg series (Newport &lt;-&gt; Block Island Great Salt Pond).</desc></metadata>
 <wpt lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name><sym>Buoy</sym></wpt>
 <wpt lat="41.25731" lon="-71.57593"><name>G1BI Block I. North Reef</name><sym>Buoy</sym></wpt>
 <wpt lat="41.20150" lon="-71.59423"><name>R2 Great Salt Pond ent.</name><sym>Buoy</sym></wpt>
-<rte><name>Leg A - Newport→BI 21.2 NM</name>
+<rte><name>Leg A - Newport-&gt;BI 21.2 NM</name>
 <rtept lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name></rtept>
 <rtept lat="41.25731" lon="-71.57593"><name>G1BI Block I. North Reef</name></rtept>
 <rtept lat="41.20150" lon="-71.59423"><name>R2 Great Salt Pond ent.</name></rtept>
 </rte>
-<rte><name>Leg B - BI→Newport 21.2 NM</name>
+<rte><name>Leg B - BI-&gt;Newport 21.2 NM</name>
 <rtept lat="41.20150" lon="-71.59423"><name>R2 Great Salt Pond ent.</name></rtept>
 <rtept lat="41.25731" lon="-71.57593"><name>G1BI Block I. North Reef</name></rtept>
 <rtept lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name></rtept>

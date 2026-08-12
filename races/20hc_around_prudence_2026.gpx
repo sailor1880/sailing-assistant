@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
-<metadata><name>20HC Around Prudence (Fall)</name><desc>Start=Finish R14 Quonset. Long courses II/IV omitted (need chart-only NE-Conanicut mark).</desc></metadata>
+<metadata><name>20HC Around Prudence (Fall)</name><desc>Start=Finish R14 Quonset. Long courses round the north end of Conanicut via Bell 2.</desc></metadata>
 <wpt lat="41.58158" lon="-71.39701"><name>G7 Quonset Channel</name><sym>Buoy</sym></wpt>
 <wpt lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><sym>Buoy</sym></wpt>
 <wpt lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point jct</name><sym>Buoy</sym></wpt>
 <wpt lat="41.67589" lon="-71.34757"><name>RGN Fork Rock (Providence Pt)</name><sym>Buoy</sym></wpt>
 <wpt lat="41.66094" lon="-71.37280"><name>R8 Patience Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.52968" lon="-71.33537"><name>G17 East Passage (E Gould I.)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.68228" lon="-71.32186"><name>GR OL Ohio Ledge</name><sym>Buoy</sym></wpt>
 <wpt lat="41.61041" lon="-71.39482"><name>R14 Quonset/Davisville</name><sym>Buoy</sym></wpt>
 <rte><name>I - Short CCW 17.4 NM</name>
 <rtept lat="41.61041" lon="-71.39482"><name>R14 Quonset/Davisville</name></rtept>
@@ -22,6 +25,28 @@
 <rtept lat="41.67589" lon="-71.34757"><name>RGN Fork Rock (Providence Pt)</name></rtept>
 <rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point jct</name></rtept>
 <rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name></rtept>
+<rtept lat="41.58158" lon="-71.39701"><name>G7 Quonset Channel</name></rtept>
+<rtept lat="41.61041" lon="-71.39482"><name>R14 Quonset/Davisville</name></rtept>
+</rte>
+<rte><name>II - Long CCW 22.2 NM</name>
+<rtept lat="41.61041" lon="-71.39482"><name>R14 Quonset/Davisville</name></rtept>
+<rtept lat="41.58158" lon="-71.39701"><name>G7 Quonset Channel</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name></rtept>
+<rtept lat="41.52968" lon="-71.33537"><name>G17 East Passage (E Gould I.)</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point jct</name></rtept>
+<rtept lat="41.68228" lon="-71.32186"><name>GR OL Ohio Ledge</name></rtept>
+<rtept lat="41.67589" lon="-71.34757"><name>RGN Fork Rock (Providence Pt)</name></rtept>
+<rtept lat="41.66094" lon="-71.37280"><name>R8 Patience Island</name></rtept>
+<rtept lat="41.61041" lon="-71.39482"><name>R14 Quonset/Davisville</name></rtept>
+</rte>
+<rte><name>IV - Long CW 22.2 NM</name>
+<rtept lat="41.61041" lon="-71.39482"><name>R14 Quonset/Davisville</name></rtept>
+<rtept lat="41.66094" lon="-71.37280"><name>R8 Patience Island</name></rtept>
+<rtept lat="41.67589" lon="-71.34757"><name>RGN Fork Rock (Providence Pt)</name></rtept>
+<rtept lat="41.68228" lon="-71.32186"><name>GR OL Ohio Ledge</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point jct</name></rtept>
+<rtept lat="41.52968" lon="-71.33537"><name>G17 East Passage (E Gould I.)</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name></rtept>
 <rtept lat="41.58158" lon="-71.39701"><name>G7 Quonset Channel</name></rtept>
 <rtept lat="41.61041" lon="-71.39482"><name>R14 Quonset/Davisville</name></rtept>
 </rte>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>Bristol YC Millard Series (mark set)</name><desc>Bristol Harbor / upper East Passage weekly PHRF. Course order changes weekly (RC matrix), so this shows the fixed government MARK SET, not one course. Mt Hope Bridge via center span.</desc></metadata>
+<wpt lat="41.65882" lon="-71.28916"><name>G3 Ushers Rocks (Mark T)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.64665" lon="-71.29956"><name>RG PP Popasquash Pt bell (Mark N)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.64116" lon="-71.26586"><name>R2 Bristol Point Rock (Mark H)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.63086" lon="-71.28929"><name>R2 Hog Island SW Point (Mark E)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.66117" lon="-71.28115"><name>RG Middle Ground (Mark M)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.65384" lon="-71.28623"><name>Castle Island Light 2</name><sym>Buoy</sym></wpt>
+<wpt lat="41.63241" lon="-71.27325"><name>Hog Island Shoal Light</name><sym>Buoy</sym></wpt>
+</gpx>

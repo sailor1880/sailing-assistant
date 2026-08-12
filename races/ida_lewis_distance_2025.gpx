@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
-<metadata><name>Ida Lewis Distance Race</name><desc>Start S of Rose I.; finish off ILYC. Other courses (Block I./Montauk/Pt Judith) need marks not in LL2025.</desc></metadata>
+<metadata><name>Ida Lewis Distance Race</name><desc>Start S of Rose I.; finish off ILYC. Representative course; set yearly per SI.</desc></metadata>
 <wpt lat="41.43241" lon="-71.36298"><name>R2 Brenton Point</name><sym>Buoy</sym></wpt>
 <wpt lat="41.39700" lon="-71.03469"><name>Buzzards Bay Entrance Tower</name><sym>Buoy</sym></wpt>
-<wpt lat="41.11584" lon="-71.71843"><name>GR BIS Block I. Sd S ent.</name><sym>Buoy</sym></wpt>
+<wpt lat="41.25731" lon="-71.57593"><name>G1BI Block I. North Reef</name><sym>Buoy</sym></wpt>
 <wpt lat="41.49000" lon="-71.34000"><name>Start S of Rose Island (RC)</name><sym>Buoy</sym></wpt>
 <wpt lat="41.48170" lon="-71.32688"><name>Finish off ILYC (G3 Goat I.)</name><sym>Buoy</sym></wpt>
 <rte><name>Buzzards Bay Tower - ~110 NM</name>
 <rtept lat="41.49000" lon="-71.34000"><name>Start S of Rose Island (RC)</name></rtept>
 <rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point</name></rtept>
 <rtept lat="41.39700" lon="-71.03469"><name>Buzzards Bay Entrance Tower</name></rtept>
-<rtept lat="41.11584" lon="-71.71843"><name>GR BIS Block I. Sd S ent.</name></rtept>
-<rtept lat="41.39700" lon="-71.03469"><name>Buzzards Bay Entrance Tower</name></rtept>
-<rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point</name></rtept>
+<rtept lat="41.25731" lon="-71.57593"><name>G1BI Block I. North Reef</name></rtept>
 <rtept lat="41.48170" lon="-71.32688"><name>Finish off ILYC (G3 Goat I.)</name></rtept>
 </rte>
 </gpx>

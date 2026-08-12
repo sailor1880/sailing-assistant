@@ -1,38 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
-<metadata><name>Conanicut YC - Around the Island</name><desc>Around the Island series. Start/finish RC line off CYC (approx). O &amp; X courses omitted (need chart-only Conanicut Pt marks). No sailing Rose I.–Newport Bridge.</desc></metadata>
-<wpt lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><sym>Buoy</sym></wpt>
-<wpt lat="41.51664" lon="-71.33422"><name>R14 Bishop Rock</name><sym>Buoy</sym></wpt>
-<wpt lat="41.48345" lon="-71.35075"><name>Bell 11 The Dumplings</name><sym>Buoy</sym></wpt>
+<metadata><name>Conanicut YC - Around the Island</name><desc>Around the Island series (97th ATI SIs). O/X round the north end via Quonset Ch buoys 5 &amp; 3. No sailing Rose I.-Newport Bridge.</desc></metadata>
+<wpt lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><sym>Buoy</sym></wpt>
 <wpt lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><sym>Buoy</sym></wpt>
-<wpt lat="41.60811" lon="-71.36002"><name>Despair Island Buoy C-1</name><sym>Buoy</sym></wpt>
-<wpt lat="41.50500" lon="-71.36000"><name>Start/Finish off CYC (RC)</name><sym>Buoy</sym></wpt>
-<rte><name>Z - 12.0 NM (S→N)</name>
-<rtept lat="41.50500" lon="-71.36000"><name>Start/Finish off CYC (RC)</name></rtept>
-<rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name></rtept>
-<rtept lat="41.51664" lon="-71.33422"><name>R14 Bishop Rock</name></rtept>
-<rtept lat="41.48345" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
-<rtept lat="41.50500" lon="-71.36000"><name>Start/Finish off CYC (RC)</name></rtept>
+<wpt lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57639" lon="-71.36849"><name>Can 3 Quonset Ch Buoy 3 (NNE Conanicut Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><sym>Buoy</sym></wpt>
+<wpt lat="41.51664" lon="-71.33422"><name>R14 East Passage Bell 14 (Bishop Rock)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.60811" lon="-71.36002"><name>G1 Despair Island (green)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name><sym>Buoy</sym></wpt>
+<rte><name>O - 18.1 NM (N-&gt;S)</name>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name></rtept>
+<rtept lat="41.57639" lon="-71.36849"><name>Can 3 Quonset Ch Buoy 3 (NNE Conanicut Pt)</name></rtept>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
 </rte>
-<rte><name>P - 12.0 NM (N→S)</name>
-<rtept lat="41.50500" lon="-71.36000"><name>Start/Finish off CYC (RC)</name></rtept>
-<rtept lat="41.48345" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
-<rtept lat="41.51664" lon="-71.33422"><name>R14 Bishop Rock</name></rtept>
+<rte><name>X - 18.1 NM (S-&gt;N)</name>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.57639" lon="-71.36849"><name>Can 3 Quonset Ch Buoy 3 (NNE Conanicut Pt)</name></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+</rte>
+<rte><name>Z - 12.0 NM (S-&gt;N)</name>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
 <rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name></rtept>
-<rtept lat="41.50500" lon="-71.36000"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.51664" lon="-71.33422"><name>R14 East Passage Bell 14 (Bishop Rock)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+</rte>
+<rte><name>P - 12.0 NM (N-&gt;S)</name>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
+<rtept lat="41.51664" lon="-71.33422"><name>R14 East Passage Bell 14 (Bishop Rock)</name></rtept>
+<rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name></rtept>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
 </rte>
 <rte><name>T - 21.5 NM</name>
-<rtept lat="41.50500" lon="-71.36000"><name>Start/Finish off CYC (RC)</name></rtept>
-<rtept lat="41.48345" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
 <rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
-<rtept lat="41.60811" lon="-71.36002"><name>Despair Island Buoy C-1</name></rtept>
-<rtept lat="41.50500" lon="-71.36000"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.60811" lon="-71.36002"><name>G1 Despair Island (green)</name></rtept>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
 </rte>
 <rte><name>U - 21.5 NM</name>
-<rtept lat="41.50500" lon="-71.36000"><name>Start/Finish off CYC (RC)</name></rtept>
-<rtept lat="41.60811" lon="-71.36002"><name>Despair Island Buoy C-1</name></rtept>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.60811" lon="-71.36002"><name>G1 Despair Island (green)</name></rtept>
 <rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
-<rtept lat="41.48345" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
-<rtept lat="41.50500" lon="-71.36000"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
+<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
 </rte>
 </gpx>

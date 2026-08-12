@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>Newport Cup - Around Conanicut Island</name><desc>Around Conanicut Island (Newport Cup NOR). North gate = red Bell 2 (vs CYC&#x27;s green Can 3). Start/finish RC line, East Passage. Newport Bridge center span; no sailing Rose I.-Newport Bridge.</desc></metadata>
+<wpt lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><sym>Buoy</sym></wpt>
+<wpt lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name><sym>Buoy</sym></wpt>
+<rte><name>O - CW 18.1 NM (N-&gt;S)</name>
+<rtept lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name></rtept>
+<rtept lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name></rtept>
+</rte>
+<rte><name>X - CCW 18.1 NM (S-&gt;N)</name>
+<rtept lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
+<rtept lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name></rtept>
+</rte>
+</gpx>
