@@ -763,7 +763,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
    <span style="color:#888">RI Sound / approaches only &mdash; not inside the bay</span><br>
    <span style="background:linear-gradient(90deg,#2166ac,#67a9cf,#f7f7f7,#ef8a62,#b2182b);display:inline-block;width:112px;height:9px;vertical-align:middle;border:1px solid #999"></span><br>
    <span style="color:#2166ac">ebb&nbsp;(S)</span> &larr; slack &rarr; <span style="color:#b2182b">flood&nbsp;(N)</span> &middot; &plusmn;2.3&nbsp;kt, N&ndash;S</div>
- <label class="wx"><input type="checkbox" id="curflowchk"> Tidal current field &mdash; bay, sounds, Cape Cod (animated)</label>
+ <label class="wx"><input type="checkbox" id="curflowchk"> Tidal current field (animated)</label>
  <div id="curfieldleg" style="display:none;margin:1px 0 3px 18px;font-size:10px">
    <span style="background:linear-gradient(90deg,#e6f4ff,#8ec7ff,#3aa0e6,#1f6fb2,#1fae8f,#57c84d,#a8d13a,#f2d13b,#f6a020,#f2661f,#e0301e,#a11015);display:block;width:162px;height:11px;border:1px solid #999"></span>
    <div style="width:164px;display:flex;justify-content:space-between;color:#555"><span>0</span><span>0.5</span><span>1.0</span><span>1.5</span><span>2.0+</span></div>
@@ -802,7 +802,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-08-01 10:54</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-08-12 12:29</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2016,12 +2016,18 @@ async function loadFlow(){
   const j=await (await fetch(u)).json(); WINDFLO=Array.isArray(j)?j:[j];
   if(!TIMES){TIMES=WINDFLO[0].hourly.time; document.getElementById('thr').max=TIMES.length-1;}
 }
+function flowLandAt(lat,lon){ const m=CMASK; if(!m) return false;   // mask wind over land where the coastline mask covers
+  if(lat>m.la1||lat<m.la2||lon<m.lo1||lon>m.lo2) return false;       // outside mask bbox (offshore) -> keep
+  const j=Math.round((lon-m.lo1)/m.dx), i=Math.round((m.la1-lat)/m.dy);
+  if(i<0||i>=m.ny||j<0||j>=m.nx) return false; return m.mask[i*m.nx+j]==='1'; }
 function flowData(){
   const h=idxAt(WINDFLO[0]&&WINDFLO[0].hourly&&WINDFLO[0].hourly.time,targetMs());
   const NX=FLOLONS.length, NY=FLOLATS.length, u=[],v=[];
-  WINDFLO.forEach(rec=>{
+  WINDFLO.forEach((rec,idx)=>{
     const s=rec.hourly?rec.hourly.wind_speed_10m[h]:null, d=rec.hourly?rec.hourly.wind_direction_10m[h]:null;
     if(s==null||d==null){u.push(0);v.push(0);return;}
+    const la=FLOLATS[Math.floor(idx/NX)], lo=FLOLONS[idx%NX];
+    if(flowLandAt(la,lo)){ u.push(null); v.push(null); return; }              // cut out land
     const r=d*Math.PI/180; u.push(-s*Math.sin(r)); v.push(-s*Math.cos(r));   // wind FROM dir -> flow vector
   });
   const hdr=(num,name)=>({parameterUnit:'m.s-1',parameterCategory:2,parameterNumber:num,parameterNumberName:name,
@@ -2029,7 +2035,7 @@ function flowData(){
   return [{header:hdr(2,'U-component_of_wind'),data:u},{header:hdr(3,'V-component_of_wind'),data:v}];
 }
 document.getElementById('flowchk').addEventListener('change',async e=>{
-  if(e.target.checked){ try{ if(!WINDFLO) await loadFlow(); setWhen();
+  if(e.target.checked){ try{ if(!WINDFLO) await loadFlow(); try{await loadCMask();}catch(_){} setWhen();
       flowLayer=L.velocityLayer({displayValues:false,data:flowData(),
         maxVelocity:18,velocityScale:0.005,lineWidth:1.8,particleMultiplier:1/220,
         colorScale:['#8ec7ff','#4aa3ff','#3cb44b','#f0a020','#e6194b']}).addTo(map);
