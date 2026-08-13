@@ -821,7 +821,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; <a href="#" id="disclink" style="color:#0b6">Disclaimer</a> &middot; build 2026-08-13 13:41</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; <a href="#" id="disclink" style="color:#0b6">Disclaimer</a> &middot; build 2026-08-13 14:16</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2352,7 +2352,7 @@ document.getElementById('curflowchk').addEventListener('change',async e=>{
       if(!coopsLoaded) await loadCoops();            // station tidal series (markers stay hidden unless Tidal-currents toggle is on)
       setWhen(); showTbox();
       curFlowLayer=L.velocityLayer({displayValues:false,data:curFieldData(),
-        maxVelocity:2.0*0.514444,velocityScale:0.13,lineWidth:2.4,particleMultiplier:1/120,particleAge:90,
+        maxVelocity:2.0*0.514444,velocityScale:0.13,lineWidth:2.2,particleMultiplier:1/60,particleAge:70,
         colorScale:['#e6f4ff','#8ec7ff','#3aa0e6','#1f6fb2','#1fae8f','#57c84d','#a8d13a','#f2d13b','#f6a020','#f2661f','#e0301e','#a11015']}).addTo(map);
         // maxVelocity is m/s (data is m/s) = 2.0 kt; 12-stop turbo ramp -> color now matches the kt-labeled bar
       setTimeout(()=>{ if(curFlowLayer&&CMASK) curFlowLayer.setData(curFieldData()); },2500);  // repaint once CO-OPS series arrive
