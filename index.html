@@ -690,9 +690,27 @@ svg.leaflet-image-layer.leaflet-interactive path {
  .leg span{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:3px;vertical-align:middle}
  .panel.hidden{display:none}
  @media (max-width:640px){ .panel{width:70vw;max-width:270px;font-size:14px} }
+ #notfornav{position:absolute;left:50%;bottom:3px;transform:translateX(-50%);z-index:1100;
+   background:rgba(255,255,255,.85);color:#c1121f;font:bold 12px system-ui;letter-spacing:.6px;
+   padding:2px 10px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none;white-space:nowrap}
+ #discmodal{display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.55);overflow:auto;-webkit-overflow-scrolling:touch}
+ #disccard{max-width:520px;margin:5vh auto;background:#fff;border-radius:10px;padding:16px 18px;font:14px/1.45 system-ui;color:#222;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+ #discok{margin-top:14px;width:100%;padding:13px;font-size:16px;font-weight:bold;background:#0b3d66;color:#fff;border:none;border-radius:8px;cursor:pointer}
 </style></head>
 <body>
 <div id="map"></div>
+<div id="notfornav">&#9888; NOT FOR NAVIGATION</div>
+<div id="discmodal"><div id="disccard">
+  <div style="font-weight:bold;font-size:17px;color:#c1121f;margin-bottom:8px">&#9888; NOT FOR NAVIGATION</div>
+  <div style="font-size:13px">
+   <p><b>This app is for general planning, reference, and situational awareness only.</b> It is <b>not</b> a navigational aid and must <b>not</b> be relied upon for navigation, collision avoidance, or any safety-of-life decision. Always navigate using official, current NOAA charts, publications, and proper equipment.</p>
+   <p><b>Use at your own risk.</b> You alone are responsible for the safe operation of your vessel and for independently verifying any information before relying on it.</p>
+   <p><b>Data &amp; accuracy.</b> Information is aggregated from third-party sources &mdash; NOAA (ENC charts, CO-OPS currents, GoMOFS, BlueTopo), USCG Light List, Open-Meteo / NOAA HRRR, OpenStreetMap, and AIS (aisstream.io). Race courses, marks, currents, wind, depths, radar, AIS targets, and marina / VHF details are provided <b>&ldquo;as is,&rdquo;</b> may be inaccurate, incomplete, delayed, or outdated, and are <b>not independently verified</b>. Positions and marks are approximate; current and wind fields are model / interpolated estimates, not measurements; depths are for reference only.</p>
+   <p><b>No warranty / no liability.</b> Provided without warranty of any kind. The creators accept no liability for any loss, damage, or injury arising from its use. This is a personal, non-commercial project.</p>
+   <p style="color:#555">By tapping &ldquo;I understand&rdquo; you acknowledge and accept these terms.</p>
+  </div>
+  <button id="discok">I understand</button>
+</div></div>
 <div id="windywrap" style="display:none;position:absolute;inset:0;z-index:1200;background:#fff;flex-direction:column">
   <div style="flex:0 0 46px;background:#0b3d66;display:flex;align-items:center;gap:10px">
     <button id="windyclose" style="margin-left:10px;font-size:15px;font-weight:bold;padding:9px 16px;border:none;border-radius:7px;background:#fff;color:#0b3d66;cursor:pointer">&#8592; Back to Chart</button>
@@ -802,7 +820,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; build 2026-08-12 12:29</span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Start = RC line <b>W of Goat Island</b> (approx); finish = Castle Hill Light (cross when it bears 120&deg;M). Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; <a href="#" id="disclink" style="color:#0b6">Disclaimer</a> &middot; build 2026-08-13 13:36</span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -1828,7 +1846,8 @@ function showCoord(ll){ const s=ll.lat.toFixed(6)+', '+ll.lng.toFixed(6);
 map.on('click',e=>{ if(coordMode){ showCoord(e.latlng); return; }
   if(markMode){ placeMark(e.latlng); return; }
   if(drawMode){ addRoutePoint(e.latlng); return; }
-  if(map.hasLayer(bathyLayer)){ showBathyDepth(e.latlng); return; } setPanel(true); });  // coord / mark / route / bathy depth / hide menu
+  if(map.hasLayer(bathyLayer)) showBathyDepth(e.latlng);  // bathy depth AND still hide the panel (so taps can close the toolbar)
+  setPanel(true); });
 
 // ---- Esri dynamic MapServer as tiles (renders all visible layers via /export) ----
 function esriExportLayer(base, attr){
@@ -2884,6 +2903,12 @@ document.getElementById('aidschk').addEventListener('change',async e=>{
 if(document.getElementById('aidschk').checked) document.getElementById('aidschk').dispatchEvent(new Event('change'));  // load aids on start (default on)
 
 // ---- PWA: register service worker + pre-cache ENC tiles for offline use ----
+// ---- Disclaimer: one-time modal (mobile-friendly) + re-openable from the footer link ----
+(function(){ const modal=document.getElementById('discmodal'); if(!modal) return;
+  try{ if(!localStorage.getItem('sa_disc_ok')) modal.style.display='block'; }catch(e){ modal.style.display='block'; }
+  const ok=document.getElementById('discok'); if(ok) ok.addEventListener('click',()=>{ try{localStorage.setItem('sa_disc_ok','1');}catch(e){} modal.style.display='none'; });
+  const link=document.getElementById('disclink'); if(link) link.addEventListener('click',e=>{ e.preventDefault(); modal.style.display='block'; });
+})();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 const ENC_BASE='https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/ENCOnline/MapServer/exts/MaritimeChartService/MapServer';
 function encTileUrl(x,y,z){ const R=20037508.342789244,n=Math.pow(2,z),sz=2*R/n;
