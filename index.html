@@ -760,7 +760,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <input id="nbfilter" placeholder="filter by club / name / town" style="display:none;font-size:11px;width:100%;box-sizing:border-box;margin:2px 0">
  <div id="nblive" style="font-size:11px;max-height:44vh;overflow:auto"></div>
  <label style="font-size:12px;display:block;margin:2px 0">Add your own (GPX):
-   <input type="file" id="gpxfile" accept=".gpx,application/gpx+xml" style="font-size:11px;width:100%"></label>
+   <!-- no accept= : iOS Safari does not know the .gpx extension or its MIME type and greys out
+        every GPX file in the Files picker. Any non-GPX pick is caught by the parser in buildRace(). -->
+   <input type="file" id="gpxfile" style="font-size:11px;width:100%"></label>
  <label><input type="checkbox" id="raceschk" checked> Show loaded races</label>
  <div id="racelist" style="font-size:11px;color:#555"></div>
  <button id="clrgpx" style="font-size:11px;margin-top:2px">Clear all loaded races</button>
@@ -2020,7 +2022,7 @@ document.getElementById('thr').addEventListener('input',()=>{ setWhen();
   if(document.getElementById('coopschk').checked&&coopsLoaded) drawCoopsArrows(); });
 
 // ---- Animated wind flow on the ENC (leaflet-velocity + Open-Meteo, keyless) ----
-const FLO={la1:43.60,la2:40.40,lo1:-71.95,lo2:-68.00,dx:0.15,dy:0.15};  // bay -> Gulf of Maine (Biddeford ME) -> Cultivator Shoal; wind is smooth so 0.15deg is fine
+const FLO={la1:43.60,la2:40.40,lo1:-72.10,lo2:-68.00,dx:0.15,dy:0.15};  // Mystic River / Fishers I Sound -> Gulf of Maine (Biddeford ME) -> Cultivator Shoal; wind is smooth so 0.15deg is fine
 let FLOLATS=[],FLOLONS=[],WINDFLO=null,flowLayer=null;
 function floCSV(){
   FLOLATS=[];FLOLONS=[];
