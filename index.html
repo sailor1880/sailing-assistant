@@ -1945,10 +1945,26 @@ function setWhen(){ const el=document.getElementById('when'); if(!el) return;
   catch(e){ loc=t.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',hour12:true}); }
   el.textContent='Fcst: '+utc+'Z ('+loc+')'; }
 
+// Open-Meteo bills one API call PER LOCATION and caps the free tier per minute. When the cap is hit it
+// answers 429 with {error:true,reason:...} — a normal response, so fetch() resolves and does NOT throw.
+// Without this guard the error object was stored as the forecast, every u/v came out 0, and the layer
+// drew nothing with no message at all.
+async function omFetch(url){
+  const res=await fetch(url);
+  let j=null; try{ j=await res.json(); }catch(_){}
+  if(!res.ok||(j&&j.error)){
+    const why=(j&&j.reason)?j.reason:('HTTP '+res.status);
+    throw new Error(res.status===429
+      ? 'Open-Meteo request limit reached — '+why+'. Switch off a wind layer, wait a minute, then try again.'
+      : why);
+  }
+  return j;
+}
+
 async function loadWind(){
   const u='https://api.open-meteo.com/v1/forecast?latitude='+latCSV+'&longitude='+lonCSV+
     '&hourly=wind_speed_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=2&timezone=UTC';
-  const j=await (await fetch(u)).json(); WIND=Array.isArray(j)?j:[j];
+  const j=await omFetch(u); WIND=Array.isArray(j)?j:[j];
   TIMES=WIND[0].hourly.time; document.getElementById('thr').max=TIMES.length-1;
 }
 function drawWind(){ windLayer.clearLayers(); const h=idxAt(WIND[0]&&WIND[0].hourly&&WIND[0].hourly.time,targetMs());
@@ -1960,7 +1976,7 @@ function drawWind(){ windLayer.clearLayers(); const h=idxAt(WIND[0]&&WIND[0].hou
 async function loadWindH(){            // HRRR (NCEP 3km CONUS) via Open-Meteo, keyless, hourly-updated
   const u='https://api.open-meteo.com/v1/forecast?latitude='+latCSV+'&longitude='+lonCSV+
     '&hourly=wind_speed_10m,wind_direction_10m&wind_speed_unit=kn&models=ncep_hrrr_conus&forecast_days=2&timezone=UTC';
-  const j=await (await fetch(u)).json(); WINDH=Array.isArray(j)?j:[j];
+  const j=await omFetch(u); WINDH=Array.isArray(j)?j:[j];
   if(!TIMES && WINDH[0] && WINDH[0].hourly){ TIMES=WINDH[0].hourly.time; document.getElementById('thr').max=TIMES.length-1; } }
 function drawWindH(){ windhLayer.clearLayers(); const h=idxAt(WINDH[0]&&WINDH[0].hourly&&WINDH[0].hourly.time,targetMs());
   WINDH.forEach((w,i)=>{ if(!w.hourly) return; const s=w.hourly.wind_speed_10m[h], d=w.hourly.wind_direction_10m[h];
@@ -1971,7 +1987,7 @@ function drawWindH(){ windhLayer.clearLayers(); const h=idxAt(WINDH[0]&&WINDH[0]
 async function loadCur(){
   const u='https://marine-api.open-meteo.com/v1/marine?latitude='+latCSV+'&longitude='+lonCSV+
     '&hourly=ocean_current_velocity,ocean_current_direction&forecast_days=2&timezone=UTC';
-  const j=await (await fetch(u)).json(); CUR=Array.isArray(j)?j:[j];
+  const j=await omFetch(u); CUR=Array.isArray(j)?j:[j];
   if(!TIMES){TIMES=CUR[0].hourly.time; document.getElementById('thr').max=TIMES.length-1;} }
 function drawCur(){ curLayer.clearLayers(); const h=idxAt(CUR[0]&&CUR[0].hourly&&CUR[0].hourly.time,targetMs());
   CUR.forEach((w,i)=>{ if(!w.hourly) return; const v=w.hourly.ocean_current_velocity[h], d=w.hourly.ocean_current_direction[h];
@@ -2022,7 +2038,12 @@ document.getElementById('thr').addEventListener('input',()=>{ setWhen();
   if(document.getElementById('coopschk').checked&&coopsLoaded) drawCoopsArrows(); });
 
 // ---- Animated wind flow on the ENC (leaflet-velocity + Open-Meteo, keyless) ----
-const FLO={la1:43.60,la2:40.40,lo1:-72.10,lo2:-68.00,dx:0.15,dy:0.15};  // Mystic River / Fishers I Sound -> Gulf of Maine (Biddeford ME) -> Cultivator Shoal; wind is smooth so 0.15deg is fine
+// Mystic River / Fishers I Sound -> Gulf of Maine (Biddeford ME) -> Cultivator Shoal.
+// dx/dy 0.25 (was 0.15) is deliberate: Open-Meteo bills one call PER LOCATION against a per-minute
+// free-tier cap of ~600. The old 0.15deg grid was 594 points, so a single flow fetch consumed almost
+// the whole minute's budget and any other wind layer pushed it over into a silent 429. 0.25deg = 221
+// points, leaving room for the arrow layers. Wind is smooth and the layer interpolates, so it still reads well.
+const FLO={la1:43.60,la2:40.40,lo1:-72.10,lo2:-68.00,dx:0.25,dy:0.25};
 let FLOLATS=[],FLOLONS=[],WINDFLO=null,flowLayer=null;
 function floCSV(){
   FLOLATS=[];FLOLONS=[];
@@ -2035,7 +2056,7 @@ async function loadFlow(){
   const g=floCSV();
   const u='https://api.open-meteo.com/v1/forecast?latitude='+g.la+'&longitude='+g.lo+
     '&hourly=wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&forecast_days=2&timezone=UTC';
-  const j=await (await fetch(u)).json(); WINDFLO=Array.isArray(j)?j:[j];
+  const j=await omFetch(u); WINDFLO=Array.isArray(j)?j:[j];
   if(!TIMES){TIMES=WINDFLO[0].hourly.time; document.getElementById('thr').max=TIMES.length-1;}
 }
 function flowLandAt(lat,lon){ const m=CMASK; if(!m) return false;   // mask wind over land where the coastline mask covers
