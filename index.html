@@ -2179,7 +2179,7 @@ document.getElementById('precipchk').addEventListener('change',async e=>{
 // (updated in place, pruned when stale), plus a 300-vessel cap.
 const AIS_NM=5;                 // radius of interest, both the subscription box and the hard circle
 const AIS_STALE_MS=15*60000;    // keep a target on the chart for 15 min after its last position report
-const aisLayer=L.layerGroup(); let aisWS=null, aisMarkers={}, aisMoveTimer=null;
+const aisLayer=L.layerGroup(); let aisWS=null, aisMarkers={}, aisMoveTimer=null, aisSubOk=false;
 const aisOn=()=>document.getElementById('aischk').checked;
 function aisMsg(t){ const el=document.getElementById('aismsg'); if(el) el.innerHTML=t; }
 // The key lives in localStorage, so it is remembered on THIS device/browser until site data is cleared.
@@ -2192,6 +2192,10 @@ function aisSetKey(){
   if(k) localStorage.setItem('ais_key',k); else localStorage.removeItem('ais_key');
   return k; }
 function aisKey(){ return localStorage.getItem('ais_key') || aisSetKey(); }
+// [[south, west], [north, east]] - latitude ascending. aisstream's own examples disagree with each
+// other on corner order (the docs show latitude descending, the Go reference uses {{-90,-180},{90,180}}
+// for "the entire world", and the JS and Rust ones are [lon,lat]), but since their flagship whole-world
+// example is latitude-ascending the server must normalise corners. Keep the Go reference's order.
 function aisBBox(){ const c=map.getCenter(), dLat=AIS_NM/60, dLon=AIS_NM/60/Math.cos(c.lat*Math.PI/180);
   return [[c.lat-dLat,c.lng-dLon],[c.lat+dLat,c.lng+dLon]]; }
 function aisSubscribe(){ if(aisWS&&aisWS.readyState===1)
@@ -2214,7 +2218,7 @@ function aisDrawRing(){
 }
 function aisConnect(){ const key=aisKey();
   if(!key){ document.getElementById('aischk').checked=false; map.removeLayer(aisLayer); aisMsg('needs a free <b>aisstream.io</b> key'); return; }
-  aisMsg('connecting&hellip;'); aisDrawRing();
+  aisMsg('connecting&hellip;'); aisDrawRing(); aisSubOk=false;
   try{ aisWS=new WebSocket('wss://stream.aisstream.io/v0/stream'); }catch(e){ aisMsg('connect failed'); return; }
   aisWS.onopen=()=>{ aisSubscribe(); aisMsg('connected &mdash; waiting for reports&hellip;'); };
   aisWS.onmessage=ev=>{ let d; try{ d=JSON.parse(ev.data); }catch(_){ return; }
@@ -2226,6 +2230,11 @@ function aisConnect(){ const key=aisKey();
         aisMsg('key rejected &mdash; tap <b>set / change aisstream key</b> and paste it again');
       } else aisMsg('aisstream error: '+msg);
       return; }
+    // "Each accepted subscription or replacement returns a SubscriptionConfirmation; invalid
+    // subscriptions do not." So this is the definitive proof the key and the box were accepted -
+    // without it, silence is ambiguous between a bad key and simply no ships in range.
+    if(d.MessageType==='SubscriptionConfirmation'){ aisSubOk=true;
+      aisMsg('subscribed &mdash; watching '+AIS_NM+' NM, no reports yet'); return; }
     if(d.MessageType!=='PositionReport') return;
     const md=d.MetaData||{}, pr=(d.Message&&d.Message.PositionReport)||{};
     const mmsi=md.MMSI||pr.UserID; if(!mmsi) return;
@@ -2239,10 +2248,14 @@ function aisConnect(){ const key=aisKey();
     const why=(ev&&ev.reason)?String(ev.reason).slice(0,120):('code '+((ev&&ev.code)||'?'));
     aisMsg('disconnected &mdash; '+why); };
   aisWS.onerror=()=>{ aisMsg('connection error (check key / internet)'); };
-  // Watchdog: if the socket never reaches OPEN, say so instead of sitting on "connecting…" forever.
+  // Two watchdogs: one for a socket that never opens, one for a subscription that is never confirmed.
+  // An unconfirmed subscription means the key or the box was rejected - aisstream stays silent rather
+  // than replying, so without this the panel would wait forever looking merely quiet.
   const sock=aisWS;
   setTimeout(()=>{ if(aisOn() && sock && sock===aisWS && sock.readyState!==1)
     aisMsg('still connecting &mdash; check network, or re-enter the key'); },8000);
+  setTimeout(()=>{ if(aisOn() && sock && sock===aisWS && sock.readyState===1 && !aisSubOk)
+    aisMsg('connected but subscription not confirmed &mdash; the key is probably wrong; tap <b>set / change aisstream key</b>'); },10000);
 }
 function aisPlot(mmsi,lat,lon,cog,sog,name){
   const e=aisMarkers[mmsi];
