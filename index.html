@@ -2198,8 +2198,12 @@ function aisKey(){ return localStorage.getItem('ais_key') || aisSetKey(); }
 // example is latitude-ascending the server must normalise corners. Keep the Go reference's order.
 function aisBBox(){ const c=map.getCenter(), dLat=AIS_NM/60, dLon=AIS_NM/60/Math.cos(c.lat*Math.PI/180);
   return [[c.lat-dLat,c.lng-dLon],[c.lat+dLat,c.lng+dLon]]; }
+// Class A ships send PositionReport. Class B - the transponder recreational boats actually carry -
+// sends StandardClassBPositionReport / ExtendedClassBPositionReport, which the old filter excluded
+// entirely. That is why the layer only ever had commercial traffic in it.
+const AIS_TYPES=['PositionReport','StandardClassBPositionReport','ExtendedClassBPositionReport'];
 function aisSubscribe(){ if(aisWS&&aisWS.readyState===1)
-  aisWS.send(JSON.stringify({APIKey:aisKey(),BoundingBoxes:[aisBBox()],FilterMessageTypes:['PositionReport']})); }
+  aisWS.send(JSON.stringify({APIKey:aisKey(),BoundingBoxes:[aisBBox()],FilterMessageTypes:AIS_TYPES})); }
 function aisClear(){ aisLayer.clearLayers(); aisMarkers={}; aisRing=null; }
 // Status used to refresh only on the 60 s prune timer, so for the first minute the panel just said
 // "connecting…" even when everything was working - indistinguishable from a dead key. Now every
@@ -2220,8 +2224,18 @@ function aisConnect(){ const key=aisKey();
   if(!key){ document.getElementById('aischk').checked=false; map.removeLayer(aisLayer); aisMsg('needs a free <b>aisstream.io</b> key'); return; }
   aisMsg('connecting&hellip;'); aisDrawRing(); aisSubOk=false;
   try{ aisWS=new WebSocket('wss://stream.aisstream.io/v0/stream'); }catch(e){ aisMsg('connect failed'); return; }
+  // aisstream delivers BINARY frames, not text. Without this the browser hands onmessage a Blob,
+  // JSON.parse throws, the catch swallows it, and every message - including SubscriptionConfirmation -
+  // is silently discarded. The stream then backs up unconsumed and the server drops the socket with
+  // code 1006, which is what made a perfectly good key look refused.
+  aisWS.binaryType='arraybuffer';
   aisWS.onopen=()=>{ aisSubscribe(); aisMsg('connected &mdash; waiting for reports&hellip;'); };
-  aisWS.onmessage=ev=>{ let d; try{ d=JSON.parse(ev.data); }catch(_){ return; }
+  const aisDec=('TextDecoder' in window)?new TextDecoder():null;
+  aisWS.onmessage=ev=>{ let raw;
+    if(typeof ev.data==='string') raw=ev.data;
+    else if(aisDec) raw=aisDec.decode(ev.data);
+    else return;
+    let d; try{ d=JSON.parse(raw); }catch(_){ return; }
     if(d.error){ const msg=String(d.error);
       // Only forget the key when the error is actually about the key - a bad bounding box or a
       // transient server error must not wipe a perfectly good one.
@@ -2235,18 +2249,18 @@ function aisConnect(){ const key=aisKey();
     // without it, silence is ambiguous between a bad key and simply no ships in range.
     if(d.MessageType==='SubscriptionConfirmation'){ aisSubOk=true;
       aisMsg('subscribed &mdash; watching '+AIS_NM+' NM, no reports yet'); return; }
-    if(d.MessageType!=='PositionReport') return;
-    const md=d.MetaData||{}, pr=(d.Message&&d.Message.PositionReport)||{};
+    if(AIS_TYPES.indexOf(d.MessageType)<0) return;
+    const md=d.MetaData||{}, M=d.Message||{};
+    const pr=M.PositionReport||M.StandardClassBPositionReport||M.ExtendedClassBPositionReport||{};
     const mmsi=md.MMSI||pr.UserID; if(!mmsi) return;
     const lat=(md.latitude!=null?md.latitude:pr.Latitude), lon=(md.longitude!=null?md.longitude:pr.Longitude);
     if(lat==null||lon==null) return;
     if(map.distance([lat,lon],map.getCenter())/1852>AIS_NM) return;  // hard circle, the box alone is square
     aisPlot(mmsi,lat,lon,pr.Cog,pr.Sog,(md.ShipName||'').trim()||('MMSI '+mmsi)); aisStat(); };
-  // A rejected key does NOT produce an error message from aisstream - it accepts the socket, stays
-  // silent, then drops the TCP connection with no close frame. Verified against the live service: a
-  // deliberately bogus key yields exactly code 1006, reason "", zero messages, with or without a
-  // browser Origin header. So "closed before the subscription was ever confirmed" means the key was
-  // refused; a close AFTER confirmation is just a dropped connection worth retrying.
+  // A genuinely bad key yields code 1006 with no close frame and no error message (verified against
+  // the live service). But 1006 was ALSO what a good key produced while binary frames were going
+  // undecoded above: nothing was consumed, the stream backed up, and aisstream dropped the socket.
+  // With decoding fixed, a close before confirmation really does point at the key.
   aisWS.onclose=ev=>{ aisWS=null; if(!aisOn()) return;
     const code=(ev&&ev.code)||0;
     if(!aisSubOk){
