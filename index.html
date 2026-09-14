@@ -1329,6 +1329,7 @@ var Windy = function Windy(params) {
   var builder;
   var grid;
   var gridData = params.data;
+  var LANDMASK = params.landMask || null;   // optional {isLand(lon,lat)} for fine shoreline cutout
   var date;
   var λ0, φ0, Δλ, Δφ, ni, nj;
 
@@ -1345,6 +1346,7 @@ var Windy = function Windy(params) {
     if (options.hasOwnProperty("particleMultiplier")) PARTICLE_MULTIPLIER = options.particleMultiplier;
     if (options.hasOwnProperty("opacity")) OPACITY = +options.opacity;
     if (options.hasOwnProperty("frameRate")) FRAME_RATE = options.frameRate;
+    if (options.hasOwnProperty("landMask")) LANDMASK = options.landMask;
     FRAME_TIME = 1000 / FRAME_RATE;
   }; // interpolation for vectors like wind (u,v,m)
 
@@ -1475,6 +1477,10 @@ var Windy = function Windy(params) {
 
   var interpolate = function interpolate(λ, φ) {
     if (!grid) return null;
+    // Shoreline cutout is done HERE, per interpolated point, against a fine land raster -
+    // not by nulling cells of the data grid. That decouples coastline detail from grid
+    // resolution: the data grid can stay coarse and cheap while the coast stays crisp.
+    if (LANDMASK && LANDMASK.isLand(λ, φ)) return null;
     var i = floorMod(λ - λ0, 360) / Δλ; // calculate longitude index in wrapped range [0, 360)
 
     var j = (φ0 - φ) / Δφ; // calculate latitude index in direction +90 to -90
@@ -2029,13 +2035,20 @@ document.getElementById('curchk').addEventListener('change',async e=>{
   if(e.target.checked){ try{ buildGrid(); await loadCur(); setWhen(); drawCur(); curLayer.addTo(map);}
     catch(err){ alert('Current model unavailable here: '+err); e.target.checked=false; } }
   else map.removeLayer(curLayer); showTbox(); });
+// Dragging the slider fires 'input' continuously. The label updates on every event so the scrub feels
+// live, but rebuilding the fields is deferred until the drag settles - otherwise each pixel of travel
+// queued a full field rebuild and the slider became unusable on a phone.
+let thrTimer=null;
 document.getElementById('thr').addEventListener('input',()=>{ setWhen();
-  if(windOn()&&WIND) drawWind(); if(windhOn()&&WINDH) drawWindH(); if(curOn()&&CUR) drawCur();
-  if(precipOn()&&PRECIP) drawPrecip();
-  if(flowOn()&&flowLayer&&WINDFLO) flowLayer.setData(flowData());
-  if(typeof curFlowLayer!=='undefined'&&curFlowLayer&&CMASK) curFlowLayer.setData(curFieldData());
-  if(typeof gomofsLayer!=='undefined'&&gomofsLayer) gomofsLayer.setParams({time:gomofsTime()});
-  if(document.getElementById('coopschk').checked&&coopsLoaded) drawCoopsArrows(); });
+  clearTimeout(thrTimer);
+  thrTimer=setTimeout(()=>{ thrTimer=null;
+    if(windOn()&&WIND) drawWind(); if(windhOn()&&WINDH) drawWindH(); if(curOn()&&CUR) drawCur();
+    if(precipOn()&&PRECIP) drawPrecip();
+    if(flowOn()&&flowLayer&&WINDFLO) flowLayer.setData(flowData());
+    if(typeof curFlowLayer!=='undefined'&&curFlowLayer&&CMASK) curFlowLayer.setData(curFieldData());
+    if(typeof gomofsLayer!=='undefined'&&gomofsLayer) gomofsLayer.setParams({time:gomofsTime()});
+    if(document.getElementById('coopschk').checked&&coopsLoaded) drawCoopsArrows();
+  },140); });
 
 // ---- Animated wind flow on the ENC (leaflet-velocity + Open-Meteo, keyless) ----
 // Mystic River / Fishers I Sound -> Gulf of Maine (Biddeford ME) -> Cultivator Shoal.
@@ -2059,18 +2072,15 @@ async function loadFlow(){
   const j=await omFetch(u); WINDFLO=Array.isArray(j)?j:[j];
   if(!TIMES){TIMES=WINDFLO[0].hourly.time; document.getElementById('thr').max=TIMES.length-1;}
 }
-function flowLandAt(lat,lon){ const m=CMASK; if(!m) return false;   // mask wind over land where the coastline mask covers
-  if(lat>m.la1||lat<m.la2||lon<m.lo1||lon>m.lo2) return false;       // outside mask bbox (offshore) -> keep
-  const j=Math.round((lon-m.lo1)/m.dx), i=Math.round((m.la1-lat)/m.dy);
-  if(i<0||i>=m.ny||j<0||j>=m.nx) return false; return m.mask[i*m.nx+j]==='1'; }
 function flowData(){
+  // No land nulling here any more. At 0.25deg a grid cell is ~20 km, so cutting land by cell gave a
+  // coastline in enormous blocks. LANDMASK does it per interpolated point instead (see interpolate()),
+  // which follows the real shoreline regardless of how coarse this grid is.
   const h=idxAt(WINDFLO[0]&&WINDFLO[0].hourly&&WINDFLO[0].hourly.time,targetMs());
   const NX=FLOLONS.length, NY=FLOLATS.length, u=[],v=[];
-  WINDFLO.forEach((rec,idx)=>{
+  WINDFLO.forEach(rec=>{
     const s=rec.hourly?rec.hourly.wind_speed_10m[h]:null, d=rec.hourly?rec.hourly.wind_direction_10m[h]:null;
     if(s==null||d==null){u.push(0);v.push(0);return;}
-    const la=FLOLATS[Math.floor(idx/NX)], lo=FLOLONS[idx%NX];
-    if(flowLandAt(la,lo)){ u.push(null); v.push(null); return; }              // cut out land
     const r=d*Math.PI/180; u.push(-s*Math.sin(r)); v.push(-s*Math.cos(r));   // wind FROM dir -> flow vector
   });
   const hdr=(num,name)=>({parameterUnit:'m.s-1',parameterCategory:2,parameterNumber:num,parameterNumberName:name,
@@ -2079,7 +2089,7 @@ function flowData(){
 }
 document.getElementById('flowchk').addEventListener('change',async e=>{
   if(e.target.checked){ try{ if(!WINDFLO) await loadFlow(); try{await loadCMask();}catch(_){} setWhen();
-      flowLayer=L.velocityLayer({displayValues:false,data:flowData(),
+      flowLayer=L.velocityLayer({displayValues:false,data:flowData(),landMask:LANDMASK,
         maxVelocity:18,velocityScale:0.005,lineWidth:1.8,particleMultiplier:1/220,
         colorScale:['#8ec7ff','#4aa3ff','#3cb44b','#f0a020','#e6194b']}).addTo(map);
     }catch(err){ alert('Wind flow failed: '+err); e.target.checked=false; } }
@@ -2315,10 +2325,21 @@ function loadCoopsPreds(){       // MAX_SLACK events (only series NOAA publishes
       s.series=cp.map(x=>({t:Date.parse((x.Time||'').replace(' ','T')+'Z'),v:+x.Velocity_Major,
         fd:+x.meanFloodDir,ed:+x.meanEbbDir})).filter(o=>!isNaN(o.t)&&!isNaN(o.v))
         .sort((a,b2)=>a.t-b2.t);
-      if(coopsOn()) drawCoopsArrows();
-      if(curFlowLayer&&CMASK) curFlowLayer.setData(curFieldData());   // tidal series just arrived -> refresh animated field
+      scheduleCurRefresh();      // coalesced - see below
     }).catch(()=>{});
   });
+}
+// The ~196 station series arrive as ~196 separate responses. Redrawing the arrows and rebuilding
+// the whole velocity field on EVERY arrival meant ~196 full field rebuilds and ~196 restarts of the
+// particle engine, which is what made the current layer lock the UI up while it loaded. Coalesce
+// them: each arrival just resets a short timer, so the expensive work runs once after the last one.
+let curRefreshTimer=null;
+function scheduleCurRefresh(){
+  clearTimeout(curRefreshTimer);
+  curRefreshTimer=setTimeout(()=>{ curRefreshTimer=null;
+    if(coopsOn()) drawCoopsArrows();
+    if(curFlowLayer) curFlowLayer.setData(curFieldData());
+  },350);
 }
 function curAt(sr,tgt){          // cosine-interpolate signed velocity between slack/max events
   if(!sr.length) return null;
@@ -2328,13 +2349,21 @@ function curAt(sr,tgt){          // cosine-interpolate signed velocity between s
   return {v:a.v+(b.v-a.v)*(1-Math.cos(f*Math.PI))/2, fd:a.fd, ed:a.ed};
 }
 function drawCoopsArrows(){ coopsArrows.clearLayers(); const tgt=targetMs(), sz=coopsArrowSize();
+  // Viewport-culled: building all ~196 SVG divIcons meant ~196 DOM nodes rebuilt on every zoom,
+  // slider move and refresh, nearly all of them off screen. The pad keeps a margin so arrows are
+  // already there when you pan a little.
+  const vis=map.getBounds().pad(0.3);
   coopsStations.forEach(s=>{ if(!s.series||!s.series.length) return;
+    if(!vis.contains([s.lat,s.lng])) return;
     const c=curAt(s.series,tgt); if(!c) return;
     const spd=Math.abs(c.v), dir=(c.v>=0?c.fd:c.ed); if(isNaN(dir)||spd<0.1) return;
     L.marker([s.lat,s.lng],{icon:arrow(dir,curColor(spd),sz),keyboard:false})
       .bindTooltip(spd.toFixed(1)+' kt '+(c.v>=0?'flood':'ebb'),{direction:'top'}).addTo(coopsArrows); });
 }
-map.on('zoomend',()=>{ if(document.getElementById('coopschk').checked&&coopsLoaded) drawCoopsArrows(); });  // rescale arrows on zoom
+// rescale arrows on zoom, and refill them after a pan now that drawing is viewport-culled
+let coopsDrawTimer=null;
+map.on('zoomend moveend',()=>{ if(!(document.getElementById('coopschk').checked&&coopsLoaded)) return;
+  clearTimeout(coopsDrawTimer); coopsDrawTimer=setTimeout(drawCoopsArrows,150); });
 document.getElementById('coopschk').addEventListener('change',async e=>{
   if(e.target.checked){ try{ if(!coopsLoaded) await loadCoops(); coopsLayer.addTo(map); coopsArrows.addTo(map);
       drawCoopsArrows(); showTbox(); }
@@ -2342,13 +2371,35 @@ document.getElementById('coopschk').addEventListener('change',async e=>{
   else { map.removeLayer(coopsLayer); map.removeLayer(coopsArrows); showTbox(); }
 });
 
-// ---- Animated IN-BAY TIDAL CURRENT FIELD: CO-OPS station vectors (IDW) on a land-masked bay grid (curmask.json) ----
+// ---- Animated IN-BAY TIDAL CURRENT FIELD: CO-OPS station vectors (IDW) on a coarse grid, ----
+// ---- with the shoreline cut at curmask.json's much finer resolution by LANDMASK.          ----
 let CMASK=null, curFlowLayer=null;
 const curFlowOn=()=>document.getElementById('curflowchk').checked;
-async function loadCMask(){ if(!CMASK) CMASK=await (await fetch('curmask.json')).json(); return CMASK; }
+async function loadCMask(){
+  if(!CMASK){
+    const m=await (await fetch('curmask.json')).json();
+    m.bits=new Uint8Array(m.nx*m.ny);                    // '0'/'1' string -> byte array, ~10x faster to probe
+    for(let i=0;i<m.bits.length;i++) m.bits[i]=m.mask.charCodeAt(i)-48;
+    m.mask=null;                                         // release the string, keep the bytes
+    CMASK=m;
+  }
+  return CMASK;
+}
+// Probed once per interpolated screen point by the velocity layer, so it must stay cheap.
+const LANDMASK={ isLand(lon,lat){ const m=CMASK; if(!m) return false;
+  if(lat>m.la1||lat<m.la2||lon<m.lo1||lon>m.lo2) return false;      // outside the raster -> treat as open water
+  const j=(lon-m.lo1)/m.dx+0.5|0, i=(m.la1-lat)/m.dy+0.5|0;
+  if(i<0||i>=m.ny||j<0||j>=m.nx) return false;
+  return m.bits[i*m.nx+j]===1; } };
+
 const CUR_RANGE2=0.18*0.18;   // no data (blank) beyond ~18km from any station -> no phantom current in open water
+const CUR_STEP=0.006;         // IDW grid step. Independent of the mask now, so raising mask detail costs nothing here.
+function curGrid(){ const m=CMASK;
+  return {la1:m.la1,la2:m.la2,lo1:m.lo1,lo2:m.lo2,dx:CUR_STEP,dy:CUR_STEP,
+          nx:Math.round((m.lo2-m.lo1)/CUR_STEP)+1, ny:Math.round((m.la1-m.la2)/CUR_STEP)+1}; }
 function curFieldData(){
-  const g=CMASK; if(!g) return [{header:{},data:[]},{header:{},data:[]}];
+  if(!CMASK) return [{header:{},data:[]},{header:{},data:[]}];
+  const g=curGrid();
   const NX=g.nx, NY=g.ny, U=new Array(NX*NY), V=new Array(NX*NY), tgt=targetMs();
   const st=[];                                    // CO-OPS station vectors at target time (m/s, SET/toward direction)
   (coopsStations||[]).forEach(s=>{ if(!s.series||!s.series.length) return; const c=curAt(s.series,tgt); if(!c) return;
@@ -2357,7 +2408,8 @@ function curFieldData(){
   const NS=st.length, bd=new Float64Array(6), bs=new Array(6);   // nearest-6 tracker, allocated once
   for(let iy=0; iy<NY; iy++){ const la=g.la1-iy*g.dy, cs=Math.cos(la*Math.PI/180);
     for(let ix=0; ix<NX; ix++){ const idx=iy*NX+ix;
-      if(g.mask[idx]==='1'){ U[idx]=null; V[idx]=null; continue; }   // land -> no data (particles never drawn on land)
+      // Deliberately NOT skipping land here: values are carried under the coastline so that bilinear
+      // interpolation stays valid right up to the shore. LANDMASK removes them at draw time.
       const lo=g.lo1+ix*g.dx;
       bd.fill(1/0); bs.fill(null);                                   // insertion-sort nearest 6 (no allocation)
       for(let k=0;k<NS;k++){ const s=st[k], dyy=la-s.lat, dxx=(lo-s.lon)*cs, dd=dxx*dxx+dyy*dyy;
@@ -2376,7 +2428,7 @@ document.getElementById('curflowchk').addEventListener('change',async e=>{
       await loadCMask();
       if(!coopsLoaded) await loadCoops();            // station tidal series (markers stay hidden unless Tidal-currents toggle is on)
       setWhen(); showTbox();
-      curFlowLayer=L.velocityLayer({displayValues:false,data:curFieldData(),
+      curFlowLayer=L.velocityLayer({displayValues:false,data:curFieldData(),landMask:LANDMASK,
         maxVelocity:2.0*0.514444,velocityScale:0.13,lineWidth:2.2,particleMultiplier:1/60,particleAge:70,
         colorScale:['#e6f4ff','#8ec7ff','#3aa0e6','#1f6fb2','#1fae8f','#57c84d','#a8d13a','#f2d13b','#f6a020','#f2661f','#e0301e','#a11015']}).addTo(map);
         // maxVelocity is m/s (data is m/s) = 2.0 kt; 12-stop turbo ramp -> color now matches the kt-labeled bar
@@ -2586,9 +2638,11 @@ document.getElementById('sbchk').addEventListener('change',async e=>{
   else if(sbLayer) map.removeLayer(sbLayer); });
 
 // ---- Course library picker (SBRC coded courses; set model also supports 'list' type for 20HC etc.) ----
-let COURSESETS=null, sbMarksData=null, courseLine=null, curSetIdx=0, LANDMASK=null;
+let COURSESETS=null, sbMarksData=null, courseLine=null, curSetIdx=0;
 async function getSBMarks(){ if(!sbMarksData){ sbMarksData=(await (await fetch('southbay_marks.json')).json()).marks; } return sbMarksData; }
-async function getLandMask(){ if(!LANDMASK){ try{ LANDMASK=await (await fetch('curmask.json')).json(); }catch(e){ LANDMASK=null; } } return LANDMASK; }
+// Shares the one CMASK copy with the current/wind layers instead of fetching and parsing
+// curmask.json a second time - it is a much bigger raster now, so a duplicate copy is worth avoiding.
+async function getLandMask(){ try{ return await loadCMask(); }catch(e){ return null; } }
 async function loadCourseSets(){ if(COURSESETS) return COURSESETS;
   COURSESETS=(await (await fetch('courses.json')).json()).sets;
   const sel=document.getElementById('courseset'); sel.innerHTML='';
@@ -2596,9 +2650,7 @@ async function loadCourseSets(){ if(COURSESETS) return COURSESETS;
     o.textContent=(s.club?s.club+' - ':'')+s.startArea+' ('+Object.keys(s.courses).length+')'; sel.appendChild(o); });
   await getSBMarks(); await getLandMask(); fillCodes(0); return COURSESETS; }
 // curmask.json: 1=land, row-major i*nx+j (la1=north, lo1=west)
-function landAt(lat,lon){ const m=LANDMASK; if(!m) return false;
-  const j=Math.round((lon-m.lo1)/m.dx), i=Math.round((m.la1-lat)/m.dy);
-  if(i<0||i>=m.ny||j<0||j>=m.nx) return false; return m.mask[i*m.nx+j]==='1'; }
+function landAt(lat,lon){ return LANDMASK.isLand(lon,lat); }
 function legCrossesLand(a,b){ let n=0; for(let k=1;k<20;k++){ const t=k/20;
   if(landAt(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t)) n++; } return n>=2; }  // >=2 interior samples -> ignore 1-cell coastline nicks
 // perpendicular distance (m) from point p to segment a-b, plus whether it projects ONTO the segment
