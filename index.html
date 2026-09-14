@@ -807,7 +807,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <hr><b style="font-size:12px">Tracking</b>
  <label><input type="checkbox" id="gpschk"> My position (boat) &#9973;</label>
  <label style="margin-left:18px;font-size:12px"><input type="checkbox" id="followchk" checked> keep centered</label>
- <label><input type="checkbox" id="aischk"> AIS ships &mdash; live, within 10&nbsp;NM</label>
+ <label><input type="checkbox" id="aischk"> AIS ships &mdash; live, within 5&nbsp;NM</label>
  <div id="aismsg" style="margin-left:18px;font-size:11px;color:#888">needs a free <b>aisstream.io</b> key</div>
  <button id="aisembed" style="font-size:11px;margin:3px 0 0 18px;cursor:pointer;width:calc(100% - 18px)">Traffic map &mdash; no key needed</button>
  <hr><b style="font-size:12px">Track &amp; route</b>
@@ -2176,13 +2176,15 @@ document.getElementById('precipchk').addEventListener('change',async e=>{
 // ---- Live AIS ships (aisstream.io free key, wss:// - works from HTTPS PWA) ----
 // Bounded 3 ways so it never overloads: 10 NM box subscription + hard 10 NM circle filter + markers keyed by MMSI
 // (updated in place, pruned when stale), plus a 300-vessel cap.
+const AIS_NM=5;                 // radius of interest, both the subscription box and the hard circle
+const AIS_STALE_MS=15*60000;    // keep a target on the chart for 15 min after its last position report
 const aisLayer=L.layerGroup(); let aisWS=null, aisMarkers={}, aisMoveTimer=null;
 const aisOn=()=>document.getElementById('aischk').checked;
 function aisMsg(t){ const el=document.getElementById('aismsg'); if(el) el.innerHTML=t; }
 function aisKey(){ let k=localStorage.getItem('ais_key');
   if(!k){ k=(prompt('Paste your free aisstream.io API key (register at aisstream.io):')||'').trim(); if(k) localStorage.setItem('ais_key',k); }
   return k; }
-function aisBBox(){ const c=map.getCenter(), dLat=10/60, dLon=10/60/Math.cos(c.lat*Math.PI/180);   // 10 NM box around center
+function aisBBox(){ const c=map.getCenter(), dLat=AIS_NM/60, dLon=AIS_NM/60/Math.cos(c.lat*Math.PI/180);
   return [[c.lat-dLat,c.lng-dLon],[c.lat+dLat,c.lng+dLon]]; }
 function aisSubscribe(){ if(aisWS&&aisWS.readyState===1)
   aisWS.send(JSON.stringify({APIKey:aisKey(),BoundingBoxes:[aisBBox()],FilterMessageTypes:['PositionReport']})); }
@@ -2199,7 +2201,7 @@ function aisConnect(){ const key=aisKey();
     const mmsi=md.MMSI||pr.UserID; if(!mmsi) return;
     const lat=(md.latitude!=null?md.latitude:pr.Latitude), lon=(md.longitude!=null?md.longitude:pr.Longitude);
     if(lat==null||lon==null) return;
-    if(map.distance([lat,lon],map.getCenter())/1852>10) return;      // hard 10 NM circle
+    if(map.distance([lat,lon],map.getCenter())/1852>AIS_NM) return;  // hard circle, the box alone is square
     aisPlot(mmsi,lat,lon,pr.Cog,pr.Sog,(md.ShipName||'').trim()||('MMSI '+mmsi)); };
   aisWS.onclose=()=>{ aisWS=null; if(aisOn()) aisMsg('disconnected'); };
   aisWS.onerror=()=>{ aisMsg('connection error (check key / internet)'); };
@@ -2219,9 +2221,13 @@ function aisPlot(mmsi,lat,lon,cog,sog,name){
   else { const m=L.marker([lat,lon],{icon:icon,keyboard:false}).bindTooltip(tip).bindPopup(pop).addTo(aisLayer);
     aisMarkers[mmsi]={m,t:Date.now()}; }
 }
-setInterval(()=>{ if(!aisOn()) return; const now=Date.now();          // prune vessels not heard from in 10 min + show count
-  Object.keys(aisMarkers).forEach(k=>{ if(now-aisMarkers[k].t>600000){ aisLayer.removeLayer(aisMarkers[k].m); delete aisMarkers[k]; } });
-  if(aisWS&&aisWS.readyState===1) aisMsg('live · '+Object.keys(aisMarkers).length+' ships within 10 NM'); },60000);
+// aisstream PUSHES position reports as they are broadcast, so targets move as soon as a vessel
+// transmits - there is nothing to poll. AIS_STALE_MS is the other half of that: how long a target
+// stays on the chart after its last report before being treated as gone. Vessels at anchor or
+// moving slowly report only every few minutes, so 15 min stops them flickering off and back on.
+setInterval(()=>{ if(!aisOn()) return; const now=Date.now();
+  Object.keys(aisMarkers).forEach(k=>{ if(now-aisMarkers[k].t>AIS_STALE_MS){ aisLayer.removeLayer(aisMarkers[k].m); delete aisMarkers[k]; } });
+  if(aisWS&&aisWS.readyState===1) aisMsg('live &middot; '+Object.keys(aisMarkers).length+' ships within '+AIS_NM+' NM'); },60000);
 document.getElementById('aischk').addEventListener('change',e=>{
   if(e.target.checked){ aisClear(); aisLayer.addTo(map); aisConnect(); }
   else { if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } map.removeLayer(aisLayer); aisClear(); aisMsg('needs a free <b>aisstream.io</b> key'); } });
