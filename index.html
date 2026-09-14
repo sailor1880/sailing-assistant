@@ -2242,11 +2242,21 @@ function aisConnect(){ const key=aisKey();
     if(lat==null||lon==null) return;
     if(map.distance([lat,lon],map.getCenter())/1852>AIS_NM) return;  // hard circle, the box alone is square
     aisPlot(mmsi,lat,lon,pr.Cog,pr.Sog,(md.ShipName||'').trim()||('MMSI '+mmsi)); aisStat(); };
-  // Surface the close code/reason: aisstream closes the socket with a reason for a bad key or a
-  // malformed subscription, and swallowing it left every failure looking like a generic disconnect.
+  // A rejected key does NOT produce an error message from aisstream - it accepts the socket, stays
+  // silent, then drops the TCP connection with no close frame. Verified against the live service: a
+  // deliberately bogus key yields exactly code 1006, reason "", zero messages, with or without a
+  // browser Origin header. So "closed before the subscription was ever confirmed" means the key was
+  // refused; a close AFTER confirmation is just a dropped connection worth retrying.
   aisWS.onclose=ev=>{ aisWS=null; if(!aisOn()) return;
-    const why=(ev&&ev.reason)?String(ev.reason).slice(0,120):('code '+((ev&&ev.code)||'?'));
-    aisMsg('disconnected &mdash; '+why); };
+    const code=(ev&&ev.code)||0;
+    if(!aisSubOk){
+      localStorage.removeItem('ais_key');
+      aisMsg('key refused by aisstream (code '+code+') &mdash; tap <b>set / change aisstream key</b>. '+
+             'Copy it from aisstream.io &rarr; Account &rarr; API keys; a new key is shown only once.');
+      document.getElementById('aischk').checked=false; map.removeLayer(aisLayer); aisClear();
+      return; }
+    aisMsg('connection dropped (code '+code+') &mdash; reconnecting&hellip;');
+    setTimeout(()=>{ if(aisOn()&&!aisWS) aisConnect(); },4000); };
   aisWS.onerror=()=>{ aisMsg('connection error (check key / internet)'); };
   // Two watchdogs: one for a socket that never opens, one for a subscription that is never confirmed.
   // An unconfirmed subscription means the key or the box was rejected - aisstream stays silent rather
