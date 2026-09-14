@@ -2179,7 +2179,7 @@ document.getElementById('precipchk').addEventListener('change',async e=>{
 // (updated in place, pruned when stale), plus a 300-vessel cap.
 const AIS_NM=5;                 // radius of interest, both the subscription box and the hard circle
 const AIS_STALE_MS=15*60000;    // keep a target on the chart for 15 min after its last position report
-const aisLayer=L.layerGroup(); let aisWS=null, aisMarkers={}, aisMoveTimer=null, aisSubOk=false;
+const aisLayer=L.layerGroup(); let aisWS=null, aisMarkers={}, aisMoveTimer=null, aisSubOk=false, aisRetry=0;
 const aisOn=()=>document.getElementById('aischk').checked;
 function aisMsg(t){ const el=document.getElementById('aismsg'); if(el) el.innerHTML=t; }
 // The key lives in localStorage, so it is remembered on THIS device/browser until site data is cleared.
@@ -2247,7 +2247,7 @@ function aisConnect(){ const key=aisKey();
     // "Each accepted subscription or replacement returns a SubscriptionConfirmation; invalid
     // subscriptions do not." So this is the definitive proof the key and the box were accepted -
     // without it, silence is ambiguous between a bad key and simply no ships in range.
-    if(d.MessageType==='SubscriptionConfirmation'){ aisSubOk=true;
+    if(d.MessageType==='SubscriptionConfirmation'){ aisSubOk=true; aisRetry=0;
       aisMsg('subscribed &mdash; watching '+AIS_NM+' NM, no reports yet'); return; }
     if(AIS_TYPES.indexOf(d.MessageType)<0) return;
     const md=d.MetaData||{}, M=d.Message||{};
@@ -2264,14 +2264,18 @@ function aisConnect(){ const key=aisKey();
   aisWS.onclose=ev=>{ aisWS=null; if(!aisOn()) return;
     const code=(ev&&ev.code)||0;
     if(!aisSubOk){
-      // Deliberately does NOT delete the stored key. 1006-before-confirmation is how aisstream refuses
-      // a bad key, but it is ALSO what their documented "direct browser connections are not permitted"
-      // rule would look like from here, and what throttling would look like. Those are indistinguishable
-      // from the client, so throwing away a key that may be perfectly good would just add a re-paste to
-      // every failure.
-      aisMsg('aisstream closed the connection (code '+code+') before confirming. Either the key was '+
-             'refused, or browser connections are being blocked &mdash; their docs say the key is meant to '+
-             'live on a server. Try <b>Traffic map</b> below, which needs no key.');
+      // Closing before confirmation is usually aisstream throttling this key, not refusing it - so
+      // back off and retry rather than switching the layer off, which just made it "keep turning
+      // itself off". Only after three failures is it worth suspecting the key itself. The stored key
+      // is never deleted here: a key that may be perfectly good should not cost a re-paste.
+      aisRetry++;
+      if(aisRetry<=3){
+        const wait=5*Math.pow(3,aisRetry-1);                       // 5s, 15s, 45s
+        aisMsg('aisstream dropped the connection (code '+code+') &mdash; retrying in '+wait+'s ('+aisRetry+'/3)');
+        setTimeout(()=>{ if(aisOn()&&!aisWS) aisConnect(); },wait*1000);
+        return; }
+      aisMsg('aisstream refused three times (code '+code+'). Most likely the key was disabled or '+
+             'replaced &mdash; tap <b>set / change aisstream key</b>. Otherwise use <b>Traffic map</b>, which needs no key.');
       document.getElementById('aischk').checked=false; map.removeLayer(aisLayer); aisClear();
       return; }
     aisMsg('connection dropped (code '+code+') &mdash; reconnecting&hellip;');
@@ -2314,11 +2318,19 @@ document.getElementById('aiskeybtn').addEventListener('click',e=>{ e.preventDefa
   if(aisOn()){ if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } aisClear(); aisConnect(); }  // reconnect with the new key
   else aisMsg('key saved &mdash; tick <b>AIS ships</b> to connect'); });
 document.getElementById('aischk').addEventListener('change',e=>{
-  if(e.target.checked){ aisClear(); aisLayer.addTo(map); aisConnect(); }
+  if(e.target.checked){ aisRetry=0; aisClear(); aisLayer.addTo(map); aisConnect(); }
   else { if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } map.removeLayer(aisLayer); aisClear();
     aisMsg(localStorage.getItem('ais_key')?'off':'needs a free <b>aisstream.io</b> key'); } });
-map.on('moveend',()=>{ if(!aisOn()) return; clearTimeout(aisMoveTimer);   // recentre the 10 NM box on pan (reconnect for a clean new box)
-  aisMoveTimer=setTimeout(()=>{ if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } aisClear(); aisConnect(); },900); });
+// Recentre the box on pan/zoom. This used to CLOSE the socket and open a brand new one every time,
+// so a bit of pinching and panning could fire off a dozen fresh connections in a minute - and
+// aisstream throttles per key, which then refuses the next connection and looks exactly like a
+// refused key. Their docs say "Resending a subscription replaces the active configuration", so just
+// re-subscribe down the socket that is already open and only reconnect if there genuinely isn't one.
+map.on('moveend',()=>{ if(!aisOn()) return; clearTimeout(aisMoveTimer);
+  aisMoveTimer=setTimeout(()=>{
+    if(aisWS&&aisWS.readyState===1){ aisClear(); aisDrawRing(); aisSubscribe(); }
+    else if(!aisWS) aisConnect();
+  },900); });
 document.getElementById('radarchk').addEventListener('change',e=>{
   if(e.target.checked){
     radarLayer=L.tileLayer(radarUrl(),{opacity:0.7,maxZoom:18,attribution:'NEXRAD (current) &copy; IEM / Iowa State'}).addTo(map);
