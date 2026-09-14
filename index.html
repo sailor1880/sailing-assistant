@@ -809,6 +809,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <label style="margin-left:18px;font-size:12px"><input type="checkbox" id="followchk" checked> keep centered</label>
  <label><input type="checkbox" id="aischk"> AIS ships &mdash; live, within 5&nbsp;NM</label>
  <div id="aismsg" style="margin-left:18px;font-size:11px;color:#888">needs a free <b>aisstream.io</b> key</div>
+ <div style="margin-left:18px;font-size:10px"><a href="#" id="aiskeybtn" style="color:#0b6">set / change aisstream key</a></div>
  <button id="aisembed" style="font-size:11px;margin:3px 0 0 18px;cursor:pointer;width:calc(100% - 18px)">Traffic map &mdash; no key needed</button>
  <hr><b style="font-size:12px">Track &amp; route</b>
  <label><input type="checkbox" id="recchk"> Record my GPS track</label>
@@ -2181,9 +2182,16 @@ const AIS_STALE_MS=15*60000;    // keep a target on the chart for 15 min after i
 const aisLayer=L.layerGroup(); let aisWS=null, aisMarkers={}, aisMoveTimer=null;
 const aisOn=()=>document.getElementById('aischk').checked;
 function aisMsg(t){ const el=document.getElementById('aismsg'); if(el) el.innerHTML=t; }
-function aisKey(){ let k=localStorage.getItem('ais_key');
-  if(!k){ k=(prompt('Paste your free aisstream.io API key (register at aisstream.io):')||'').trim(); if(k) localStorage.setItem('ais_key',k); }
+// The key lives in localStorage, so it is remembered on THIS device/browser until site data is cleared.
+// It is never sent anywhere except aisstream.io. aisSetKey() pre-fills the current value so a typo can be
+// corrected: before this existed, a wrong key was saved permanently, because aisKey() only ever prompted
+// when nothing was stored and nothing cleared a rejected one.
+function aisSetKey(){
+  const cur=localStorage.getItem('ais_key')||'';
+  const k=(prompt('Paste your free aisstream.io API key (register free at aisstream.io).\nLeave blank to forget the saved key.',cur)||'').trim();
+  if(k) localStorage.setItem('ais_key',k); else localStorage.removeItem('ais_key');
   return k; }
+function aisKey(){ return localStorage.getItem('ais_key') || aisSetKey(); }
 function aisBBox(){ const c=map.getCenter(), dLat=AIS_NM/60, dLon=AIS_NM/60/Math.cos(c.lat*Math.PI/180);
   return [[c.lat-dLat,c.lng-dLon],[c.lat+dLat,c.lng+dLon]]; }
 function aisSubscribe(){ if(aisWS&&aisWS.readyState===1)
@@ -2195,7 +2203,14 @@ function aisConnect(){ const key=aisKey();
   try{ aisWS=new WebSocket('wss://stream.aisstream.io/v0/stream'); }catch(e){ aisMsg('connect failed'); return; }
   aisWS.onopen=()=>{ aisSubscribe(); };
   aisWS.onmessage=ev=>{ let d; try{ d=JSON.parse(ev.data); }catch(_){ return; }
-    if(d.error){ aisMsg('key rejected: '+d.error); return; }
+    if(d.error){ const msg=String(d.error);
+      // Only forget the key when the error is actually about the key - a bad bounding box or a
+      // transient server error must not wipe a perfectly good one.
+      if(/api\s*key|apikey|unauthor|invalid|forbidden|not\s*valid/i.test(msg)){
+        localStorage.removeItem('ais_key');
+        aisMsg('key rejected &mdash; tap <b>set / change aisstream key</b> and paste it again');
+      } else aisMsg('aisstream error: '+msg);
+      return; }
     if(d.MessageType!=='PositionReport') return;
     const md=d.MetaData||{}, pr=(d.Message&&d.Message.PositionReport)||{};
     const mmsi=md.MMSI||pr.UserID; if(!mmsi) return;
@@ -2228,6 +2243,11 @@ function aisPlot(mmsi,lat,lon,cog,sog,name){
 setInterval(()=>{ if(!aisOn()) return; const now=Date.now();
   Object.keys(aisMarkers).forEach(k=>{ if(now-aisMarkers[k].t>AIS_STALE_MS){ aisLayer.removeLayer(aisMarkers[k].m); delete aisMarkers[k]; } });
   if(aisWS&&aisWS.readyState===1) aisMsg('live &middot; '+Object.keys(aisMarkers).length+' ships within '+AIS_NM+' NM'); },60000);
+document.getElementById('aiskeybtn').addEventListener('click',e=>{ e.preventDefault();
+  const k=aisSetKey();
+  if(!k){ aisMsg('needs a free <b>aisstream.io</b> key'); return; }
+  if(aisOn()){ if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } aisClear(); aisConnect(); }  // reconnect with the new key
+  else aisMsg('key saved &mdash; tick <b>AIS ships</b> to connect'); });
 document.getElementById('aischk').addEventListener('change',e=>{
   if(e.target.checked){ aisClear(); aisLayer.addTo(map); aisConnect(); }
   else { if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } map.removeLayer(aisLayer); aisClear(); aisMsg('needs a free <b>aisstream.io</b> key'); } });
