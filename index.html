@@ -2250,9 +2250,14 @@ function aisConnect(){ const key=aisKey();
   aisWS.onclose=ev=>{ aisWS=null; if(!aisOn()) return;
     const code=(ev&&ev.code)||0;
     if(!aisSubOk){
-      localStorage.removeItem('ais_key');
-      aisMsg('key refused by aisstream (code '+code+') &mdash; tap <b>set / change aisstream key</b>. '+
-             'Copy it from aisstream.io &rarr; Account &rarr; API keys; a new key is shown only once.');
+      // Deliberately does NOT delete the stored key. 1006-before-confirmation is how aisstream refuses
+      // a bad key, but it is ALSO what their documented "direct browser connections are not permitted"
+      // rule would look like from here, and what throttling would look like. Those are indistinguishable
+      // from the client, so throwing away a key that may be perfectly good would just add a re-paste to
+      // every failure.
+      aisMsg('aisstream closed the connection (code '+code+') before confirming. Either the key was '+
+             'refused, or browser connections are being blocked &mdash; their docs say the key is meant to '+
+             'live on a server. Try <b>Traffic map</b> below, which needs no key.');
       document.getElementById('aischk').checked=false; map.removeLayer(aisLayer); aisClear();
       return; }
     aisMsg('connection dropped (code '+code+') &mdash; reconnecting&hellip;');
