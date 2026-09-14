@@ -714,7 +714,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="windywrap" style="display:none;position:absolute;inset:0;z-index:1200;background:#fff;flex-direction:column">
   <div style="flex:0 0 46px;background:#0b3d66;display:flex;align-items:center;gap:10px">
     <button id="windyclose" style="margin-left:10px;font-size:15px;font-weight:bold;padding:9px 16px;border:none;border-radius:7px;background:#fff;color:#0b3d66;cursor:pointer">&#8592; Back to Chart</button>
-    <span style="color:#cfe3f5;font-size:13px">Windy weather &mdash; tap Back to return</span>
+    <span id="windylabel" style="color:#cfe3f5;font-size:13px">Windy weather &mdash; tap Back to return</span>
   </div>
   <iframe id="windyframe" style="flex:1 1 auto;width:100%;border:0" allow="fullscreen"></iframe>
 </div>
@@ -809,6 +809,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <label style="margin-left:18px;font-size:12px"><input type="checkbox" id="followchk" checked> keep centered</label>
  <label><input type="checkbox" id="aischk"> AIS ships &mdash; live, within 10&nbsp;NM</label>
  <div id="aismsg" style="margin-left:18px;font-size:11px;color:#888">needs a free <b>aisstream.io</b> key</div>
+ <button id="aisembed" style="font-size:11px;margin:3px 0 0 18px;cursor:pointer;width:calc(100% - 18px)">Traffic map &mdash; no key needed</button>
  <hr><b style="font-size:12px">Track &amp; route</b>
  <label><input type="checkbox" id="recchk"> Record my GPS track</label>
  <label><input type="checkbox" id="drawchk"> Draw a route (tap map)</label>
@@ -2109,6 +2110,24 @@ document.getElementById('windybtn').addEventListener('click',()=>{
 document.getElementById('windyclose').addEventListener('click',()=>{
   document.getElementById('windywrap').style.display='none';
   document.getElementById('windyframe').src='about:blank';
+  document.getElementById('windylabel').textContent='Windy weather — tap Back to return';
+});
+// ---- Nearby shipping WITHOUT an API key: VesselFinder's free embed, reusing the Windy overlay ----
+// aisstream.io (the 'AIS ships' layer above) gives real targets on THIS chart, but it needs a free key
+// and its docs say browsers must not connect to it directly - the key is meant to live on a server that
+// proxies to clients. This embed needs no key, no account and no server, at the cost of being a separate
+// map rather than an overlay: no CPA, no range/bearing, no integration with the rest of the app.
+// URL is built exactly as vesselfinder's own aismap.js builds it, including the ra= referring-page field.
+document.getElementById('aisembed').addEventListener('click',()=>{
+  const c=(typeof boatMarker!=='undefined'&&boatMarker)?boatMarker.getLatLng():map.getCenter();  // your GPS if tracking, else map centre
+  const src='https://www.vesselfinder.com/aismap?zoom=13'+          // zoom 13 ~ 3 NM across a phone screen
+    '&lat='+c.lat.toFixed(4)+'&lon='+c.lng.toFixed(4)+
+    '&width=100%25&height=400&names=true&track=false'+
+    '&fleet=false&fleet_name=false&fleet_hide_old_positions=false'+
+    '&clicktoact=false&store_pos=false&ra='+encodeURIComponent(location.href);
+  document.getElementById('windylabel').textContent='Nearby shipping (VesselFinder) — AIS transponders only';
+  document.getElementById('windyframe').src=src;
+  document.getElementById('windywrap').style.display='flex';
 });
 document.getElementById('windycourses').addEventListener('click',()=>{ location.href='windy.html'; });
 
