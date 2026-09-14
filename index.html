@@ -2349,13 +2349,21 @@ function curAt(sr,tgt){          // cosine-interpolate signed velocity between s
   return {v:a.v+(b.v-a.v)*(1-Math.cos(f*Math.PI))/2, fd:a.fd, ed:a.ed};
 }
 function drawCoopsArrows(){ coopsArrows.clearLayers(); const tgt=targetMs(), sz=coopsArrowSize();
+  // Viewport-culled: building all ~196 SVG divIcons meant ~196 DOM nodes rebuilt on every zoom,
+  // slider move and refresh, nearly all of them off screen. The pad keeps a margin so arrows are
+  // already there when you pan a little.
+  const vis=map.getBounds().pad(0.3);
   coopsStations.forEach(s=>{ if(!s.series||!s.series.length) return;
+    if(!vis.contains([s.lat,s.lng])) return;
     const c=curAt(s.series,tgt); if(!c) return;
     const spd=Math.abs(c.v), dir=(c.v>=0?c.fd:c.ed); if(isNaN(dir)||spd<0.1) return;
     L.marker([s.lat,s.lng],{icon:arrow(dir,curColor(spd),sz),keyboard:false})
       .bindTooltip(spd.toFixed(1)+' kt '+(c.v>=0?'flood':'ebb'),{direction:'top'}).addTo(coopsArrows); });
 }
-map.on('zoomend',()=>{ if(document.getElementById('coopschk').checked&&coopsLoaded) drawCoopsArrows(); });  // rescale arrows on zoom
+// rescale arrows on zoom, and refill them after a pan now that drawing is viewport-culled
+let coopsDrawTimer=null;
+map.on('zoomend moveend',()=>{ if(!(document.getElementById('coopschk').checked&&coopsLoaded)) return;
+  clearTimeout(coopsDrawTimer); coopsDrawTimer=setTimeout(drawCoopsArrows,150); });
 document.getElementById('coopschk').addEventListener('change',async e=>{
   if(e.target.checked){ try{ if(!coopsLoaded) await loadCoops(); coopsLayer.addTo(map); coopsArrows.addTo(map);
       drawCoopsArrows(); showTbox(); }
