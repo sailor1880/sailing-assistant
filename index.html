@@ -2196,12 +2196,27 @@ function aisBBox(){ const c=map.getCenter(), dLat=AIS_NM/60, dLon=AIS_NM/60/Math
   return [[c.lat-dLat,c.lng-dLon],[c.lat+dLat,c.lng+dLon]]; }
 function aisSubscribe(){ if(aisWS&&aisWS.readyState===1)
   aisWS.send(JSON.stringify({APIKey:aisKey(),BoundingBoxes:[aisBBox()],FilterMessageTypes:['PositionReport']})); }
-function aisClear(){ aisLayer.clearLayers(); aisMarkers={}; }
+function aisClear(){ aisLayer.clearLayers(); aisMarkers={}; aisRing=null; }
+// Status used to refresh only on the 60 s prune timer, so for the first minute the panel just said
+// "connecting…" even when everything was working - indistinguishable from a dead key. Now every
+// position report refreshes the count, throttled so a busy harbour cannot spam the DOM.
+let aisStatTimer=null;
+function aisStat(){ if(aisStatTimer) return;
+  aisStatTimer=setTimeout(()=>{ aisStatTimer=null;
+    if(aisWS&&aisWS.readyState===1)
+      aisMsg('live &middot; '+Object.keys(aisMarkers).length+' ship(s) within '+AIS_NM+' NM'); },1500); }
+// A visible search circle, so "nothing shows up" reads as "working, nothing in range" rather than broken.
+let aisRing=null;
+function aisDrawRing(){
+  const c=map.getCenter();
+  if(aisRing) aisLayer.removeLayer(aisRing);   // it lives in aisLayer, not on the map directly
+  aisRing=L.circle(c,{radius:AIS_NM*1852,color:'#8e24aa',weight:1,dashArray:'5 5',fill:false,interactive:false}).addTo(aisLayer);
+}
 function aisConnect(){ const key=aisKey();
   if(!key){ document.getElementById('aischk').checked=false; map.removeLayer(aisLayer); aisMsg('needs a free <b>aisstream.io</b> key'); return; }
-  aisMsg('connecting…');
+  aisMsg('connecting&hellip;'); aisDrawRing();
   try{ aisWS=new WebSocket('wss://stream.aisstream.io/v0/stream'); }catch(e){ aisMsg('connect failed'); return; }
-  aisWS.onopen=()=>{ aisSubscribe(); };
+  aisWS.onopen=()=>{ aisSubscribe(); aisMsg('connected &mdash; waiting for reports&hellip;'); };
   aisWS.onmessage=ev=>{ let d; try{ d=JSON.parse(ev.data); }catch(_){ return; }
     if(d.error){ const msg=String(d.error);
       // Only forget the key when the error is actually about the key - a bad bounding box or a
@@ -2217,9 +2232,17 @@ function aisConnect(){ const key=aisKey();
     const lat=(md.latitude!=null?md.latitude:pr.Latitude), lon=(md.longitude!=null?md.longitude:pr.Longitude);
     if(lat==null||lon==null) return;
     if(map.distance([lat,lon],map.getCenter())/1852>AIS_NM) return;  // hard circle, the box alone is square
-    aisPlot(mmsi,lat,lon,pr.Cog,pr.Sog,(md.ShipName||'').trim()||('MMSI '+mmsi)); };
-  aisWS.onclose=()=>{ aisWS=null; if(aisOn()) aisMsg('disconnected'); };
+    aisPlot(mmsi,lat,lon,pr.Cog,pr.Sog,(md.ShipName||'').trim()||('MMSI '+mmsi)); aisStat(); };
+  // Surface the close code/reason: aisstream closes the socket with a reason for a bad key or a
+  // malformed subscription, and swallowing it left every failure looking like a generic disconnect.
+  aisWS.onclose=ev=>{ aisWS=null; if(!aisOn()) return;
+    const why=(ev&&ev.reason)?String(ev.reason).slice(0,120):('code '+((ev&&ev.code)||'?'));
+    aisMsg('disconnected &mdash; '+why); };
   aisWS.onerror=()=>{ aisMsg('connection error (check key / internet)'); };
+  // Watchdog: if the socket never reaches OPEN, say so instead of sitting on "connecting…" forever.
+  const sock=aisWS;
+  setTimeout(()=>{ if(aisOn() && sock && sock===aisWS && sock.readyState!==1)
+    aisMsg('still connecting &mdash; check network, or re-enter the key'); },8000);
 }
 function aisPlot(mmsi,lat,lon,cog,sog,name){
   const e=aisMarkers[mmsi];
@@ -2250,7 +2273,8 @@ document.getElementById('aiskeybtn').addEventListener('click',e=>{ e.preventDefa
   else aisMsg('key saved &mdash; tick <b>AIS ships</b> to connect'); });
 document.getElementById('aischk').addEventListener('change',e=>{
   if(e.target.checked){ aisClear(); aisLayer.addTo(map); aisConnect(); }
-  else { if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } map.removeLayer(aisLayer); aisClear(); aisMsg('needs a free <b>aisstream.io</b> key'); } });
+  else { if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } map.removeLayer(aisLayer); aisClear();
+    aisMsg(localStorage.getItem('ais_key')?'off':'needs a free <b>aisstream.io</b> key'); } });
 map.on('moveend',()=>{ if(!aisOn()) return; clearTimeout(aisMoveTimer);   // recentre the 10 NM box on pan (reconnect for a clean new box)
   aisMoveTimer=setTimeout(()=>{ if(aisWS){ try{aisWS.close();}catch(_){} aisWS=null; } aisClear(); aisConnect(); },900); });
 document.getElementById('radarchk').addEventListener('change',e=>{
