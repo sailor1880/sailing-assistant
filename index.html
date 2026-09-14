@@ -2043,7 +2043,7 @@ document.getElementById('thr').addEventListener('input',()=>{ setWhen();
 // free-tier cap of ~600. The old 0.15deg grid was 594 points, so a single flow fetch consumed almost
 // the whole minute's budget and any other wind layer pushed it over into a silent 429. 0.25deg = 221
 // points, leaving room for the arrow layers. Wind is smooth and the layer interpolates, so it still reads well.
-const FLO={la1:43.60,la2:40.40,lo1:-72.10,lo2:-68.00,dx:0.25,dy:0.25};
+const FLO={la1:43.60,la2:40.40,lo1:-72.30,lo2:-68.00,dx:0.25,dy:0.25};
 let FLOLATS=[],FLOLONS=[],WINDFLO=null,flowLayer=null;
 function floCSV(){
   FLOLATS=[];FLOLONS=[];
@@ -2291,8 +2291,10 @@ function ymd(d){ return ''+d.getUTCFullYear()+String(d.getUTCMonth()+1).padStart
 async function loadCoops(){
   const u='https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json?type=currentpredictions';
   const j=await (await fetch(u)).json();
-  const seen=new Set();     // region: Narragansett Bay + Block Island/RI Sound + Buzzards + Vineyard/Nantucket Sound + Cape Cod; dedup by id
-  coopsStations=(j.stations||[]).filter(s=>s.lat>40.90&&s.lat<42.05&&s.lng>-71.75&&s.lng<-69.80&&!seen.has(s.id)&&seen.add(s.id)).slice(0,220);
+  const seen=new Set();     // region: Fishers I Sound/New London/Thames + Narragansett Bay + Block Island/RI Sound
+  // + Buzzards + Vineyard/Nantucket Sound + Cape Cod; dedup by id. West edge -72.30 (was -71.75) matches
+  // the widened curmask.json and pulls in the 56 stations around Mystic, the Race, Plum Gut and Niantic.
+  coopsStations=(j.stations||[]).filter(s=>s.lat>40.90&&s.lat<42.05&&s.lng>-72.30&&s.lng<-69.80&&!seen.has(s.id)&&seen.add(s.id)).slice(0,220);
   coopsStations.forEach(s=>{
     s.marker=L.circleMarker([s.lat,s.lng],{radius:4,color:'#023e8a',weight:1,fillColor:'#90e0ef',fillOpacity:1})
       .bindTooltip(s.name,{direction:'top'})
