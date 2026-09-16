@@ -589,6 +589,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-tooltip.measlbl{background:rgba(255,255,255,.92);border:1px solid #0b3d66;color:#0b3d66;
   font:bold 11px/1.2 system-ui,sans-serif;padding:1px 4px;border-radius:4px;box-shadow:none;white-space:nowrap}
 .leaflet-tooltip.measlbl:before{display:none}
+.leaflet-tooltip.leglbl{border-color:#0a7d2c;color:#0a7d2c}      /* route legs: same label, route green */
+#routeinfo table{font-size:11px;border-collapse:collapse;margin:1px 0}
+#routeinfo td{padding:0 7px 0 0} #routeinfo .r{text-align:right} #routeinfo .c{color:#888}
 /* Tooltip */
 /* Base styles for the element that has a tooltip */
 .leaflet-tooltip {
@@ -1861,6 +1864,19 @@ const panelEl=document.getElementById('panel'), collapseEl=document.getElementBy
 function setPanel(hidden){ panelEl.classList.toggle('hidden',hidden); }
 collapseEl.addEventListener('click',()=>setPanel(!panelEl.classList.contains('hidden')));
 let drawMode=false, markMode=false, coordMode=false, measMode=false, ringMode=false, routePts=[], routeLine=null;
+// Magnetic variation for Narragansett Bay, ~14.5 deg WEST (2026): magnetic = true + 14.5.
+// Declared up here, not with the measure tool, because the saved route is restored and drawn (with
+// magnetic leg bearings) long before the measure section runs - a later const would be in its
+// temporal dead zone at that point and throw, taking the whole page down.
+const MAGVAR_W=14.5;
+// Only one tap mode can own a map tap: the click handler checks them in a fixed order and the first
+// match consumes the tap, so e.g. Measure + Draw route both ticked meant Draw silently got nothing.
+// Ticking any of these unticks the rest.
+const TAP_MODES={drawchk:v=>{drawMode=v;}, markmode:v=>{markMode=v;}, coordmode:v=>{coordMode=v;},
+                 measmode:v=>{measMode=v; if(!v) measA=null;}, ringmode:v=>{ringMode=v;}};
+function exclusiveTap(keep){
+  Object.keys(TAP_MODES).forEach(id=>{ if(id===keep) return;
+    const el=document.getElementById(id); if(el&&el.checked){ el.checked=false; TAP_MODES[id](false); } }); }
 function showCoord(ll){ const s=ll.lat.toFixed(6)+', '+ll.lng.toFixed(6);
   L.popup().setLatLng(ll).setContent('<b>'+s+'</b><br><a href="#" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+s+'\');this.textContent=\'\\u2713 copied\';return false;">copy</a>').openOn(map); }
 map.on('click',e=>{ if(coordMode){ showCoord(e.latlng); return; }
@@ -2628,23 +2644,39 @@ document.getElementById('clrtrack').onclick=()=>{ if(!confirm('Erase the recorde
 
 // ---- Draw a route by tapping the map ----
 const routeMarks=L.layerGroup().addTo(map);
+const routeLegs=L.layerGroup().addTo(map);      // per-leg distance + bearing labels on the chart
 function addRoutePoint(ll){ routePts.push(ll); drawRoute(); }
 function wpIcon(){ return L.divIcon({className:'',iconSize:[18,18],iconAnchor:[9,9],
   html:'<div style="width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #0a7d2c;box-shadow:0 0 2px rgba(0,0,0,.6)"></div>'}); }
-function routeInfo(){ let d=0; for(let i=1;i<routePts.length;i++) d+=map.distance(routePts[i-1],routePts[i]);
-  document.getElementById('routeinfo').textContent = routePts.length
-    ? routePts.length+' pts · '+(d/1852).toFixed(2)+' NM'+(routePts.length>1?'  (drag dots; tap to delete)':'') : ''; }
+function legNm(a,b){ return map.distance(a,b)/1852; }
+function legLbl(nm){ return nm<0.5 ? Math.round(nm*1852)+' m' : nm.toFixed(2)+' NM'; }   // metres on short legs
+function legBrgM(a,b){ return String(Math.round((brgTrue([a.lat,a.lng],[b.lat,b.lng])+MAGVAR_W)%360)%360).padStart(3,'0'); }
+function drawLegLabels(){ routeLegs.clearLayers();
+  for(let i=1;i<routePts.length;i++){ const a=routePts[i-1], b=routePts[i];
+    L.tooltip({permanent:true,direction:'center',className:'measlbl leglbl',interactive:false})
+      .setLatLng([(a.lat+b.lat)/2,(a.lng+b.lng)/2])
+      .setContent(legLbl(legNm(a,b))+' · '+legBrgM(a,b)+'°M').addTo(routeLegs); } }
+function routeInfo(){ const el=document.getElementById('routeinfo');
+  if(!routePts.length){ el.innerHTML=''; return; }
+  let tot=0, rows='';
+  for(let i=1;i<routePts.length;i++){ const a=routePts[i-1], b=routePts[i], nm=legNm(a,b); tot+=nm;
+    rows+='<tr><td>'+i+'&rarr;'+(i+1)+'</td><td class="r">'+legLbl(nm)+'</td><td>'+legBrgM(a,b)+'&deg;M</td>'+
+          '<td class="r c">'+tot.toFixed(2)+'</td></tr>'; }
+  el.innerHTML='<b>Total '+tot.toFixed(2)+' NM</b> &middot; '+(routePts.length-1)+' leg'+(routePts.length===2?'':'s')+
+    ' &middot; '+routePts.length+' pts'+
+    (rows?'<table><tr class="c"><td>leg</td><td class="r">dist</td><td>brg</td><td class="r">cum NM</td></tr>'+rows+'</table>'+
+          '<span class="c">drag dots to move &middot; tap a dot to delete</span>':''); }
 window.removeWp=function(i){ routePts.splice(i,1); drawRoute(); };
 function drawRoute(){
   if(!routeLine) routeLine=L.polyline([],{color:'#0a7d2c',weight:3,dashArray:'6 4'}).addTo(map);
   routeLine.setLatLngs(routePts); routeMarks.clearLayers();
   routePts.forEach((p,i)=>{
     const m=L.marker(p,{icon:wpIcon(),draggable:true,keyboard:false,zIndexOffset:500}).addTo(routeMarks);
-    const upd=ev=>{ routePts[i]=ev.target.getLatLng(); routeLine.setLatLngs(routePts); routeInfo(); saveRoute(); };
+    const upd=ev=>{ routePts[i]=ev.target.getLatLng(); routeLine.setLatLngs(routePts); drawLegLabels(); routeInfo(); saveRoute(); };
     m.on('drag',upd); m.on('dragend',upd);
     m.bindPopup('Waypoint '+(i+1)+'<br><a href="#" onclick="removeWp('+i+');return false;">Delete point</a>');
   });
-  routeInfo(); saveRoute();
+  drawLegLabels(); routeInfo(); saveRoute();
 }
 function saveRoute(){ try{ localStorage.setItem('sa_route', JSON.stringify(routePts.map(p=>[p.lat,p.lng]))); }catch(e){} }
 (function(){ try{ const r=JSON.parse(localStorage.getItem('sa_route')||'[]');
@@ -2656,7 +2688,7 @@ function eachClickable(fn){                 // interactive overlays that would o
 }
 function setDrawPassthrough(on){ map.closePopup();      // draw mode -> taps fall through to the map
   eachClickable(l=>{ const el=l&&(l._path||l._icon); if(el) el.style.pointerEvents=on?'none':''; }); }
-document.getElementById('drawchk').addEventListener('change',e=>{ drawMode=e.target.checked;
+document.getElementById('drawchk').addEventListener('change',e=>{ if(e.target.checked) exclusiveTap('drawchk'); drawMode=e.target.checked;
   map.getContainer().style.cursor=anyTapMode()?'crosshair':''; setDrawPassthrough(anyTapMode()); });
 document.getElementById('undobtn').onclick =()=>{ routePts.pop(); drawRoute(); };
 document.getElementById('clrroute').onclick=()=>{ routePts=[]; drawRoute(); };
@@ -2752,9 +2784,8 @@ function placeMark(ll){ const dflt=String.fromCharCode(65+(myMarks.length%26));
 function anyTapMode(){ return drawMode||markMode||coordMode||measMode||ringMode; }
 
 // ---- Measure: A-to-B range & bearing, and dropped range rings ----
-// Magnetic variation for Narragansett Bay, ~14.5 deg WEST (2026). Bearings are shown both ways
-// because the chart and the SIs talk in degrees magnetic while the maths is naturally true.
-const MAGVAR_W=14.5;
+// Bearings are shown in true and magnetic because the chart and the SIs talk in degrees magnetic while
+// the maths is naturally true. MAGVAR_W is declared up with the tap-mode state (see the note there).
 const RING_NM=[0.5,1,2,3,5];
 const measLayer=L.layerGroup(), ringLayer=L.layerGroup();
 let measA=null;
@@ -2792,17 +2823,17 @@ function dropRings(ll){
 }
 function measToggle(){ const on=anyTapMode();
   map.getContainer().style.cursor=on?'crosshair':''; setDrawPassthrough(on); }
-document.getElementById('measmode').addEventListener('change',e=>{ measMode=e.target.checked;
+document.getElementById('measmode').addEventListener('change',e=>{ if(e.target.checked) exclusiveTap('measmode'); measMode=e.target.checked;
   if(measMode){ measLayer.addTo(map); measA=null; measOut('tap A, then B'); }
   measToggle(); });
-document.getElementById('ringmode').addEventListener('change',e=>{ ringMode=e.target.checked;
+document.getElementById('ringmode').addEventListener('change',e=>{ if(e.target.checked) exclusiveTap('ringmode'); ringMode=e.target.checked;
   if(ringMode){ ringLayer.addTo(map); measOut('tap to drop the ring centre'); }
   measToggle(); });
 document.getElementById('clrmeas').onclick=()=>{ measLayer.clearLayers(); ringLayer.clearLayers();
   measA=null; measOut(''); };
-document.getElementById('markmode').addEventListener('change',e=>{ markMode=e.target.checked;
+document.getElementById('markmode').addEventListener('change',e=>{ if(e.target.checked) exclusiveTap('markmode'); markMode=e.target.checked;
   map.getContainer().style.cursor=anyTapMode()?'crosshair':''; setDrawPassthrough(anyTapMode()); });
-document.getElementById('coordmode').addEventListener('change',e=>{ coordMode=e.target.checked;
+document.getElementById('coordmode').addEventListener('change',e=>{ if(e.target.checked) exclusiveTap('coordmode'); coordMode=e.target.checked;
   map.getContainer().style.cursor=anyTapMode()?'crosshair':''; setDrawPassthrough(anyTapMode()); });
 document.getElementById('clrmarks').onclick=()=>{ if(!myMarks.length) return; if(!confirm('Clear all your manually-placed marks?')) return;
   myMarks=[]; drawMyMarks(); renderMyMarks(); persistMarks(); };
