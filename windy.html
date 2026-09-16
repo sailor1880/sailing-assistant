@@ -17,7 +17,9 @@
 <a id="back" href="index.html">&#8592; Chart</a>
 <div id="msg">Loading Windy&hellip;</div>
 <script>
-const D = {"marks": {"CH": {"lat": 41.46217611111111, "lon": -71.36291999999999, "llnr": "17795", "name": "Castle Hill Light", "short": "Castle Hill Light (Finish, east end of line)"}, "R4": {"lat": 41.14548805555555, "lon": -71.62246888888889, "llnr": "19735", "name": "Southwest Point Lighted Whistle Buoy 4", "short": "R \"4\" Fl R 6s Whistle"}, "R2": {"lat": 41.307692499999995, "lon": -71.47245333333333, "llnr": "19460", "name": "Point Judith Lighted Buoy 2", "short": "R \"2\" Fl R 4s Whistle"}, "R32": {"lat": 41.36804194444444, "lon": -70.95697277777778, "llnr": "15613", "name": "Vineyard Sound Entrance Lighted Whistle Buoy 32", "short": "R \"32\" Fl R 2.5s Whistle"}, "G5": {"lat": 41.210170833333336, "lon": -71.53385805555556, "llnr": "19685", "name": "Block Island Northeast Whistle Buoy 5", "short": "G \"5\" Whistle"}, "BB": {"lat": 41.39698666666666, "lon": -71.03468805555555, "llnr": "15985", "name": "Buzzards Bay Entrance Light", "short": "Buzzards Bay Entrance Light Fl W 2.5s"}, "NB": {"lat": 41.38334277777778, "lon": -71.38930055555556, "llnr": "17675", "name": "Narragansett Bay Entrance Lighted Whistle Buoy (Mo(A)W, AIS MMSI 993672153)", "short": "RW \"NB\" Mo(A)W"}, "G1BI": {"lat": 41.25731305555556, "lon": -71.57593277777778, "llnr": "19475", "name": "Block Island North Reef Lighted Bell Buoy 1BI", "short": "G \"1BI\" Fl G 4s Bell"}, "VM1": {"lat": 40.63333333333333, "lon": -71.61666666666666, "llnr": null, "name": "Virtual Mark 1 (SI: 40-38-00N / 071-37-00W)", "short": "Virtual Mark 1"}, "VM2": {"lat": 40.71666666666667, "lon": -71.18333333333334, "llnr": null, "name": "Virtual Mark 2 (SI: 40-43-00N / 071-11-00W)", "short": "Virtual Mark 2"}, "START": {"lat": 41.4915, "lon": -71.336, "llnr": null, "name": "Start area - RC-set line west of Goat Island (SI 7.1); approximate, not a fixed aid", "short": "START (W of Goat Island)"}}, "courses": [{"code": "A", "dist": "120 NM", "seq": ["START", "R4", "VM1", "VM2", "R2", "CH"], "color": "#e6194b"}, {"code": "B", "dist": "103 NM", "seq": ["START", "R4", "R32", "G5", "CH"], "color": "#f58231"}, {"code": "C", "dist": "93 NM", "seq": ["START", "R4", "R32", "R2", "CH"], "color": "#3cb44b"}, {"code": "D", "dist": "77.2 NM", "seq": ["START", "R4", "BB", "NB", "CH"], "color": "#4363d8"}, {"code": "E", "dist": "70 NM", "seq": ["START", "G5", "R32", "NB", "CH"], "color": "#911eb4"}, {"code": "F", "dist": "65 NM", "seq": ["START", "G1BI", "BB", "NB", "CH"], "color": "#008080"}, {"code": "G", "dist": "60 NM", "seq": ["START", "R2", "R32", "NB", "CH"], "color": "#e6b800"}], "ez": [{"id": "EZ01", "lat": 41.15833333333333, "lon": -71.26666666666667}, {"id": "EZ02", "lat": 41.23166666666667, "lon": -71.175}, {"id": "EZ03", "lat": 41.23166666666667, "lon": -71.05833333333334}, {"id": "EZ04", "lat": 41.13333333333333, "lon": -70.83333333333333}, {"id": "EZ05", "lat": 41.111666666666665, "lon": -70.83166666666666}, {"id": "EZ06", "lat": 41.075, "lon": -70.94166666666666}, {"id": "EZ07", "lat": 41.071666666666665, "lon": -71.19333333333333}], "finish": {"a": [41.46217611111111, -71.36291999999999], "b": [41.46483167228598, -71.37578501769853]}};
+// Cox Ledge / wind-farm exclusion polygon only (general keep-out area). The retired hardcoded Solo/Twin race's
+// marks, courses and finish that used to sit alongside it here were unused and have been removed.
+const D = {"ez": [{"id": "EZ01", "lat": 41.15833333333333, "lon": -71.26666666666667}, {"id": "EZ02", "lat": 41.23166666666667, "lon": -71.175}, {"id": "EZ03", "lat": 41.23166666666667, "lon": -71.05833333333334}, {"id": "EZ04", "lat": 41.13333333333333, "lon": -70.83333333333333}, {"id": "EZ05", "lat": 41.111666666666665, "lon": -70.83166666666666}, {"id": "EZ06", "lat": 41.075, "lon": -70.94166666666666}, {"id": "EZ07", "lat": 41.071666666666665, "lon": -71.19333333333333}]};
 let KEY = "lXsLH7lUO9iXYZgssZSp100sjgXLz4Hd";
 if(!KEY || KEY.slice(0,2)==='__'){ KEY = localStorage.getItem('windy_key') || (prompt('Paste your Windy API key:')||''); if(KEY) localStorage.setItem('windy_key',KEY); }
 if(!KEY){ document.getElementById('msg').textContent='No Windy API key provided.'; }
@@ -40,13 +42,15 @@ else windyInit({key:KEY, verbose:false, lat:41.1, lon:-71.3, zoom:9}, windyAPI=>
       let xml; try{ xml=new DOMParser().parseFromString(r.text,'application/xml'); }catch(_){ return; }
       if(xml.getElementsByTagName('parsererror').length) return;
       const tg=(el,t)=>Array.from(el.getElementsByTagNameNS('*',t)), nm=el=>{ const x=tg(el,'name')[0]; return x?x.textContent:''; };
-      let ci=0;
+      // Same colour slot (c0) and reverse flag the main page saved with the race, so Windy matches it.
+      let ci=(r.c0!=null)?r.c0:0;
+      const rev=pts=>(r.rev && pts.length>2) ? [pts[0],...pts.slice(1,-1).reverse(),pts[pts.length-1]] : pts;
       tg(xml,'rte').forEach(rt=>{ const pts=tg(rt,'rtept').map(p=>[+p.getAttribute('lat'),+p.getAttribute('lon')]); if(pts.length<2) return;
         const lbl=nm(rt), t=lbl.toLowerCase(), pop='<b>'+r.name+' - '+(lbl||'course')+'</b>';
         if(/exclus|restrict|prohibit|keep ?out|danger|no.?go/.test(t)) L.polygon(pts,{color:'#c00',weight:2,fillColor:'#c00',fillOpacity:0.15,dashArray:'4 3'}).bindPopup(pop).addTo(map);
         else if(/finish/.test(t)) L.polyline(pts,{color:'#0033cc',weight:4,dashArray:'6 4'}).bindPopup(pop).addTo(map);
         else if(/start/.test(t)) L.polyline(pts,{color:'#0a7d2c',weight:4,dashArray:'6 4'}).bindPopup(pop).addTo(map);
-        else L.polyline(pts,{color:CCOL[(ci++)%CCOL.length],weight:3}).bindPopup(pop).addTo(map); });
+        else L.polyline(rev(pts),{color:CCOL[(ci++)%CCOL.length],weight:3}).bindPopup(pop+(r.rev?' (reversed)':'')).addTo(map); });
       tg(xml,'wpt').forEach(w=>{ L.circleMarker([+w.getAttribute('lat'),+w.getAttribute('lon')],{radius:4,color:'#333',weight:1,fillColor:'#fff',fillOpacity:1}).bindTooltip(nm(w),{direction:'right'}).addTo(map); });
     }); }catch(e){}
   // South Bay picked course (from the main-page Course library picker)
@@ -72,5 +76,11 @@ else windyInit({key:KEY, verbose:false, lat:41.1, lon:-71.3, zoom:9}, windyAPI=>
       else bm.setLatLng(ll); if(first){ map.setView(ll,10); first=false; } }, ()=>{}, {enableHighAccuracy:true,maximumAge:3000}); }
 });
 </script>
-<div style="position:absolute;bottom:2px;right:4px;z-index:9999;font:11px system-ui;color:#bbb">build 2026-08-13 14:16</div>
+<div style="position:absolute;bottom:2px;right:4px;z-index:9999;font:11px system-ui;color:#bbb">build <span id="buildstamp">&mdash;</span></div>
+<script>
+// Read from the page's own Last-Modified - the literal date that used to be here never changed between deploys.
+(function(){ var el=document.getElementById('buildstamp'), d=new Date(document.lastModified); if(!el||isNaN(d)) return;
+  function p(n){ return String(n).padStart(2,'0'); }
+  el.textContent=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); })();
+</script>
 </body></html>

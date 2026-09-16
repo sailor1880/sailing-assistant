@@ -2605,8 +2605,6 @@ document.getElementById('gomofschk').addEventListener('change',e=>{
     showTbox(); }
 });
 
-// ---- Courses ----
-const isRev=()=>false;   // reverse-direction feature retired with the hardcoded SOLO/TWIN race
 
 // ---- Exclusion zone ----
 const ezpts = D.ez.map(e=>[e.lat,e.lon]);
@@ -3020,7 +3018,12 @@ let racesRaw=[]; const RKEY='sa_races';
 const CCOL=['#e6194b','#3cb44b','#4363d8','#f58231','#911eb4','#00b4d8','#f032e6','#7cb342','#e6ab02','#469990','#9a6324','#1f78b4','#b15928','#6a3d9a'];  // per-course colours (automatic)
 let races=[];   // {name,color,bounds,routes:[{name,pts,layer,on}], extra:[layer]}
 const racesOn=()=>document.getElementById('raceschk').checked;
-function revPts(pts){ return (isRev() && pts.length>2) ? [pts[0], ...pts.slice(1,-1).reverse(), pts[pts.length-1]] : pts; }
+// Reverse course direction (SI "course may be sailed in reverse"): start and finish stay put, the marks in
+// between are rounded in the opposite order. Per race - several can be loaded at once - and saved with the race.
+// Only COURSE lines are reversed. The old global toggle also ran exclusion polygons through this, which
+// reorders their corners into a crossed shape; start/finish lines are two points and unaffected anyway.
+function revPts(pts,rev){ return (rev && pts.length>2) ? [pts[0], ...pts.slice(1,-1).reverse(), pts[pts.length-1]] : pts; }
+function redrawRace(r){ r.routes.forEach(rt=>{ if(rt.kind==='course') rt.layer.setLatLngs(revPts(rt.pts,r.rev)); }); }
 function raceLinksHtml(links){ return (links&&links.length)
   ? '<br>'+links.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener">'+l.name+' ↗</a>').join(' &middot; ') : ''; }
 // Colour slots. Every loaded file used to restart its course-colour counter at 0, so the first line of EVERY
@@ -3030,7 +3033,7 @@ function raceLinksHtml(links){ return (links&&links.length)
 // colour as its first course, so one file reads as one colour.
 function nextColorSlot(){ if(!races.length) return 0; const last=races[races.length-1];
   return (last.c0+last.ncol)%CCOL.length; }
-function buildRace(text,name,idx,links,c0){
+function buildRace(text,name,idx,links,c0,rev){
   const xml=new DOMParser().parseFromString(text,'application/xml');
   if(xml.getElementsByTagName('parsererror').length) throw new Error('not valid GPX/XML');
   const base=(c0!=null)?c0:nextColorSlot();
@@ -3038,16 +3041,16 @@ function buildRace(text,name,idx,links,c0){
   const tag=(el,t)=>Array.from(el.getElementsByTagNameNS('*',t));
   const nm=el=>{ const x=tag(el,'name')[0]; return x?x.textContent:''; };
   const collect=els=>els.map(p=>{ const la=+p.getAttribute('lat'),lo=+p.getAttribute('lon'); b.push([la,lo]); return [la,lo]; });
-  const race={name,color:col,bounds:b,routes:[],extra:[],links:links||null};
+  const race={name,color:col,bounds:b,routes:[],extra:[],links:links||null,rev:!!rev};
   const lh=raceLinksHtml(links);                       // NOR/SI/club links appended to every course popup
   let ncourse=0;
-  const addRoute=(pts,label)=>{ if(pts.length>1){ const t=(label||'').toLowerCase(); let rc,layer; const pop='<b>'+(label||name)+'</b>'+lh;
+  const addRoute=(pts,label)=>{ if(pts.length>1){ const t=(label||'').toLowerCase(); let rc,layer,kind='course'; const pop='<b>'+(label||name)+'</b>'+lh;
     if(/exclus|restrict|prohibit|keep ?out|danger|no.?go/.test(t)){        // exclusion zone -> filled polygon
-      rc='#c00'; layer=L.polygon(revPts(pts),{color:rc,weight:2,fillColor:rc,fillOpacity:0.15,dashArray:'4 3'}).bindPopup(pop); }
-    else if(/finish/.test(t)){ rc='#0033cc'; layer=L.polyline(revPts(pts),{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
-    else if(/start/.test(t)){  rc='#0a7d2c'; layer=L.polyline(revPts(pts),{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
-    else { rc=CCOL[(base+ncourse++)%CCOL.length]; layer=L.polyline(revPts(pts),{color:rc,weight:3}).bindPopup(pop); }  // each course its own colour, starting at this race's slot
-    race.routes.push({name:label||('course '+(race.routes.length+1)),pts,layer,on:true,color:rc}); } };
+      kind='ez'; rc='#c00'; layer=L.polygon(pts,{color:rc,weight:2,fillColor:rc,fillOpacity:0.15,dashArray:'4 3'}).bindPopup(pop); }
+    else if(/finish/.test(t)){ kind='finish'; rc='#0033cc'; layer=L.polyline(pts,{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
+    else if(/start/.test(t)){  kind='start'; rc='#0a7d2c'; layer=L.polyline(pts,{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
+    else { rc=CCOL[(base+ncourse++)%CCOL.length]; layer=L.polyline(revPts(pts,race.rev),{color:rc,weight:3}).bindPopup(pop); }  // each course its own colour, starting at this race's slot
+    race.routes.push({name:label||('course '+(race.routes.length+1)),pts,layer,on:true,color:rc,kind}); } };
   tag(xml,'rte').forEach(r=>addRoute(collect(tag(r,'rtept')),nm(r)));
   tag(xml,'trk').forEach(t=>{ let pts=[]; tag(t,'trkseg').forEach(sg=>pts=pts.concat(collect(tag(sg,'trkpt'))));
     if(pts.length>1) race.extra.push(L.polyline(pts,{color:col,weight:2,opacity:.7,dashArray:'4 3'}).bindPopup(nm(t)||name)); });
@@ -3060,7 +3063,6 @@ function buildRace(text,name,idx,links,c0){
 function applyRaceVisibility(){ const on=racesOn(); races.forEach(r=>{
   r.routes.forEach(rt=> (on&&rt.on)? rt.layer.addTo(map):map.removeLayer(rt.layer) );
   r.extra.forEach(l=> on? l.addTo(map):map.removeLayer(l) ); }); }
-function redrawImported(){ races.forEach(r=>r.routes.forEach(rt=>rt.layer.setLatLngs(revPts(rt.pts)))); }
 function renderRaceList(){ const box=document.getElementById('racelist'); box.innerHTML='';
   races.forEach(r=>{ const h=document.createElement('div'); h.style.marginTop='3px';
     h.innerHTML='<span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:'+r.color+
@@ -3069,6 +3071,13 @@ function renderRaceList(){ const box=document.getElementById('racelist'); box.in
       const mk=(txt,val)=>{ const b=document.createElement('button'); b.textContent=txt; b.style.fontSize='10px'; b.style.marginLeft='3px';
         b.onclick=()=>{ r.routes.forEach(rt=>rt.on=val); applyRaceVisibility(); renderRaceList(); }; return b; };
       h.appendChild(mk('all',true)); h.appendChild(mk('none',false)); }
+    if(r.routes.some(rt=>rt.kind==='course'&&rt.pts.length>2)){      // reverse direction: needs marks between start and finish
+      const rv=document.createElement('label'); rv.style.cssText='font-size:10px;margin-left:6px;white-space:nowrap';
+      rv.innerHTML='<input type="checkbox" '+(r.rev?'checked':'')+' style="vertical-align:middle"> reverse direction';
+      rv.querySelector('input').addEventListener('change',e=>{ r.rev=e.target.checked;
+        const j=racesRaw.findIndex(x=>x.name===r.name); if(j>=0){ racesRaw[j].rev=r.rev; saveRaces(); }
+        redrawRace(r); });
+      h.appendChild(rv); }
     if(r.links&&r.links.length){ const ls=document.createElement('div'); ls.style.cssText='font-size:10px;margin:1px 0 0 2px';  // NOR / SI / club links
       ls.innerHTML='&#128196; '+r.links.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener">'+l.name+' ↗</a>').join(' &middot; ');
       h.appendChild(ls); }
@@ -3085,7 +3094,7 @@ function renderRaceList(){ const box=document.getElementById('racelist'); box.in
       lab.querySelector('input').addEventListener('change',e=>{ rt.on=e.target.checked; applyRaceVisibility(); });
       box.appendChild(lab); }); }); }
 function addRace(text,name,idx,fit,links){ try{ const raw=racesRaw[idx];
-    const r=buildRace(text,name,idx,links,raw&&raw.c0); races.push(r);
+    const r=buildRace(text,name,idx,links,raw&&raw.c0,raw&&raw.rev); races.push(r);
     if(raw&&raw.c0==null){ raw.c0=r.c0; saveRaces(); }   // remember this file's colour
     applyRaceVisibility();
     if(fit&&r.bounds.length) map.fitBounds(r.bounds,{padding:[30,30]}); }
@@ -3105,7 +3114,7 @@ document.getElementById('clrgpx').onclick=()=>{ if(!racesRaw.length) return; if(
 document.getElementById('raceschk').addEventListener('change',applyRaceVisibility);
 (function(){ try{ racesRaw=JSON.parse(localStorage.getItem(RKEY)||'[]'); }catch(e){ racesRaw=[]; }
   let dirty=false;       // files saved before colour slots existed get one now, so they stop all being red
-  racesRaw.forEach((r,i)=>{ try{ const rc=buildRace(r.text,r.name,i,r.links,r.c0); races.push(rc);
+  racesRaw.forEach((r,i)=>{ try{ const rc=buildRace(r.text,r.name,i,r.links,r.c0,r.rev); races.push(rc);
     if(r.c0==null){ r.c0=rc.c0; dirty=true; } }catch(e){} });
   if(dirty) saveRaces();
   applyRaceVisibility(); renderRaceList(); })();
