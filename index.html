@@ -3230,19 +3230,26 @@ document.getElementById('nbkeel').addEventListener('change',()=>{ if(NBRACES) re
 // ---- NOAA aids (USCG Light List Vol 1, bundled aids.json, lazy-loaded, viewport-culled + canvas) ----
 let AIDS=null; const aidsCanvas=L.canvas({padding:0.3,tolerance:14}), aidsLayer=L.layerGroup();  // tolerance = bigger tap target (mobile single-tap)
 const aidsOn=()=>document.getElementById('aidschk').checked;
-function aidStyle(a){                       // chart-like colour from Light List name + characteristic
-  const nm=(a[3]||'').toLowerCase(), ch=(a[4]||'').toLowerCase(), t=nm+' '+ch;
-  let color='#7a8a99';                     // default: unlit / other (grey-blue)
-  if(/(^|[^a-z])g( |")|green|fl g|q g|iso g|oc g|fl \(2\)g/.test(t)) color='#0a9b0a';
-  if(/(^|[^a-z])r( |")|red|fl r|q r|iso r|oc r|fl \(2\)r/.test(t)) color='#e11';
-  if(/yellow|fl y|q y|(^|[^a-z])y( |")/.test(t)) color='#efc000';
-  const safe=/rw |mo ?\(a\)|safe water|fairway|midchannel/.test(t);
-  const rg=/(rg|gr) |junction|preferred channel/.test(t);
-  if(safe||rg) color='#e11';                // safe-water / junction shown red-ish (ring differentiates)
-  const white=/fl w|q w|oc w|iso w|f w|mo ?\(a\)|al w/.test(ch);
-  if(white && color==='#7a8a99') color='#f4f4f4';
-  const lit=/\b(fl|q|oc|iso|mo|l fl|vq|uq|al)\b|f w|f r|f g/.test(ch);
-  return {color, lit, safe, ring: lit?'#c800c8':(safe?'#fff':'#333'), r: lit?5:4, w: (lit||safe)?2:1};
+// Colour comes from the aid's NAME only. The characteristic column in aids.json is unreliable (checked against
+// NOAA ENC colours it pointed the wrong way more often than not), so it is no longer used for colour or "lit".
+// Lateral aids follow the buoyage numbering: odd = green, even = red. Kinds: G, R, RG (junction / preferred
+// channel), RW (safe water), Y (special purpose), WO (white-orange danger / regulatory), grey (unknown).
+function aidStyle(a){
+  const nm=(a[3]||'').trim(), t=nm.toLowerCase(), last=nm.split(/\s+/).pop()||'';
+  const lit=/lighted|\blights?\b/.test(t);
+  const num=/^[A-Za-z]{0,2}(\d{1,3})[A-Za-z]{0,2}$/.exec(last);
+  let kind='grey';
+  if(/hazard|danger|obstruction|no.?wake|speed|swim|exclusion/.test(t)) kind='WO';
+  else if(/aquaculture|research|monitoring|\bdata\b|outfall|anchorage|mooring|security|deployment|preserve|\braft\b|\bzone\b|dump|cable|pipeline|regatta|race|wave|odas|environmental|restricted|special/.test(t)) kind='Y';
+  else if(num) kind=(+num[1])%2?'G':'R';
+  else if(/junction|preferred/.test(t)) kind='RG';
+  else if(/safe water|fairway|mid.?channel|sea buoy/.test(t)) kind='RW';
+  else if(/^[A-Z]{1,3}$/.test(last) && /buoy/.test(t))                            // lettered, not numbered:
+    kind=/entrance|approach|\bbar\b|passage|beach|inlet/.test(t)?'RW':'RG';       //   harbour/entrance buoy = safe water, else junction
+  if(a[5]) kind=a[5];                                  // charted colour baked in from NOAA ENC (tools/bake_aid_colours.js) wins over the name rules
+  const S={ G:['#0a9b0a',null], R:['#e11',null], RG:['#e11','#0a9b0a'], GR:['#0a9b0a','#e11'], RW:['#fff','#e11'], Y:['#efc000',null],
+            WO:['#fff','#ff8c00'], BK:['#111','#e11'], grey:['#7a8a99',null] }[kind];   // RG = red band on top, GR = green on top
+  return {kind, color:S[0], lit, safe:kind==='RW', ring: S[1]||(lit?'#c800c8':'#333'), r: lit?5:4, w: S[1]?3:(lit?2:1)};
 }
 function renderAids(){ aidsLayer.clearLayers(); if(!AIDS) return;
   const b=map.getBounds().pad(0.2), s=b.getSouth(),n=b.getNorth(),w=b.getWest(),e=b.getEast();
