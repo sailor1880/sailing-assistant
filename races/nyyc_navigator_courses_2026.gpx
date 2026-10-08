@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="sailing-assistant" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>NYYC 172nd Annual Regatta - Navigator Courses 1 and 2</name><desc>New York Yacht Club 172nd Annual Regatta, 12-14 June 2026, Sailing Instructions incorporating Amendment 1, SI Addendum A (Courses using Government Marks) A2.4 and A2.5. Course is shown on a board on the RC signal vessel no later than the warning signal (number 1 or 2) and normally announced on the circle VHF channel. Start: RC line in the rendezvous area signalled ashore that day (SI 3.3, 6) - no fixed start position is published, so the route is drawn from the Fort Adams line (approx). Finish: off Fort Adams between a blue flag on an RC vessel and the finishing mark, approximately 0.4 NM north of Fl R 6s Horn 2 (Fort Adams Light 2). Cautions: both bridges must be passed through the center span only (the piers are a gate, A2.1); pass to the west of R12 off Rose Island; the RC may add a set Special Mark E as a new first mark (A3.6, not drawn); if flag F is flown at the start the finish moves to about 1 NM bearing 310 from Fort Adams Light 2 (A2.9, not drawn); Navy security zone north of the Pell Bridge on the Newport shore (SI 18.2). Courses 3 and 4 are mark lists posted on the day and are not included. Jamestown bridge point is chart-approximate. No distance is published; drawn length is about 19.2 NM.</desc></metadata>
+<wpt lat="41.48841" lon="-71.33677"><name>RC line 0.4 NM N of Fort Adams Light 2 (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.48344" lon="-71.35075"><name>G11 East Passage Lighted Bell Buoy 11 (The Dumplings)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock Bell Buoy (SW of Beavertail Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.52749" lon="-71.39749"><name>Jamestown Verrazzano Bridge center span (gate, approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57903" lon="-71.38276"><name>G5 Quonset Channel Buoy 5 (NW of Conanicut Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57785" lon="-71.36128"><name>R2 Quonset Channel Lighted Bell Buoy 2 (NE of Conanicut Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (gate)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.49451" lon="-71.34468"><name>R12 East Passage Lighted Bell Buoy 12 (pass to the west)</name><sym>Buoy</sym></wpt>
+<rte><name>Course 1 - clockwise around Conanicut Island</name>
+<rtept lat="41.48841" lon="-71.33677"><name>Start - area signalled on the day; drawn at the Fort Adams line (approx)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 East Passage Lighted Bell Buoy 11 (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.47350" lon="-71.35300"><name>East Passage off The Dumplings (routing)</name></rtept>
+<rtept lat="41.46200" lon="-71.37200"><name>East Passage W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.44400" lon="-71.39600"><name>S of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock Bell Buoy (SW of Beavertail Pt)</name><type>stbd</type></rtept>
+<rtept lat="41.50000" lon="-71.41500"><name>West Passage W of Dutch Island (routing)</name></rtept>
+<rtept lat="41.52749" lon="-71.39749"><name>Jamestown Verrazzano Bridge center span (gate, approx)</name></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Channel Buoy 5 (NW of Conanicut Pt)</name><type>stbd</type></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Channel Lighted Bell Buoy 2 (NE of Conanicut Pt)</name><type>stbd</type></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (gate)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>R12 East Passage Lighted Bell Buoy 12 (pass to the west)</name><type>port</type></rtept>
+<rtept lat="41.48841" lon="-71.33677"><name>Finish line 0.4 NM N of Fort Adams Light 2 (approx)</name></rtept>
+</rte>
+<rte><name>Course 2 - counter-clockwise around Conanicut Island</name>
+<rtept lat="41.48841" lon="-71.33677"><name>Start - area signalled on the day; drawn at the Fort Adams line (approx)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>R12 East Passage Lighted Bell Buoy 12 (pass to the west)</name><type>stbd</type></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (gate)</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Channel Lighted Bell Buoy 2 (NE of Conanicut Pt)</name><type>port</type></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Channel Buoy 5 (NW of Conanicut Pt)</name><type>port</type></rtept>
+<rtept lat="41.52749" lon="-71.39749"><name>Jamestown Verrazzano Bridge center span (gate, approx)</name></rtept>
+<rtept lat="41.50000" lon="-71.41500"><name>West Passage W of Dutch Island (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock Bell Buoy (SW of Beavertail Pt)</name><type>port</type></rtept>
+<rtept lat="41.44400" lon="-71.39600"><name>S of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.46200" lon="-71.37200"><name>East Passage W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.47350" lon="-71.35300"><name>East Passage off The Dumplings (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 East Passage Lighted Bell Buoy 11 (The Dumplings)</name><type>port</type></rtept>
+<rtept lat="41.48841" lon="-71.33677"><name>Finish line 0.4 NM N of Fort Adams Light 2 (approx)</name></rtept>
+</rte>
+</gpx>
