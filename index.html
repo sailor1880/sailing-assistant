@@ -3063,6 +3063,9 @@ function buildRace(text,name,idx,links,c0,rev){
   const addRoute=(pts,label,sides)=>{ if(pts.length>1){ const t=(label||'').toLowerCase(); let rc,layer,kind='course'; const pop='<b>'+(label||name)+'</b>'+lh;
     if(/exclus|restrict|prohibit|keep ?out|danger|no.?go/.test(t)){        // exclusion zone -> filled polygon
       kind='ez'; rc='#c00'; layer=L.polygon(pts,{color:rc,weight:2,fillColor:rc,fillOpacity:0.15,dashArray:'4 3'}).bindPopup(pop); }
+    else if(/untimed|time.?stop|clock.?stop/.test(t)){                     // timing gate (e.g. Tiverton Basin): wide amber band over that stretch
+      kind='untimed'; rc='#ff9500'; layer=L.polyline(pts,{color:rc,weight:10,opacity:.55,lineCap:'butt'}).bindPopup(pop)
+        .bindTooltip('clock stopped',{permanent:true,direction:'right',offset:[8,0],opacity:.9}); }
     else if(/finish/.test(t)){ kind='finish'; rc='#0033cc'; layer=L.polyline(pts,{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
     else if(/start/.test(t)){  kind='start'; rc='#0a7d2c'; layer=L.polyline(pts,{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
     else { rc=CCOL[(base+ncourse++)%CCOL.length]; layer=L.polyline(revPts(pts,race.rev),{color:rc,weight:3}).bindPopup(pop); }  // each course its own colour, starting at this race's slot
