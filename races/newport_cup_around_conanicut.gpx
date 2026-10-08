@@ -8,18 +8,18 @@
 <wpt lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name><sym>Buoy</sym></wpt>
 <rte><name>O - CW 18.1 NM (N-&gt;S)</name>
 <rtept lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name></rtept>
-<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
-<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
-<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name></rtept>
-<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>stbd</type></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>stbd</type></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name><type>stbd</type></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name><type>stbd</type></rtept>
 <rtept lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name></rtept>
 </rte>
 <rte><name>X - CCW 18.1 NM (S-&gt;N)</name>
 <rtept lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name></rtept>
-<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name></rtept>
-<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name></rtept>
-<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
-<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt)</name><type>port</type></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name><type>port</type></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>port</type></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>port</type></rtept>
 <rtept lat="41.47800" lon="-71.34300"><name>Start/Finish off Newport (RC)</name></rtept>
 </rte>
 </gpx>

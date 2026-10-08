@@ -6,12 +6,12 @@
 <wpt lat="41.20150" lon="-71.59423"><name>R2 Great Salt Pond ent.</name><sym>Buoy</sym></wpt>
 <rte><name>Leg A - Newport-&gt;BI 21.2 NM</name>
 <rtept lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name></rtept>
-<rtept lat="41.25731" lon="-71.57593"><name>G1BI Block I. North Reef</name></rtept>
+<rtept lat="41.25731" lon="-71.57593"><name>G1BI Block I. North Reef</name><type>port</type></rtept>
 <rtept lat="41.20150" lon="-71.59423"><name>R2 Great Salt Pond ent.</name></rtept>
 </rte>
 <rte><name>Leg B - BI-&gt;Newport 21.2 NM</name>
 <rtept lat="41.20150" lon="-71.59423"><name>R2 Great Salt Pond ent.</name></rtept>
-<rtept lat="41.25731" lon="-71.57593"><name>G1BI Block I. North Reef</name></rtept>
+<rtept lat="41.25731" lon="-71.57593"><name>G1BI Block I. North Reef</name><type>stbd</type></rtept>
 <rtept lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name></rtept>
 </rte>
 </gpx>

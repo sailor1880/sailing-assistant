@@ -10,15 +10,15 @@
 <wpt lat="41.44011" lon="-70.92886"><name>RGN MG Middle Ground (Buzzards)</name><sym>Buoy</sym></wpt>
 <rte><name>Full - ~30 NM</name>
 <rtept lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name></rtept>
-<rtept lat="41.38334" lon="-71.38930"><name>RW NB Bay Entrance</name></rtept>
-<rtept lat="41.39700" lon="-71.03469"><name>Buzzards Bay Entrance Tower</name></rtept>
-<rtept lat="41.43568" lon="-71.01092"><name>R2 Buzzards Bay Bell 2 (SE Old Cock)</name></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>RW NB Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03469"><name>Buzzards Bay Entrance Tower</name><type>port</type></rtept>
+<rtept lat="41.43568" lon="-71.01092"><name>R2 Buzzards Bay Bell 2 (SE Old Cock)</name><type>stbd</type></rtept>
 <rtept lat="41.44011" lon="-70.92886"><name>RGN MG Middle Ground (Buzzards)</name></rtept>
 </rte>
 <rte><name>Short - ~24 NM</name>
 <rtept lat="41.49261" lon="-71.33642"><name>G3 Mitchell Rock gong</name></rtept>
-<rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point</name></rtept>
-<rtept lat="41.43381" lon="-71.34674"><name>R2A Seal Ledge (SE Castle Hill)</name></rtept>
+<rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point</name><type>port</type></rtept>
+<rtept lat="41.43381" lon="-71.34674"><name>R2A Seal Ledge (SE Castle Hill)</name><type>port</type></rtept>
 <rtept lat="41.44011" lon="-70.92886"><name>RGN MG Middle Ground (Buzzards)</name></rtept>
 </rte>
 </gpx>
