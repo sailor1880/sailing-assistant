@@ -15,12 +15,12 @@
 <rte><name>Standard - 27.7 NM (CCW)</name>
 <rtept lat="41.63115" lon="-71.27238"><name>Start (btwn Hog I Shoal Lt &amp; Mt Hope Bay Appr Bell)</name></rtept>
 <rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center</name></rtept>
-<rtept lat="41.49992" lon="-71.34582"><name>R12A East Passage</name></rtept>
-<rtept lat="41.49451" lon="-71.34468"><name>R12 East Passage (Rose I.)</name></rtept>
-<rtept lat="41.45754" lon="-71.36639"><name>R6 East Passage</name></rtept>
-<rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point</name></rtept>
-<rtept lat="41.45445" lon="-71.24489"><name>G1 Cormorant Reef (Sakonnet)</name></rtept>
-<rtept lat="41.55292" lon="-71.22803"><name>R6 Sakonnet River</name></rtept>
+<rtept lat="41.49992" lon="-71.34582"><name>R12A East Passage</name><type>port</type></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>R12 East Passage (Rose I.)</name><type>port</type></rtept>
+<rtept lat="41.45754" lon="-71.36639"><name>R6 East Passage</name><type>port</type></rtept>
+<rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point</name><type>port</type></rtept>
+<rtept lat="41.45445" lon="-71.24489"><name>G1 Cormorant Reef (Sakonnet)</name><type>port</type></rtept>
+<rtept lat="41.55292" lon="-71.22803"><name>R6 Sakonnet River</name><type>stbd</type></rtept>
 <rtept lat="41.60317" lon="-71.21644"><name>RN12 Sakonnet R. (S Gould)</name></rtept>
 </rte>
 </gpx>

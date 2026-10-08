@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
-<metadata><name>RIYC Ladies Cup (Providence River)</name><desc>Providence River distance race off RIYC (Pawtuxet). Marks sourced from SI; confirm exact order/leave-sides in the current SI. Do not enter RIYC mooring field.</desc></metadata>
-<wpt lat="41.76013" lon="-71.38007"><name>C1 Pawtuxet Cove approach</name><sym>Buoy</sym></wpt>
-<wpt lat="41.76205" lon="-71.37424"><name>Sabin Point Daybeacon</name><sym>Buoy</sym></wpt>
-<wpt lat="41.73772" lon="-71.36420"><name>Bullock Point Light</name><sym>Buoy</sym></wpt>
-<wpt lat="41.71702" lon="-71.34515"><name>Conimicut Light</name><sym>Buoy</sym></wpt>
-<wpt lat="41.70337" lon="-71.30934"><name>Rumstick Ledge danger buoy</name><sym>Buoy</sym></wpt>
-<wpt lat="41.75800" lon="-71.38500"><name>Start/Finish off RIYC, Pawtuxet</name><sym>Buoy</sym></wpt>
-<rte><name>Course marks - order per SI</name>
-<rtept lat="41.75800" lon="-71.38500"><name>Start/Finish off RIYC, Pawtuxet</name></rtept>
-<rtept lat="41.76013" lon="-71.38007"><name>C1 Pawtuxet Cove approach</name></rtept>
-<rtept lat="41.76205" lon="-71.37424"><name>Sabin Point Daybeacon</name></rtept>
-<rtept lat="41.73772" lon="-71.36420"><name>Bullock Point Light</name></rtept>
-<rtept lat="41.71702" lon="-71.34515"><name>Conimicut Light</name></rtept>
-<rtept lat="41.70337" lon="-71.30934"><name>Rumstick Ledge danger buoy</name></rtept>
-<rtept lat="41.75800" lon="-71.38500"><name>Start/Finish off RIYC, Pawtuxet</name></rtept>
+<gpx version="1.1" creator="sailing-assistant" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>RIYC Ladies Cup</name><desc>Providence River race off RIYC (Pawtuxet), from the 2026 Ladies Cup SI section 8. Primary 10.4 NM: G11 south of Conimicut Light, R12, R32, all left to port. Alternate 6.0 NM: G19 north of Conimicut Light, R18, R32, all left to port. The RC may instead signal a variable course on the course board. "Channel" points are routing only, to keep the line in the channel. SI 9 obstacles: leave Sabin Point Dolphins to the east, C1 Pawtuxet Cove to the west, Bullock Point to the east, Conimicut Light to the west; do not enter the RIYC mooring field. Start/finish position is approximate.</desc></metadata>
+<wpt lat="41.75800" lon="-71.38500"><name>Start/Finish off RIYC, Pawtuxet (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.69836" lon="-71.32471"><name>G11 Providence R. Approach (S of Conimicut Lt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.69953" lon="-71.32270"><name>R12 Providence R. Approach</name><sym>Buoy</sym></wpt>
+<wpt lat="41.76620" lon="-71.37414"><name>R32 Providence River Channel</name><sym>Buoy</sym></wpt>
+<wpt lat="41.72759" lon="-71.36409"><name>G19 Providence River Channel (N of Conimicut Lt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.72598" lon="-71.35681"><name>R18 Providence River Channel</name><sym>Buoy</sym></wpt>
+<wpt lat="41.76013" lon="-71.38007"><name>C1 Pawtuxet Cove approach - leave to the west</name><sym>Buoy</sym></wpt>
+<wpt lat="41.76205" lon="-71.37424"><name>Sabin Point Daybeacon - leave to the east</name><sym>Buoy</sym></wpt>
+<wpt lat="41.73772" lon="-71.36420"><name>Bullock Point Light - leave to the east</name><sym>Buoy</sym></wpt>
+<wpt lat="41.71702" lon="-71.34515"><name>Conimicut Light - leave to the west</name><sym>Buoy</sym></wpt>
+<rte><name>Primary - 10.4 NM</name>
+<rtept lat="41.75800" lon="-71.38500"><name>Start off RIYC</name></rtept>
+<rtept lat="41.72680" lon="-71.36050"><name>Channel off Bullock Point (routing)</name></rtept>
+<rtept lat="41.71650" lon="-71.34050"><name>Channel east of Conimicut Light (routing)</name></rtept>
+<rtept lat="41.69836" lon="-71.32471"><name>G11 Providence R. Approach</name><type>port</type></rtept>
+<rtept lat="41.69953" lon="-71.32270"><name>R12 Providence R. Approach</name><type>port</type></rtept>
+<rtept lat="41.71650" lon="-71.34050"><name>Channel east of Conimicut Light (routing)</name></rtept>
+<rtept lat="41.72680" lon="-71.36050"><name>Channel off Bullock Point (routing)</name></rtept>
+<rtept lat="41.76620" lon="-71.37414"><name>R32 Providence River Channel</name><type>port</type></rtept>
+<rtept lat="41.75800" lon="-71.38500"><name>Finish off RIYC</name></rtept>
+</rte>
+<rte><name>Alternate - 6.0 NM</name>
+<rtept lat="41.75800" lon="-71.38500"><name>Start off RIYC</name></rtept>
+<rtept lat="41.72759" lon="-71.36409"><name>G19 Providence River Channel</name><type>port</type></rtept>
+<rtept lat="41.72598" lon="-71.35681"><name>R18 Providence River Channel</name><type>port</type></rtept>
+<rtept lat="41.76620" lon="-71.37414"><name>R32 Providence River Channel</name><type>port</type></rtept>
+<rtept lat="41.75800" lon="-71.38500"><name>Finish off RIYC</name></rtept>
 </rte>
 </gpx>
