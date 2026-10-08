@@ -2895,6 +2895,16 @@ function segDistM(p,a,b){ const R=6371000, toR=Math.PI/180, latm=(a[0]+b[0])/2*t
 function fillCodes(idx){ curSetIdx=idx; const dl=document.getElementById('coursecodes'); dl.innerHTML='';
   Object.keys(COURSESETS[idx].courses).forEach(c=>{ const o=document.createElement('option'); o.value=c; dl.appendChild(o); }); }
 function clearCourseLine(){ if(courseLine){ map.removeLayer(courseLine); courseLine=null; } }
+// Rounding direction: a ring with an arrowhead around a mark. Red = leave to PORT (boat turns counter-clockwise
+// around it), green = leave to STARBOARD (clockwise). Not interactive, so it never takes a tap meant for the mark.
+function roundIcon(side){ const col=side==='p'?'#d00000':'#0a8f2f', d='M20.5 5.47A11 11 0 1 1 9.5 5.47';
+  return L.divIcon({className:'',iconSize:[30,30],iconAnchor:[15,15],
+    html:'<svg width="30" height="30" viewBox="0 0 30 30"'+(side==='p'?' style="transform:scaleX(-1)"':'')+'>'+
+      '<path d="'+d+'" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>'+
+      '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="2.5" stroke-linecap="round"/>'+
+      '<polygon points="13.8,3.0 7.2,1.5 11.7,9.3" fill="'+col+'" stroke="#fff" stroke-width="1" stroke-linejoin="round"/></svg>'}); }
+function roundMark(ll,side){ return L.marker(ll,{icon:roundIcon(side),interactive:false,keyboard:false}); }
+const flipSide=s=>s==='p'?'s':'p';
 function drawCourse(code){ const set=COURSESETS[curSetIdx], c=set.courses[code], info=document.getElementById('courseinfo');
   if(!c){ info.textContent=''; return; }
   clearCourseLine();
@@ -2915,7 +2925,8 @@ function drawCourse(code){ const set=COURSESETS[curSetIdx], c=set.courses[code],
     if(bad) pl.bindTooltip('Leg may cross land - route around',{sticky:true}); pl.addTo(courseLine); }
   c.seq.forEach(([mk,side])=>{ const m=sbMarksData[mk]; if(!m) return;   // course marks (magenta)
     L.circleMarker([m.lat,m.lon],{radius:5,color:'#6a0080',weight:2,fillColor:'#e040fb',fillOpacity:1})
-      .bindTooltip(mk+(side==='fin'?' (finish)':side==='p'?' (port)':' (stbd)'),{direction:'top'}).addTo(courseLine); });
+      .bindTooltip(mk+(side==='fin'?' (finish)':side==='p'?' (port)':' (stbd)'),{direction:'top'}).addTo(courseLine);
+    if(side==='p'||side==='s') roundMark([m.lat,m.lon],side).addTo(courseLine); });
   const inCourse=new Set(c.seq.map(x=>x[0])); if(set.finish) inCourse.add(set.finish.mark);   // OTHER marks lying on a leg
   const flagged=new Set();
   Object.keys(sbMarksData).forEach(mk=>{ if(inCourse.has(mk)) return; const m=sbMarksData[mk];
@@ -3023,7 +3034,12 @@ const racesOn=()=>document.getElementById('raceschk').checked;
 // Only COURSE lines are reversed. The old global toggle also ran exclusion polygons through this, which
 // reorders their corners into a crossed shape; start/finish lines are two points and unaffected anyway.
 function revPts(pts,rev){ return (rev && pts.length>2) ? [pts[0], ...pts.slice(1,-1).reverse(), pts[pts.length-1]] : pts; }
-function redrawRace(r){ r.routes.forEach(rt=>{ if(rt.kind==='course') rt.layer.setLatLngs(revPts(rt.pts,r.rev)); }); }
+function redrawRace(r){ r.routes.forEach(rt=>{ if(rt.kind==='course'){ rt.layer.setLatLngs(revPts(rt.pts,r.rev));
+  (rt.rounds||[]).forEach(x=>x.m.setIcon(roundIcon(r.rev?flipSide(x.side):x.side))); } }); }   // reversed course = marks rounded the other way
+// Which side a GPX route point is left on, if the file says: <type> or <cmt> of port/stbd (or p/s), or a name ending "(P)"/"(S)".
+function gpxSide(pt){ const txt=t=>{ const x=Array.from(pt.getElementsByTagNameNS('*',t))[0]; return x?x.textContent.trim():''; };
+  for(const s of [txt('type'),txt('cmt')]){ if(/^(p|port)$/i.test(s)) return 'p'; if(/^(s|stbd|starboard)$/i.test(s)) return 's'; }
+  const n=txt('name'); return /\((p|port)\)\s*$/i.test(n)?'p' : /\((s|stbd|starboard)\)\s*$/i.test(n)?'s' : null; }
 function raceLinksHtml(links){ return (links&&links.length)
   ? '<br>'+links.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener">'+l.name+' ↗</a>').join(' &middot; ') : ''; }
 // Colour slots. Every loaded file used to restart its course-colour counter at 0, so the first line of EVERY
@@ -3044,14 +3060,17 @@ function buildRace(text,name,idx,links,c0,rev){
   const race={name,color:col,bounds:b,routes:[],extra:[],links:links||null,rev:!!rev};
   const lh=raceLinksHtml(links);                       // NOR/SI/club links appended to every course popup
   let ncourse=0;
-  const addRoute=(pts,label)=>{ if(pts.length>1){ const t=(label||'').toLowerCase(); let rc,layer,kind='course'; const pop='<b>'+(label||name)+'</b>'+lh;
+  const addRoute=(pts,label,sides)=>{ if(pts.length>1){ const t=(label||'').toLowerCase(); let rc,layer,kind='course'; const pop='<b>'+(label||name)+'</b>'+lh;
     if(/exclus|restrict|prohibit|keep ?out|danger|no.?go/.test(t)){        // exclusion zone -> filled polygon
       kind='ez'; rc='#c00'; layer=L.polygon(pts,{color:rc,weight:2,fillColor:rc,fillOpacity:0.15,dashArray:'4 3'}).bindPopup(pop); }
     else if(/finish/.test(t)){ kind='finish'; rc='#0033cc'; layer=L.polyline(pts,{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
     else if(/start/.test(t)){  kind='start'; rc='#0a7d2c'; layer=L.polyline(pts,{color:rc,weight:4,dashArray:'6 4'}).bindPopup(pop); }
     else { rc=CCOL[(base+ncourse++)%CCOL.length]; layer=L.polyline(revPts(pts,race.rev),{color:rc,weight:3}).bindPopup(pop); }  // each course its own colour, starting at this race's slot
-    race.routes.push({name:label||('course '+(race.routes.length+1)),pts,layer,on:true,color:rc,kind}); } };
-  tag(xml,'rte').forEach(r=>addRoute(collect(tag(r,'rtept')),nm(r)));
+    const rounds=[];                                     // port/stbd rings, only where the file gives a side
+    if(kind==='course'&&sides) pts.forEach((p,i)=>{ const s=sides[i]; if(!s||(i===pts.length-1&&i>0&&p[0]===pts[0][0]&&p[1]===pts[0][1])) return;  // closed loop: one ring on the shared start/finish mark
+      rounds.push({side:s,m:roundMark(p,race.rev?flipSide(s):s)}); });
+    race.routes.push({name:label||('course '+(race.routes.length+1)),pts,layer,on:true,color:rc,kind,rounds}); } };
+  tag(xml,'rte').forEach(r=>{ const rp=tag(r,'rtept'); addRoute(collect(rp),nm(r),rp.map(gpxSide)); });
   tag(xml,'trk').forEach(t=>{ let pts=[]; tag(t,'trkseg').forEach(sg=>pts=pts.concat(collect(tag(sg,'trkpt'))));
     if(pts.length>1) race.extra.push(L.polyline(pts,{color:col,weight:2,opacity:.7,dashArray:'4 3'}).bindPopup(nm(t)||name)); });
   tag(xml,'wpt').forEach(w=>{ const la=+w.getAttribute('lat'),lo=+w.getAttribute('lon'); b.push([la,lo]);
@@ -3061,7 +3080,8 @@ function buildRace(text,name,idx,links,c0,rev){
   return race;
 }
 function applyRaceVisibility(){ const on=racesOn(); races.forEach(r=>{
-  r.routes.forEach(rt=> (on&&rt.on)? rt.layer.addTo(map):map.removeLayer(rt.layer) );
+  r.routes.forEach(rt=>{ const show=on&&rt.on; show? rt.layer.addTo(map):map.removeLayer(rt.layer);
+    (rt.rounds||[]).forEach(x=> show? x.m.addTo(map):map.removeLayer(x.m)); });
   r.extra.forEach(l=> on? l.addTo(map):map.removeLayer(l) ); }); }
 function renderRaceList(){ const box=document.getElementById('racelist'); box.innerHTML='';
   races.forEach(r=>{ const h=document.createElement('div'); h.style.marginTop='3px';
@@ -3083,7 +3103,7 @@ function renderRaceList(){ const box=document.getElementById('racelist'); box.in
       h.appendChild(ls); }
     const bX=document.createElement('button'); bX.textContent='✕'; bX.title='remove this race'; // remove just this one race
     bX.style.fontSize='10px'; bX.style.marginLeft='4px'; bX.style.color='#c00';
-    bX.onclick=()=>{ r.routes.forEach(rt=>map.removeLayer(rt.layer)); r.extra.forEach(l=>map.removeLayer(l));
+    bX.onclick=()=>{ r.routes.forEach(rt=>{ map.removeLayer(rt.layer); (rt.rounds||[]).forEach(x=>map.removeLayer(x.m)); }); r.extra.forEach(l=>map.removeLayer(l));
       const i=races.indexOf(r); if(i>=0) races.splice(i,1);
       const j=racesRaw.findIndex(x=>x.name===r.name); if(j>=0) racesRaw.splice(j,1);
       saveRaces(); renderRaceList(); };
@@ -3109,7 +3129,7 @@ document.getElementById('gpxfile').addEventListener('change',ev=>{
   rd.readAsText(f); ev.target.value='';
 });
 document.getElementById('clrgpx').onclick=()=>{ if(!racesRaw.length) return; if(!confirm('Remove all added races?')) return;
-  races.forEach(r=>{ r.routes.forEach(rt=>map.removeLayer(rt.layer)); r.extra.forEach(l=>map.removeLayer(l)); });
+  races.forEach(r=>{ r.routes.forEach(rt=>{ map.removeLayer(rt.layer); (rt.rounds||[]).forEach(x=>map.removeLayer(x.m)); }); r.extra.forEach(l=>map.removeLayer(l)); });
   races=[]; racesRaw=[]; try{ localStorage.removeItem(RKEY); }catch(e){} renderRaceList(); };
 document.getElementById('raceschk').addEventListener('change',applyRaceVisibility);
 (function(){ try{ racesRaw=JSON.parse(localStorage.getItem(RKEY)||'[]'); }catch(e){ racesRaw=[]; }
