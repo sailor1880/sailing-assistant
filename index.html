@@ -767,6 +767,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  </div>
  <button id="nbbrowse" style="font-size:11px;width:100%;margin:2px 0;cursor:pointer">&#128269; Browse all bay races (live)</button>
  <label style="font-size:11px"><input type="checkbox" id="nbkeel" checked> keelboat / PHRF / distance only (hide junior)</label>
+ <label style="font-size:11px"><input type="checkbox" id="nbpast"> include this season's past races (for their NOR / SI)</label>
  <input id="nbfilter" placeholder="filter by club / name / town" style="display:none;font-size:11px;width:100%;box-sizing:border-box;margin:2px 0">
  <div id="nblive" style="font-size:11px;max-height:44vh;overflow:auto"></div>
  <label style="font-size:12px;display:block;margin:2px 0">Add your own (GPX):
@@ -839,7 +840,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; <a href="#" id="disclink" style="color:#0b6">Disclaimer</a> &middot; build <span id="buildstamp">&mdash;</span></span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Aids: live from <b>NOAA ENC</b>. Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; <a href="#" id="disclink" style="color:#0b6">Disclaimer</a> &middot; build <span id="buildstamp">&mdash;</span></span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -3210,9 +3211,10 @@ async function browseNB(){
   if(box.style.display==='block'){ box.style.display='none'; filt.style.display='none'; btn.textContent='Browse all bay races (live) ▸'; return; }  // collapse
   box.style.display='block'; btn.textContent='Hide bay races (live) ▾'; box.textContent='Loading live bay races from Clubspot and Yacht Scoring…';
   try{
-    if(!NBRACES){ const since=new Date(Date.now()-864e5).toISOString();   // ~now onward -> drop races that already happened
+    if(!NBRACES){ const since=nbPast() ? new Date().getFullYear()+'-01-01T00:00:00.000Z'      // whole season, to reach a past race's documents
+                                       : new Date(Date.now()-864e5).toISOString();            // ~now onward -> drop races that already happened
       const got=await Promise.allSettled([                               // either source may be down; show whatever answers
-        csQuery('regattas',{state:'RI',startDate:{$gte:{__type:'Date',iso:since}}},{order:'startDate',limit:'300',keys:'name,city,startDate'}),
+        csQuery('regattas',{state:'RI',startDate:{$gte:{__type:'Date',iso:since}}},{order:'startDate',limit:'1000',keys:'name,city,startDate'}),
         ysEvents(since)]);
       if(got.every(g=>g.status==='rejected')) throw got[0].reason;
       NBSRC=(got[0].status==='fulfilled'?'Clubspot':'')+(got[0].status==='fulfilled'&&got[1].status==='fulfilled'?' + ':'')+(got[1].status==='fulfilled'?'Yacht Scoring':'');
@@ -3226,6 +3228,7 @@ async function browseNB(){
 const YS_API='https://api.yachtscoring.com/v1/public/event';
 const YS_LOCAL=/newport|ida lewis|narragansett|block island|bristol|jamestown|twenty hundred|rhode|sakonnet|wickford|greenwich|barrington|conanicut|tiverton|point judith|warwick|providence/i;
 let NBSRC='';
+const nbPast=()=>document.getElementById('nbpast').checked;
 async function ysEvents(sinceIso){ const day=sinceIso.slice(0,10);
   const q=st=>fetch(YS_API+'?page=1&size=300&sort=startDate.asc&endDate_gte='+day+'&state_eq='+encodeURIComponent(st))
     .then(r=>{ if(!r.ok) throw new Error('Yacht Scoring '+r.status); return r.json(); }).then(j=>j.rows||[]);
@@ -3238,10 +3241,10 @@ function renderNB(){
   const keel=document.getElementById('nbkeel').checked;
   box.innerHTML=''; const cut=Date.now()-864e5;
   const list=NBRACES.filter(r=>{ if(keel && NB_JUNIOR.test(r.name||'')) return false;
-    const when=r.end||(r.startDate&&r.startDate.iso); if(when&&Date.parse(when)<cut) return false;   // drop races that already happened (a multi-day event stays until it ends)
+    const when=r.end||(r.startDate&&r.startDate.iso); if(!nbPast()&&when&&Date.parse(when)<cut) return false;   // drop races that already happened (a multi-day event stays until it ends)
     return !f || ((r.name||'')+' '+(r.city||'')).toLowerCase().indexOf(f)>=0; });
   const hdr=document.createElement('div'); hdr.style.color='#888'; hdr.style.margin='2px 0';
-  hdr.innerHTML=list.length+(keel?' keelboat/PHRF':'')+' <b>upcoming</b> bay races · tap "docs" for NOR/SI/course<br><span style="color:#aaa">(live from '+NBSRC+')</span>'; box.appendChild(hdr);
+  hdr.innerHTML=list.length+(keel?' keelboat/PHRF':'')+' <b>'+(nbPast()?'this season\'s':'upcoming')+'</b> bay races · tap "docs" for NOR/SI/course<br><span style="color:#aaa">(live from '+NBSRC+')</span>'; box.appendChild(hdr);
   const ord={nor:0,sis:1};
   list.forEach(r=>{ const dt=(r.startDate&&r.startDate.iso||'').slice(0,10);
     const row=document.createElement('div'); row.style.borderTop='1px solid #eee'; row.style.padding='3px 0';
@@ -3269,6 +3272,8 @@ function renderNB(){
 document.getElementById('nbbrowse').addEventListener('click',browseNB);
 document.getElementById('nbfilter').addEventListener('input',()=>{ if(NBRACES) renderNB(); });
 document.getElementById('nbkeel').addEventListener('change',()=>{ if(NBRACES) renderNB(); });
+document.getElementById('nbpast').addEventListener('change',()=>{ NBRACES=null;                     // different date window -> ask both sources again
+  const box=document.getElementById('nblive'); if(box.style.display==='block'){ box.style.display='none'; browseNB(); } });
 
 // ---- NOAA aids: LIVE from NOAA ENC Direct (the data behind the current charts), fetched for the area in view ----
 // Online, the dots always come from NOAA. A stored copy is used only when NOAA cannot be reached: first the areas
@@ -3302,10 +3307,16 @@ const ENCD='https://encdirect.noaa.gov/arcgis/rest/services/encdirect/', ENC_SVC
 function encLayers(svc){ return ENC_SVC[svc]||(ENC_SVC[svc]=fetch(ENCD+svc+'/MapServer?f=json').then(r=>r.json())
   .then(j=>j.layers.filter(l=>/(Buoy|Beacon)_.*_point$|\.Light(_Float)?_point$/.test(l.name)).map(l=>l.id).join(','))
   .catch(e=>{ delete ENC_SVC[svc]; throw e; })); }
-async function encIdentify(svc,b){ const ids=await encLayers(svc), env=[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].join(',');
+// NOAA answers at most 1000 features per request and silently drops the rest, so a full answer means "there is
+// more": split the box into quarters and ask again (a bay-wide view needs a few requests, a harbour view one).
+async function encIdentify(svc,b,depth){ const ids=await encLayers(svc), w=b.getWest(),s=b.getSouth(),e=b.getEast(),n=b.getNorth(), env=[w,s,e,n].join(',');
   const j=await (await fetch(ENCD+svc+'/MapServer/identify?f=json&geometryType=esriGeometryEnvelope&sr=4326&tolerance=0&imageDisplay=800,600,96'+
     '&returnGeometry=true&returnFieldName=true&layers=all:'+ids+'&geometry='+env+'&mapExtent='+env)).json();
-  if(!j.results) throw new Error((j.error&&j.error.message)||'no results from NOAA'); return j.results; }
+  if(!j.results) throw new Error((j.error&&j.error.message)||'no results from NOAA');
+  if(j.results.length<1000||(depth||0)>=4) return j.results;
+  const mx=(w+e)/2, my=(s+n)/2, q=(a,c,d,f)=>encIdentify(svc,L.latLngBounds([c,a],[f,d]),(depth||0)+1);
+  const parts=await Promise.all([q(w,s,mx,my),q(mx,s,e,my),q(w,my,mx,n),q(mx,my,e,n)]), seen={};
+  return [].concat(...parts).filter(r=>{ const k=r.layerId+':'+(r.attributes&&r.attributes.OBJECTID); return seen[k]?false:(seen[k]=1); }); }
 const LITCHR={1:'F',2:'Fl',3:'LFl',4:'Q',5:'VQ',6:'UQ',7:'Iso',8:'Oc',9:'IQ',10:'IVQ',11:'IUQ',12:'Mo',13:'FFl',14:'Fl+LFl',15:'OcFl',16:'FLFl',
   17:'Al.Oc',18:'Al.LFl',19:'Al.Fl',20:'Al.Gr',25:'Q+LFl',26:'VQ+LFl',27:'UQ+LFl',28:'Al',29:'Al.FFl'};
 const ENCCOL={1:'W',2:'Bk',3:'R',4:'G',5:'Bu',6:'Y',9:'Am',11:'Or'};
@@ -3328,8 +3339,9 @@ function encToAids(results){ const out=[], lights=[];
     else out.push([l.ll[0],l.ll[1],'',l.name||'Light',l.txt,encKind(l.col),true,'Light']); });           // lighthouse / standalone light
   return out; }
 function mergeAids(into,more){ more.forEach(m=>{ if(!into.some(a=>Math.abs(a[0]-m[0])<0.0006&&Math.abs(a[1]-m[1])<0.0008&&nearM(a,m)<40)) into.push(m); }); return into; }
-// Chart scale follows zoom, as on a real chart: harbour + approach detail when zoomed in, only the major aids when zoomed out.
-const aidBand=z=>z>=11?['enc_harbour','enc_approach']:z>=9?['enc_coastal']:['enc_general'];
+// Every charted aid (harbour + approach detail) from a bay-wide view inwards. Only when zoomed right out to a
+// whole-coast view does it drop to the major aids, as a small-scale chart does - and the status line says so.
+const aidBand=z=>z>=9?['enc_harbour','enc_approach']:z>=7?['enc_coastal']:['enc_general'];
 let aidsLive=null;     // last live answer {key,bounds,list}; reused while the view stays inside it, so small pans cost nothing
 async function loadAidsLive(view,z){ const band=aidBand(z), key=band.join();
   if(aidsLive&&aidsLive.key===key&&aidsLive.bounds.contains(view)) return aidsLive.list;
@@ -3344,7 +3356,7 @@ async function aidsFallback(){ const sv=savedAids(); if(sv&&sv.list&&sv.list.len
 let aidsSeq=0;
 async function renderAids(){ const seq=++aidsSeq, msg=document.getElementById('aidsmsg'), view=map.getBounds();
   let list, note='live from NOAA';
-  try{ list=await loadAidsLive(view,map.getZoom()); }
+  try{ list=await loadAidsLive(view,map.getZoom()); if(map.getZoom()<9) note='live from NOAA - major aids only, zoom in for all'; }
   catch(e){ try{ const f=await aidsFallback(); list=f.list; note=f.note; }catch(e2){ list=[]; note='aids unavailable (offline, nothing saved)'; } }
   if(seq!==aidsSeq||!aidsOn()) return;                 // a newer pan superseded this answer
   aidsLayer.clearLayers();
@@ -3357,12 +3369,12 @@ async function renderAids(){ const seq=++aidsSeq, msg=document.getElementById('a
         '<br>'+a[0].toFixed(5)+', '+a[1].toFixed(5)+'<br><small style="color:#666">'+note+'</small>')
       .addTo(aidsLayer);
     if(++cnt>=CAP) break; }
-  if(msg){ msg.textContent=note; msg.style.color=note==='live from NOAA'?'#0a7d2c':'#b35900'; }
+  if(msg){ msg.textContent=note; msg.style.color=/^live/.test(note)?'#0a7d2c':'#b35900'; }
 }
 let aidsTimer=null;
 map.on('moveend',()=>{ if(!aidsOn()) return; clearTimeout(aidsTimer); aidsTimer=setTimeout(renderAids,300); });
 document.getElementById('aidschk').addEventListener('change',e=>{
-  if(e.target.checked){ aidsLayer.addTo(map); renderAids(); }
+  if(e.target.checked){ aidsLayer.addTo(map); clearTimeout(aidsTimer); aidsTimer=setTimeout(renderAids,300); }   // short wait so the first request is for the settled view, not the start-up one
   else{ map.removeLayer(aidsLayer); const m=document.getElementById('aidsmsg'); if(m) m.textContent=''; } });
 if(document.getElementById('aidschk').checked) document.getElementById('aidschk').dispatchEvent(new Event('change'));  // load aids on start (default on)
 
@@ -3443,6 +3455,24 @@ document.getElementById('trapchk').addEventListener('change',async e=>{
     trapLayer.addTo(map); }
     catch(err){ alert('Could not load fish traps (RI DEM): '+err); e.target.checked=false; } }
   else if(trapLayer) map.removeLayer(trapLayer); });
+
+// ---- Collapsible menu sections: tap a section title to fold it away; the choice is remembered ----
+// Built at run time from the existing markup (a bold 12px title, then everything up to the next <hr>), so the
+// panel HTML stays flat and every control keeps its id. Folding only hides controls - layers stay as they were.
+(function(){ const panel=document.getElementById('panel'); if(!panel) return;
+  let saved={}; try{ saved=JSON.parse(localStorage.getItem('sa_sections')||'{}'); }catch(e){}
+  const OPEN_FIRST=['Additional chart layers','Races & courses'];                 // open on a first visit; the rest start folded
+  const heads=Array.from(panel.children).filter(el=>el.tagName==='B'&&/font-size:12px/.test(el.getAttribute('style')||''));
+  heads.forEach(h=>{ const key=h.textContent.trim(), body=document.createElement('div'), arrow=document.createElement('span');
+    for(let n=h.nextSibling; n && !(n.nodeType===1&&(n.tagName==='HR'||n.classList.contains('note')||heads.includes(n))); ){
+      const next=n.nextSibling; body.appendChild(n); n=next; }
+    h.after(body); h.prepend(arrow);
+    h.style.cssText+=';display:block;cursor:pointer;padding:3px 0;user-select:none'; arrow.style.cssText='display:inline-block;width:14px;color:#666';
+    const set=open=>{ body.style.display=open?'':'none'; arrow.textContent=open?'▾':'▸'; };
+    set(key in saved ? !!saved[key] : OPEN_FIRST.includes(key));
+    h.addEventListener('click',()=>{ const open=body.style.display==='none'; set(open); saved[key]=open;
+      try{ localStorage.setItem('sa_sections',JSON.stringify(saved)); }catch(e){} }); });
+})();
 
 // ---- Better Bay Alliance live chart (their page, new tab) ----
 document.getElementById('bbabtn').addEventListener('click',()=>window.open('https://betterbayalliance.org/live-chart-better-bay-alliance/','_blank'));
