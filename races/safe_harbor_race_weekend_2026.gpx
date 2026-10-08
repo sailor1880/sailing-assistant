@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="sailing-assistant" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>Safe Harbor Race Weekend 2026 navigation courses</name><desc>2026 Safe Harbor Race Weekend (Aug 7-9, 2026), fixed-mark courses only. Sources: SI Div 1-2-3 (final); Exhibit 1 Around Prudence Island with Amendment 1 applied (marks 16 and 17 are yellow/orange set marks); Notice 3 (Friday custom courses 99 LONG / 99 SHORT); Exhibit 2 Div 3 Navigation Courses with Notices 7 and 9 (intended coastal courses Sat Aug 8 and Sun Aug 9, Area E); Exhibit 5 South Bay Race Chart (mark letters and the printed positions of marks 16, 17, N2); Div 4 SI with Exhibit 7 (courses # 1-21) and Exhibit 8 (marks A-I, printed approximate positions). Prudence Island race: rendezvous Area A (approx 0.5 NM SSW of Halfway Rock); finishing line in the vicinity of Fort Adams approx 0.4 NM N of Mark 2, between a blue flag on an RC boat and a nearby mark; Patience Island is also a mark (same side as R8) and is drawn by the track passing W of it. Div 3 coastal: Area E (W of Rose Island near R2 off Jamestown Harbor) for both ends; government marks have no required side unless designated rounding marks. Div 4: RC line within ~1 NM of Kettle Bottom Reef Gong 7 (or 2-3 NM SSW of it, as broadcast); distances assume the Castle Hill finishing line (Castle Hill Light to a buoy WNW of it); other finishing options are Fort Adams and the starting area. All boats pass under the Newport Pell Bridge through the centre span. Keep out of the Navy security zone off Coddington Cove / Coasters Harbor. All approximate points are placeholders - the RC broadcasts actual positions. Points named (routing) are not marks. Windward/leeward courses and marks without a printed position (Mark 1, J, K, custom courses) are not included.</desc></metadata>
+<wpt lat="41.51127" lon="-71.34717"><name>Mark 13 - GR EP Bell N of Pell Bridge</name><sym>Buoy</sym></wpt>
+<wpt lat="41.55000" lon="-71.31667"><name>Mark 17 - TRM 17 NYYC, NE of Gould Island (inflatable, printed position)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.56807" lon="-71.32829"><name>Mark 18 - GR Can Fiske Rock</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57558" lon="-71.31638"><name>Mark 21 - G WR21 SE of Prudence Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.55604" lon="-71.33645"><name>Area A - RC line approx 0.5 NM SSW of Halfway Rock (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.67593" lon="-71.34741"><name>RG N Fork Rock Buoy N of Providence Pt</name><sym>Buoy</sym></wpt>
+<wpt lat="41.66096" lon="-71.37275"><name>R8 Bell W of Patience Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.49457" lon="-71.34466"><name>Mark S - R12 Bell SW of Rose Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.48784" lon="-71.33492"><name>Finish - vicinity of Fort Adams, approx 0.4 NM N of Mark 2 (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.52000" lon="-71.35700"><name>Finish - approx 1 NM SW of Gould Island, Potter Cove (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.55000" lon="-71.35555"><name>Finish at Mark 16 - TRM 16 NYYC, NW of Gould Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.48350" lon="-71.35061"><name>Mark R - G11 QG Bell E of The Dumplings</name><sym>Buoy</sym></wpt>
+<wpt lat="41.47733" lon="-71.35396"><name>Mark Q - G9 Gong E of Fort Wetherill</name><sym>Buoy</sym></wpt>
+<wpt lat="41.45753" lon="-71.36638"><name>Mark P - R6 Bell W of Butter Ball Rock</name><sym>Buoy</sym></wpt>
+<wpt lat="41.44083" lon="-71.40333"><name>Mark N2 - SW of Beavertail (inflatable, printed position)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.49998" lon="-71.34582"><name>Mark T - R Nun 12A NW of Rose Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.52972" lon="-71.33541"><name>Mark V - G17 QG E of Gould Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.42667" lon="-71.44333"><name>Inflatable A - SE of Little Neck (printed approx position)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.40833" lon="-71.43667"><name>Inflatable B - NE of Black Point (printed approx position)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><sym>Buoy</sym></wpt>
+<wpt lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.43000" lon="-71.24833"><name>Inflatable E - 2.5 NM S of Sachuest Point (printed approx position)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.46833" lon="-71.28333"><name>Inflatable F - 0.5 NM E of Ochre Point (printed approx position)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.43833" lon="-71.29000"><name>Inflatable G - 1 NM SE of Sheep Point (printed approx position)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><sym>Buoy</sym></wpt>
+<wpt lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name><sym>Buoy</sym></wpt>
+<rte><name>Course 1 - Clockwise around Prudence Island (Div 1 &amp; 3)</name>
+<rtept lat="41.55604" lon="-71.33645"><name>Area A - RC line approx 0.5 NM SSW of Halfway Rock (approx)</name></rtept>
+<rtept lat="41.60000" lon="-71.35000"><name>Between Hope Island and Prudence Island (routing)</name></rtept>
+<rtept lat="41.66096" lon="-71.37275"><name>R8 Bell W of Patience Island</name><type>stbd</type></rtept>
+<rtept lat="41.67593" lon="-71.34741"><name>RG N Fork Rock Buoy N of Providence Pt</name><type>stbd</type></rtept>
+<rtept lat="41.61000" lon="-71.29450"><name>E of Sandy Point, Prudence I. (routing)</name></rtept>
+<rtept lat="41.57800" lon="-71.31400"><name>W of Dyer Island (routing)</name></rtept>
+<rtept lat="41.55000" lon="-71.31667"><name>Mark 17 - TRM 17 NYYC, NE of Gould Island (inflatable, printed position)</name><type>stbd</type></rtept>
+<rtept lat="41.53000" lon="-71.33700"><name>E of Gould Island (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.49457" lon="-71.34466"><name>Mark S - R12 Bell SW of Rose Island</name><type>port</type></rtept>
+<rtept lat="41.48784" lon="-71.33492"><name>Finish - vicinity of Fort Adams, approx 0.4 NM N of Mark 2 (approx)</name></rtept>
+</rte>
+<rte><name>Course 2 - Counter-clockwise around Prudence Island (Div 1 &amp; 3)</name>
+<rtept lat="41.55604" lon="-71.33645"><name>Area A - RC line approx 0.5 NM SSW of Halfway Rock (approx)</name></rtept>
+<rtept lat="41.57558" lon="-71.31638"><name>Mark 21 - G WR21 SE of Prudence Island</name><type>port</type></rtept>
+<rtept lat="41.61000" lon="-71.29450"><name>E of Sandy Point, Prudence I. (routing)</name></rtept>
+<rtept lat="41.67593" lon="-71.34741"><name>RG N Fork Rock Buoy N of Providence Pt</name><type>port</type></rtept>
+<rtept lat="41.66096" lon="-71.37275"><name>R8 Bell W of Patience Island</name><type>port</type></rtept>
+<rtept lat="41.60000" lon="-71.35000"><name>Between Hope Island and Prudence Island (routing)</name></rtept>
+<rtept lat="41.56807" lon="-71.32829"><name>Mark 18 - GR Can Fiske Rock</name><type>stbd</type></rtept>
+<rtept lat="41.55000" lon="-71.31667"><name>Mark 17 - TRM 17 NYYC, NE of Gould Island (inflatable, printed position)</name><type>stbd</type></rtept>
+<rtept lat="41.53000" lon="-71.33700"><name>E of Gould Island (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.49457" lon="-71.34466"><name>Mark S - R12 Bell SW of Rose Island</name><type>port</type></rtept>
+<rtept lat="41.48784" lon="-71.33492"><name>Finish - vicinity of Fort Adams, approx 0.4 NM N of Mark 2 (approx)</name></rtept>
+</rte>
+<rte><name>Custom Course 99 LONG - Counter-clockwise around Prudence (Fri Aug 7, Notice 3)</name>
+<rtept lat="41.55604" lon="-71.33645"><name>Area A - RC line approx 0.5 NM SSW of Halfway Rock (approx)</name></rtept>
+<rtept lat="41.57558" lon="-71.31638"><name>Mark 21 - G WR21 SE of Prudence Island</name><type>port</type></rtept>
+<rtept lat="41.61000" lon="-71.29450"><name>E of Sandy Point, Prudence I. (routing)</name></rtept>
+<rtept lat="41.67593" lon="-71.34741"><name>RG N Fork Rock Buoy N of Providence Pt</name><type>port</type></rtept>
+<rtept lat="41.66096" lon="-71.37275"><name>R8 Bell W of Patience Island</name><type>port</type></rtept>
+<rtept lat="41.60000" lon="-71.35000"><name>Between Hope Island and Prudence Island (routing)</name></rtept>
+<rtept lat="41.56807" lon="-71.32829"><name>Mark 18 - GR Can Fiske Rock</name><type>stbd</type></rtept>
+<rtept lat="41.56200" lon="-71.32700"><name>E of Halfway Rock (routing)</name></rtept>
+<rtept lat="41.52000" lon="-71.35700"><name>Finish - approx 1 NM SW of Gould Island, Potter Cove (approx)</name></rtept>
+</rte>
+<rte><name>Custom Course 99 SHORT - Counter-clockwise around Prudence (Fri Aug 7, Notice 3)</name>
+<rtept lat="41.55604" lon="-71.33645"><name>Area A - RC line approx 0.5 NM SSW of Halfway Rock (approx)</name></rtept>
+<rtept lat="41.57558" lon="-71.31638"><name>Mark 21 - G WR21 SE of Prudence Island</name><type>port</type></rtept>
+<rtept lat="41.61000" lon="-71.29450"><name>E of Sandy Point, Prudence I. (routing)</name></rtept>
+<rtept lat="41.67593" lon="-71.34741"><name>RG N Fork Rock Buoy N of Providence Pt</name><type>port</type></rtept>
+<rtept lat="41.66096" lon="-71.37275"><name>R8 Bell W of Patience Island</name><type>port</type></rtept>
+<rtept lat="41.60000" lon="-71.35000"><name>Between Hope Island and Prudence Island (routing)</name></rtept>
+<rtept lat="41.55000" lon="-71.35555"><name>Finish at Mark 16 - TRM 16 NYYC, NW of Gould Island</name></rtept>
+</rte>
+<rte><name>Coastal A Sat Race 1 - R, N2, 13 (Div 3, Notice 7)</name>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35061"><name>Mark R - G11 QG Bell E of The Dumplings</name><type>stbd</type></rtept>
+<rtept lat="41.47650" lon="-71.35250"><name>Off Bull Point (routing)</name></rtept>
+<rtept lat="41.46550" lon="-71.36900"><name>East Passage W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.44200" lon="-71.39000"><name>SE of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.44083" lon="-71.40333"><name>Mark N2 - SW of Beavertail (inflatable, printed position)</name><type>port</type></rtept>
+<rtept lat="41.44200" lon="-71.39000"><name>SE of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.46550" lon="-71.36900"><name>East Passage W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.47650" lon="-71.35250"><name>Off Bull Point (routing)</name></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>Mark 13 - GR EP Bell N of Pell Bridge</name><type>port</type></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+</rte>
+<rte><name>Coastal B Sat Race 1 - R, N2, T (Div 3, Notice 7)</name>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35061"><name>Mark R - G11 QG Bell E of The Dumplings</name><type>stbd</type></rtept>
+<rtept lat="41.47650" lon="-71.35250"><name>Off Bull Point (routing)</name></rtept>
+<rtept lat="41.46550" lon="-71.36900"><name>East Passage W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.44200" lon="-71.39000"><name>SE of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.44083" lon="-71.40333"><name>Mark N2 - SW of Beavertail (inflatable, printed position)</name><type>port</type></rtept>
+<rtept lat="41.44200" lon="-71.39000"><name>SE of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.46550" lon="-71.36900"><name>East Passage W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.47650" lon="-71.35250"><name>Off Bull Point (routing)</name></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.49998" lon="-71.34582"><name>Mark T - R Nun 12A NW of Rose Island</name><type>port</type></rtept>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+</rte>
+<rte><name>Coastal C Sat Race 1 - R, P, T (Div 3, Notice 7)</name>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35061"><name>Mark R - G11 QG Bell E of The Dumplings</name><type>stbd</type></rtept>
+<rtept lat="41.45753" lon="-71.36638"><name>Mark P - R6 Bell W of Butter Ball Rock</name><type>stbd</type></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.49998" lon="-71.34582"><name>Mark T - R Nun 12A NW of Rose Island</name><type>port</type></rtept>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+</rte>
+<rte><name>Coastal A Sat Race 2 - P, V (Div 3, Notice 7, if held)</name>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.45753" lon="-71.36638"><name>Mark P - R6 Bell W of Butter Ball Rock</name><type>stbd</type></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>Mark V - G17 QG E of Gould Island</name><type>port</type></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+</rte>
+<rte><name>Coastal B Sat Race 2 - Q, V (Div 3, Notice 7, if held)</name>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.47733" lon="-71.35396"><name>Mark Q - G9 Gong E of Fort Wetherill</name><type>port</type></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>Mark V - G17 QG E of Gould Island</name><type>port</type></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+</rte>
+<rte><name>Coastal C Sat Race 2 - Q, 13 (Div 3, Notice 7, if held)</name>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.47733" lon="-71.35396"><name>Mark Q - G9 Gong E of Fort Wetherill</name><type>port</type></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>Mark 13 - GR EP Bell N of Pell Bridge</name><type>port</type></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+</rte>
+<rte><name>Coastal A and B Sun - Q, 17, Q, R (Div 3, Notice 9)</name>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.47733" lon="-71.35396"><name>Mark Q - G9 Gong E of Fort Wetherill</name><type>port</type></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.53000" lon="-71.33700"><name>E of Gould Island (routing)</name></rtept>
+<rtept lat="41.55000" lon="-71.31667"><name>Mark 17 - TRM 17 NYYC, NE of Gould Island (inflatable, printed position)</name><type>port</type></rtept>
+<rtept lat="41.53000" lon="-71.33700"><name>E of Gould Island (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.47733" lon="-71.35396"><name>Mark Q - G9 Gong E of Fort Wetherill</name><type>port</type></rtept>
+<rtept lat="41.48350" lon="-71.35061"><name>Mark R - G11 QG Bell E of The Dumplings</name><type>port</type></rtept>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+</rte>
+<rte><name>Coastal C Sun - Q, V, Q, R (Div 3, Notice 9)</name>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.47733" lon="-71.35396"><name>Mark Q - G9 Gong E of Fort Wetherill</name><type>port</type></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>Mark V - G17 QG E of Gould Island</name><type>port</type></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.48400" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.47733" lon="-71.35396"><name>Mark Q - G9 Gong E of Fort Wetherill</name><type>port</type></rtept>
+<rtept lat="41.48350" lon="-71.35061"><name>Mark R - G11 QG Bell E of The Dumplings</name><type>port</type></rtept>
+<rtept lat="41.49550" lon="-71.35700"><name>Area E - RC line W of Rose Island near R2 off Jamestown Harbor (approx)</name></rtept>
+</rte>
+<rte><name># 1 - Div 4: A-H-I 9.4 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.44000" lon="-71.40300"><name>S of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.42667" lon="-71.44333"><name>Inflatable A - SE of Little Neck (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 2 - Div 4: A-B-H-I 10.1 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.44000" lon="-71.40300"><name>S of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.42667" lon="-71.44333"><name>Inflatable A - SE of Little Neck (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.40833" lon="-71.43667"><name>Inflatable B - NE of Black Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 3 - Div 4: A-C-H-I 11.8 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.44000" lon="-71.40300"><name>S of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.42667" lon="-71.44333"><name>Inflatable A - SE of Little Neck (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 4 - Div 4: A-C-D-I 18.1 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.44000" lon="-71.40300"><name>S of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.42667" lon="-71.44333"><name>Inflatable A - SE of Little Neck (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 5 - Div 4: A-D-H-I 18.7 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.44000" lon="-71.40300"><name>S of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.42667" lon="-71.44333"><name>Inflatable A - SE of Little Neck (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 6 - Div 4: A-C-D-H-I 20.1 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.44000" lon="-71.40300"><name>S of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.42667" lon="-71.44333"><name>Inflatable A - SE of Little Neck (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 7 - Div 4: B-C-H-I 11.6 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.40833" lon="-71.43667"><name>Inflatable B - NE of Black Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 8 - Div 4: B-D-H-I 19.1 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.40833" lon="-71.43667"><name>Inflatable B - NE of Black Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 9 - Div 4: B-C-D-H-I 19.8 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.40833" lon="-71.43667"><name>Inflatable B - NE of Black Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 10 - Div 4: B-D-G-H-I 20.7 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.40833" lon="-71.43667"><name>Inflatable B - NE of Black Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43833" lon="-71.29000"><name>Inflatable G - 1 NM SE of Sheep Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 11 - Div 4: C-D-G-I 17.1 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43833" lon="-71.29000"><name>Inflatable G - 1 NM SE of Sheep Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 12 - Div 4: C-D-F-G-I 20.5 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.46833" lon="-71.28333"><name>Inflatable F - 0.5 NM E of Ochre Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43833" lon="-71.29000"><name>Inflatable G - 1 NM SE of Sheep Point (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 13 - Div 4: C-E-F-D-I 23.2 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><type>port</type></rtept>
+<rtept lat="41.43000" lon="-71.24833"><name>Inflatable E - 2.5 NM S of Sachuest Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.46833" lon="-71.28333"><name>Inflatable F - 0.5 NM E of Ochre Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 14 - Div 4: H-D-I 13.6 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 15 - Div 4: H-D-G-I 14.8 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43833" lon="-71.29000"><name>Inflatable G - 1 NM SE of Sheep Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 16 - Div 4: H-D-F-G-I 18.2 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.46833" lon="-71.28333"><name>Inflatable F - 0.5 NM E of Ochre Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.43833" lon="-71.29000"><name>Inflatable G - 1 NM SE of Sheep Point (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 17 - Div 4: I-D-H-I 13.8 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>port</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 18 - Div 4: I-G-D-H-I 15.1 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>port</type></rtept>
+<rtept lat="41.43833" lon="-71.29000"><name>Inflatable G - 1 NM SE of Sheep Point (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 19 - Div 4: I-G-D-C-H-I 17.4 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>port</type></rtept>
+<rtept lat="41.43833" lon="-71.29000"><name>Inflatable G - 1 NM SE of Sheep Point (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.38334" lon="-71.38930"><name>Mark C - RW NB Mo(A) 4 NM ENE of Point Judith</name><type>stbd</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 20 - Div 4: I-G-F-D-H-I 18.4 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>port</type></rtept>
+<rtept lat="41.43833" lon="-71.29000"><name>Inflatable G - 1 NM SE of Sheep Point (printed approx position)</name><type>port</type></rtept>
+<rtept lat="41.46833" lon="-71.28333"><name>Inflatable F - 0.5 NM E of Ochre Point (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.41167" lon="-71.27833"><name>Inflatable D - 4 NM ESE of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+<rte><name># 21 - Div 4: I-E-H-I 16.4 NM</name>
+<rtept lat="41.46100" lon="-71.37000"><name>Div 4 RC line within ~1 NM of Kettle Bottom Reef Gong 7 (approx)</name></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>port</type></rtept>
+<rtept lat="41.43000" lon="-71.24833"><name>Inflatable E - 2.5 NM S of Sachuest Point (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.41167" lon="-71.38333"><name>Inflatable H - 2 NM SW of R2 (printed approx position)</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Mark I - R2 Whistle SW of Brenton Point</name><type>stbd</type></rtept>
+<rtept lat="41.46405" lon="-71.36910"><name>Finish - Castle Hill Light line, ~0.3 NM WNW of the light (approx)</name></rtept>
+</rte>
+</gpx>

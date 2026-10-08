@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="sailing-assistant" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>Offshore 160 Singlehanded Challenge 2026</name><desc>2026 Offshore 160 Singlehanded Challenge (Newport YC, Jul 10-12, 2026). Source: Sailing Instructions with Amendment 1 (classes may sail different courses) and Amendment 2 (rounding sides: R4 off Block Island and both virtual marks to port, R2 off Pt Judith to starboard) applied. Start (SI 7.1): line between RC boat and an orange inflatable W of Goat Island, between Fort Adams and Rose Island - drawn at an approximate point. Finish (SI 13): at R2 Brenton Reef; each yacht takes her own GPS time when R2 bears 110 magnetic at a distance not exceeding 1/2 mile (bearing line drawn using 13.8 W variation). R4 position is the lat/long printed in the SI (Light List 19735); virtual marks as printed; R2 Pt Judith is Light List 19460. Cox Ledge Exclusion Zone (SI 6.4, Appendix A, seven virtual boundary marks EZ01-EZ07) is an obstruction: do not enter. Points named (routing) are not marks; either side of Block Island is allowed on the way to R4 - drawn W of the island.</desc></metadata>
+<wpt lat="41.49150" lon="-71.33600"><name>RC line W of Goat Island, between Fort Adams and Rose Island (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.14549" lon="-71.62247"><name>R4 Whistle SW of Southwest Point, Block Island</name><sym>Buoy</sym></wpt>
+<wpt lat="40.30000" lon="-71.43333"><name>Virtual Mark 1 (Course A) 40-18N 071-26W</name><sym>Buoy</sym></wpt>
+<wpt lat="40.43333" lon="-71.05000"><name>Virtual Mark 2 (Course A) 40-26N 071-03W</name><sym>Buoy</sym></wpt>
+<wpt lat="40.53333" lon="-71.48333"><name>Virtual Mark 1 (Course B) 40-32N 071-29W</name><sym>Buoy</sym></wpt>
+<wpt lat="40.65000" lon="-71.15000"><name>Virtual Mark 2 (Course B) 40-39N 071-09W</name><sym>Buoy</sym></wpt>
+<wpt lat="41.30769" lon="-71.47245"><name>R2 Whistle 3.3 NM S of Point Judith</name><sym>Buoy</sym></wpt>
+<wpt lat="41.43240" lon="-71.36298"><name>Finish at R2 Brenton Reef (own time when R2 bears 110 M, within 0.5 NM)</name><sym>Buoy</sym></wpt>
+<rte><name>Course A - Block I. R4, VM1, VM2, Pt Judith R2 160 NM</name>
+<rtept lat="41.49150" lon="-71.33600"><name>RC line W of Goat Island, between Fort Adams and Rose Island (approx)</name></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.20000" lon="-71.63500"><name>W of Block Island (routing)</name></rtept>
+<rtept lat="41.14549" lon="-71.62247"><name>R4 Whistle SW of Southwest Point, Block Island</name><type>port</type></rtept>
+<rtept lat="40.30000" lon="-71.43333"><name>Virtual Mark 1 (Course A) 40-18N 071-26W</name><type>port</type></rtept>
+<rtept lat="40.43333" lon="-71.05000"><name>Virtual Mark 2 (Course A) 40-26N 071-03W</name><type>port</type></rtept>
+<rtept lat="41.30769" lon="-71.47245"><name>R2 Whistle 3.3 NM S of Point Judith</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Finish at R2 Brenton Reef (own time when R2 bears 110 M, within 0.5 NM)</name></rtept>
+</rte>
+<rte><name>Course B - Block I. R4, VM1, VM2, Pt Judith R2 130 NM</name>
+<rtept lat="41.49150" lon="-71.33600"><name>RC line W of Goat Island, between Fort Adams and Rose Island (approx)</name></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.20000" lon="-71.63500"><name>W of Block Island (routing)</name></rtept>
+<rtept lat="41.14549" lon="-71.62247"><name>R4 Whistle SW of Southwest Point, Block Island</name><type>port</type></rtept>
+<rtept lat="40.53333" lon="-71.48333"><name>Virtual Mark 1 (Course B) 40-32N 071-29W</name><type>port</type></rtept>
+<rtept lat="40.65000" lon="-71.15000"><name>Virtual Mark 2 (Course B) 40-39N 071-09W</name><type>port</type></rtept>
+<rtept lat="41.30769" lon="-71.47245"><name>R2 Whistle 3.3 NM S of Point Judith</name><type>stbd</type></rtept>
+<rtept lat="41.43240" lon="-71.36298"><name>Finish at R2 Brenton Reef (own time when R2 bears 110 M, within 0.5 NM)</name></rtept>
+</rte>
+<rte><name>Cox Ledge Exclusion Zone</name>
+<rtept lat="41.15833" lon="-71.26667"><name>EZ01</name></rtept>
+<rtept lat="41.23167" lon="-71.17500"><name>EZ02</name></rtept>
+<rtept lat="41.23167" lon="-71.05833"><name>EZ03</name></rtept>
+<rtept lat="41.13333" lon="-70.83333"><name>EZ04</name></rtept>
+<rtept lat="41.11167" lon="-70.83167"><name>EZ05</name></rtept>
+<rtept lat="41.07500" lon="-70.94167"><name>EZ06</name></rtept>
+<rtept lat="41.07167" lon="-71.19333"><name>EZ07</name></rtept>
+<rtept lat="41.15833" lon="-71.26667"><name>EZ01</name></rtept>
+</rte>
+<rte><name>Finish line (R2 Brenton Reef bears 110 M, max 0.5 NM)</name>
+<rtept lat="41.43240" lon="-71.36298"><name>R2 Brenton Reef</name></rtept>
+<rtept lat="41.43330" lon="-71.37403"><name>0.5 NM limit, R2 bearing 110 M</name></rtept>
+</rte>
+</gpx>

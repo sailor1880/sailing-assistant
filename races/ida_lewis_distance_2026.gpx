@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="sailing-assistant" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>Ida Lewis Distance Race 2026</name><desc>2026 Ida Lewis Distance Race (Aug 14-15, 2026). Source: Addendum 1 - Courses (Course Booklet: Mark Register, "A" and "R" course descriptions, course plots) with SI Amendment No. 1 applied (Yellow Tetrahedron 071 19.61 W), and SI Rev 7 (incorporates Amendments 1 and 2). All mark positions are the printed approximate lat/long from the booklet. Start (SI 8.4): line between the RC signal boat anchored S of Rose Island and a nearby race mark; drawn at the Mark Register rendezvous position. Finish (SI 10.1): line between G3 Bell S of Goat Island and an orange flag staff at the N end of the Ida Lewis YC deck; routes end at G3. SI 10.2: yellow inflatable at approx 41 28.81 N 071 19.61 W is a mark of the course, left to starboard, not part of the finishing line. ORC 1 only (Amendment 2): finishing line is ILYC flag staff to the western tower of the Pell Bridge (approx 41 30.3407 N 071 21.0930 W) and the yellow mark does not apply - not drawn. Cox Ledge wind farm is an Obstruction (SI 1.8, 19.3, Appendix A): do not enter. Points named (routing) are not marks: they only keep the drawn line off land and follow the booklet plots (S of Block Island, off Montauk Pt, The Race, Plum Gut). Sides are as printed in the Leave To column. NOT FOR NAVIGATION.</desc></metadata>
+<wpt lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><sym>Buoy</sym></wpt>
+<wpt lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><sym>Buoy</sym></wpt>
+<wpt lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><sym>Buoy</sym></wpt>
+<wpt lat="41.17433" lon="-71.95110"><name>G9 Gong Cerberus Shoal</name><sym>Buoy</sym></wpt>
+<wpt lat="41.11600" lon="-71.71848"><name>GR BIS ENE of Montauk Pt</name><sym>Buoy</sym></wpt>
+<wpt lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><sym>Buoy</sym></wpt>
+<wpt lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><sym>Buoy</sym></wpt>
+<wpt lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><sym>Buoy</sym></wpt>
+<wpt lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.25732" lon="-71.57592"><name>G1BI Bell N of Block Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.29965" lon="-71.85923"><name>R2 Bell S of Watch Hill</name><sym>Buoy</sym></wpt>
+<wpt lat="41.14988" lon="-72.14895"><name>G1GI Gong Gardiners Island (SE of Plum Island)</name><sym>Buoy</sym></wpt>
+<wpt lat="40.81672" lon="-72.47627"><name>RW SH Whistle S of Shinnecock</name><sym>Buoy</sym></wpt>
+<wpt lat="41.15445" lon="-72.50685"><name>TE Twenty-Eight Foot Shoal Whistle</name><sym>Buoy</sym></wpt>
+<wpt lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name><sym>Buoy</sym></wpt>
+<rte><name>Course 1 - Cerberus G9, BIS, Buzzards Twr 105 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.33500" lon="-71.48200"><name>S of Point Judith (routing)</name></rtept>
+<rtept lat="41.17433" lon="-71.95110"><name>G9 Gong Cerberus Shoal</name><type>port</type></rtept>
+<rtept lat="41.11600" lon="-71.71848"><name>GR BIS ENE of Montauk Pt</name><type>port</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 2 - BIS, Cox #2, Cox #3, Cox #4, Buzzards Twr 115 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.33500" lon="-71.48200"><name>S of Point Judith (routing)</name></rtept>
+<rtept lat="41.26400" lon="-71.57700"><name>N of Block Island North Reef (routing)</name></rtept>
+<rtept lat="41.11600" lon="-71.71848"><name>GR BIS ENE of Montauk Pt</name><type>port</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>port</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>port</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 3 - Buzzards Twr, Cerberus G9, Montauk G1, Buzzards Twr 135 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.17433" lon="-71.95110"><name>G9 Gong Cerberus Shoal</name><type>port</type></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>port</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 4 - Buzzards Twr, Montauk G1, Cox #2, Cox #3, Cox #4, Buzzards Twr 150 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>port</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>port</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>port</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 5 - Buzzards Twr, Watch Hill R2, Montauk G1, Cox #2, Cox #3, Cox #4, Buzzards Twr 160 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.29965" lon="-71.85923"><name>R2 Bell S of Watch Hill</name><type>port</type></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>port</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>port</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>port</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 6 - Buzzards Twr, Gardiners 1GI, Montauk G1, Cox #2, Cox #3, Cox #4, Buzzards Twr 180 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.14988" lon="-72.14895"><name>G1GI Gong Gardiners Island (SE of Plum Island)</name><type>port</type></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>port</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>port</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>port</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 7 - Buzzards Twr, Watch Hill R2, Gardiners 1GI, Montauk G1, Cox #2, Cox #3, Cox #4, Buzzards Twr 181.5 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.29965" lon="-71.85923"><name>R2 Bell S of Watch Hill</name><type>port</type></rtept>
+<rtept lat="41.14988" lon="-72.14895"><name>G1GI Gong Gardiners Island (SE of Plum Island)</name><type>port</type></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>port</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>port</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>port</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 8 - Buzzards Twr, Watch Hill R2, Montauk G1, Shinnecock SH, Buzzards Twr 205 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.29965" lon="-71.85923"><name>R2 Bell S of Watch Hill</name><type>port</type></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>stbd</type></rtept>
+<rtept lat="41.04000" lon="-71.84500"><name>SE of Montauk Point (routing)</name></rtept>
+<rtept lat="40.81672" lon="-72.47627"><name>RW SH Whistle S of Shinnecock</name><type>port</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 9 - Buzzards Twr, Shinnecock SH, Cox #3, Cox #4, Buzzards Twr 220 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="40.81672" lon="-72.47627"><name>RW SH Whistle S of Shinnecock</name><type>port</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>port</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 10 - Buzzards Twr, 1BI, Watch Hill R2, BIS, Shinnecock SH, Cox #3, Cox #4, Buzzards Twr 235 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.25732" lon="-71.57592"><name>G1BI Bell N of Block Island</name><type>stbd</type></rtept>
+<rtept lat="41.29965" lon="-71.85923"><name>R2 Bell S of Watch Hill</name><type>port</type></rtept>
+<rtept lat="41.11600" lon="-71.71848"><name>GR BIS ENE of Montauk Pt</name><type>stbd</type></rtept>
+<rtept lat="41.04000" lon="-71.84500"><name>SE of Montauk Point (routing)</name></rtept>
+<rtept lat="40.81672" lon="-72.47627"><name>RW SH Whistle S of Shinnecock</name><type>port</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>port</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 11 - Buzzards Twr, 1BI, TE, BIS, Shinnecock SH, Cox #3, Cox #4, Buzzards Twr 288 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.25732" lon="-71.57592"><name>G1BI Bell N of Block Island</name><type>stbd</type></rtept>
+<rtept lat="41.22200" lon="-72.09200"><name>The Race, N of Little Gull Island (routing)</name></rtept>
+<rtept lat="41.15445" lon="-72.50685"><name>TE Twenty-Eight Foot Shoal Whistle</name><type>port</type></rtept>
+<rtept lat="41.17400" lon="-72.22600"><name>Plum Gut N entrance (routing)</name></rtept>
+<rtept lat="41.16450" lon="-72.21850"><name>Plum Gut (routing)</name></rtept>
+<rtept lat="41.15600" lon="-72.20900"><name>Plum Gut S entrance (routing)</name></rtept>
+<rtept lat="41.11600" lon="-71.71848"><name>GR BIS ENE of Montauk Pt</name><type>stbd</type></rtept>
+<rtept lat="41.04000" lon="-71.84500"><name>SE of Montauk Point (routing)</name></rtept>
+<rtept lat="40.81672" lon="-72.47627"><name>RW SH Whistle S of Shinnecock</name><type>port</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>port</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 1R - Buzzards Twr, BIS, Cerberus G9 105 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="41.11600" lon="-71.71848"><name>GR BIS ENE of Montauk Pt</name><type>stbd</type></rtept>
+<rtept lat="41.17433" lon="-71.95110"><name>G9 Gong Cerberus Shoal</name><type>stbd</type></rtept>
+<rtept lat="41.33500" lon="-71.48200"><name>S of Point Judith (routing)</name></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 2R - Buzzards Twr, Cox #4, Cox #3, Cox #2, BIS 115 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>stbd</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>stbd</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>stbd</type></rtept>
+<rtept lat="41.11600" lon="-71.71848"><name>GR BIS ENE of Montauk Pt</name><type>stbd</type></rtept>
+<rtept lat="41.26400" lon="-71.57700"><name>N of Block Island North Reef (routing)</name></rtept>
+<rtept lat="41.33500" lon="-71.48200"><name>S of Point Judith (routing)</name></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 3R - Buzzards Twr, Montauk G1, Cerberus G9, Buzzards Twr 135 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>stbd</type></rtept>
+<rtept lat="41.17433" lon="-71.95110"><name>G9 Gong Cerberus Shoal</name><type>stbd</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 4R - Buzzards Twr, Cox #4, Cox #3, Cox #2, Montauk G1, Buzzards Twr 150 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>stbd</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>stbd</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>stbd</type></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>stbd</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 5R - Buzzards Twr, Cox #4, Cox #3, Cox #2, Montauk G1, Watch Hill R2, Buzzards Twr 160 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>stbd</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>stbd</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>stbd</type></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>stbd</type></rtept>
+<rtept lat="41.29965" lon="-71.85923"><name>R2 Bell S of Watch Hill</name><type>stbd</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 6R - Buzzards Twr, Cox #4, Cox #3, Cox #2, Montauk G1, Gardiners 1GI, Buzzards Twr 180 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>stbd</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>stbd</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>stbd</type></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>stbd</type></rtept>
+<rtept lat="41.14988" lon="-72.14895"><name>G1GI Gong Gardiners Island (SE of Plum Island)</name><type>stbd</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 7R - Buzzards Twr, Cox #4, Cox #3, Cox #2, Montauk G1, Gardiners 1GI, Watch Hill R2, Buzzards Twr 181.5 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>stbd</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>stbd</type></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Mark Cox Ledge #2</name><type>stbd</type></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>stbd</type></rtept>
+<rtept lat="41.14988" lon="-72.14895"><name>G1GI Gong Gardiners Island (SE of Plum Island)</name><type>stbd</type></rtept>
+<rtept lat="41.29965" lon="-71.85923"><name>R2 Bell S of Watch Hill</name><type>stbd</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 8R - Buzzards Twr, Shinnecock SH, Montauk G1, Watch Hill R2, Buzzards Twr 205 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="40.81672" lon="-72.47627"><name>RW SH Whistle S of Shinnecock</name><type>stbd</type></rtept>
+<rtept lat="41.04000" lon="-71.84500"><name>SE of Montauk Point (routing)</name></rtept>
+<rtept lat="41.10195" lon="-71.77290"><name>G1 Gong ENE Montauk (Endeavor Shoals)</name><type>port</type></rtept>
+<rtept lat="41.29965" lon="-71.85923"><name>R2 Bell S of Watch Hill</name><type>stbd</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 9R - Buzzards Twr, Cox #4, Cox #3, Shinnecock SH, Buzzards Twr 220 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>stbd</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>stbd</type></rtept>
+<rtept lat="40.81672" lon="-72.47627"><name>RW SH Whistle S of Shinnecock</name><type>stbd</type></rtept>
+<rtept lat="41.13000" lon="-71.54500"><name>SE of Block Island (routing)</name></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 10R - Buzzards Twr, Cox #4, Cox #3, Shinnecock SH, BIS, Watch Hill R2, 1BI, Buzzards Twr 235 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>stbd</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>stbd</type></rtept>
+<rtept lat="40.81672" lon="-72.47627"><name>RW SH Whistle S of Shinnecock</name><type>stbd</type></rtept>
+<rtept lat="41.04000" lon="-71.84500"><name>SE of Montauk Point (routing)</name></rtept>
+<rtept lat="41.11600" lon="-71.71848"><name>GR BIS ENE of Montauk Pt</name><type>port</type></rtept>
+<rtept lat="41.29965" lon="-71.85923"><name>R2 Bell S of Watch Hill</name><type>stbd</type></rtept>
+<rtept lat="41.25732" lon="-71.57592"><name>G1BI Bell N of Block Island</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Course 11R - Buzzards Twr, Cox #4, Cox #3, Shinnecock SH, BIS, TE, 1BI, Buzzards Twr 288 NM</name>
+<rtept lat="41.49167" lon="-71.35483"><name>RC signal boat S of Rose Island - rendezvous (approx)</name></rtept>
+<rtept lat="41.48350" lon="-71.35062"><name>G11 QG Bell E of Clingstone (The Dumplings)</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>stbd</type></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Mark Cox Ledge #4</name><type>stbd</type></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Mark Cox Ledge #3</name><type>stbd</type></rtept>
+<rtept lat="40.81672" lon="-72.47627"><name>RW SH Whistle S of Shinnecock</name><type>stbd</type></rtept>
+<rtept lat="41.04000" lon="-71.84500"><name>SE of Montauk Point (routing)</name></rtept>
+<rtept lat="41.11600" lon="-71.71848"><name>GR BIS ENE of Montauk Pt</name><type>port</type></rtept>
+<rtept lat="41.15600" lon="-72.20900"><name>Plum Gut S entrance (routing)</name></rtept>
+<rtept lat="41.16450" lon="-72.21850"><name>Plum Gut (routing)</name></rtept>
+<rtept lat="41.17400" lon="-72.22600"><name>Plum Gut N entrance (routing)</name></rtept>
+<rtept lat="41.15445" lon="-72.50685"><name>TE Twenty-Eight Foot Shoal Whistle</name><type>stbd</type></rtept>
+<rtept lat="41.22200" lon="-72.09200"><name>The Race, N of Little Gull Island (routing)</name></rtept>
+<rtept lat="41.25732" lon="-71.57592"><name>G1BI Bell N of Block Island</name><type>port</type></rtept>
+<rtept lat="41.39700" lon="-71.03470"><name>Buzzards Bay Tower</name><type>port</type></rtept>
+<rtept lat="41.38333" lon="-71.38932"><name>RW NB Mo(A) Narragansett Bay Entrance</name><type>stbd</type></rtept>
+<rtept lat="41.45755" lon="-71.36640"><name>R6 Bell SW of Castle Hill</name><type>stbd</type></rtept>
+<rtept lat="41.46550" lon="-71.36550"><name>W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48450" lon="-71.33950"><name>N of Fort Adams (routing)</name></rtept>
+<rtept lat="41.48017" lon="-71.32683"><name>Yellow Tetrahedron (SI 10.2, approx)</name><type>stbd</type></rtept>
+<rtept lat="41.48167" lon="-71.32685"><name>Finish - G3 Bell S of Goat Island (line to ILYC flag staff)</name></rtept>
+</rte>
+<rte><name>Cox Ledge Exclusion Zone</name>
+<rtept lat="41.16098" lon="-71.27843"><name>Virtual Cox Ledge #1</name></rtept>
+<rtept lat="41.06993" lon="-71.19810"><name>Virtual Cox Ledge #2</name></rtept>
+<rtept lat="41.07925" lon="-70.81975"><name>Virtual Cox Ledge #3</name></rtept>
+<rtept lat="41.14962" lon="-70.82800"><name>Virtual Cox Ledge #4</name></rtept>
+<rtept lat="41.24468" lon="-71.05047"><name>Virtual Cox Ledge #5</name></rtept>
+<rtept lat="41.24468" lon="-71.19192"><name>Virtual Cox Ledge #6</name></rtept>
+<rtept lat="41.16098" lon="-71.27843"><name>Virtual Cox Ledge #1</name></rtept>
+</rte>
+</gpx>
