@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="solo-twin" xmlns="http://www.topografix.com/GPX/1/1">
-<metadata><name>Newport Cup - Around Conanicut Island</name><desc>Around Conanicut Island (Newport Cup NOR). North gate = red Bell 2 (vs CYC&#x27;s green Can 3). Start/finish RC line, East Passage. Newport Bridge center span; no sailing Rose I.-Newport Bridge. Start/finish per 2026 SI 5.1: RC boat anchored west of Goat Island, east of the shipping channel (position approximate). Course P added from SI 4.7; course Z not drawn until its G 17 is confirmed.</desc></metadata>
+<metadata><name>Newport Cup - Around Conanicut Island</name><desc>Around Conanicut Island (Newport Cup NOR). North gate = red Bell 2 (vs CYC&#x27;s green Can 3). Start/finish RC line, East Passage. Newport Bridge center span; no sailing Rose I.-Newport Bridge. Start/finish per 2026 SI 5.1: RC boat anchored west of Goat Island, east of the shipping channel (position approximate). Courses P and Z added from SI 4.7 and 4.6; G 17 on course Z is East Passage Lighted Buoy 17 (USER-CONFIRMED).</desc></metadata>
 <wpt lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><sym>Buoy</sym></wpt>
 <wpt lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><sym>Buoy</sym></wpt>
 <wpt lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name><sym>Buoy</sym></wpt>
@@ -8,6 +8,7 @@
 <wpt lat="41.48700" lon="-71.33300"><name>Start/Finish W of Goat Island (RC, approx)</name><sym>Buoy</sym></wpt>
 <wpt lat="41.51664" lon="-71.33422"><name>R14 East Passage Bell 14 (Bishop Rock)</name><sym>Buoy</sym></wpt>
 <wpt lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><sym>Buoy</sym></wpt>
+<wpt lat="41.52972" lon="-71.33541"><name>G17 East Passage Lighted Buoy 17 (E of Gould I.)</name><sym>Buoy</sym></wpt>
 <rte><name>O - CW 18.1 NM (N-&gt;S)</name>
 <rtept lat="41.48700" lon="-71.33300"><name>Start/Finish W of Goat Island (RC, approx)</name></rtept>
 <rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>stbd</type></rtept>
@@ -31,6 +32,15 @@
 <rtept lat="41.51664" lon="-71.33422"><name>R14 East Passage Bell 14 (Bishop Rock)</name><type>port</type></rtept>
 <rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><type>port</type></rtept>
 <rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48700" lon="-71.33300"><name>Start/Finish W of Goat Island (RC, approx)</name></rtept>
+</rte>
+<rte><name>Z - 12.0 NM (S-&gt;N)</name>
+<rtept lat="41.48700" lon="-71.33300"><name>Start/Finish W of Goat Island (RC, approx)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><type>stbd</type></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage Lighted Buoy 17 (E of Gould I.)</name><type>stbd</type></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>port</type></rtept>
 <rtept lat="41.48700" lon="-71.33300"><name>Start/Finish W of Goat Island (RC, approx)</name></rtept>
 </rte>
 </gpx>
