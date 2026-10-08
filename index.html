@@ -752,8 +752,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <button id="bbabtn" style="font-size:11px;margin-top:3px;cursor:pointer;width:100%">Bay events (Better Bay Alliance) &#8599;</button>
  <div id="mycourses"></div>
  <hr><b style="font-size:12px">Races &amp; courses</b> <span style="color:#888;font-size:11px">by yacht club</span>
- <label style="font-size:12px;display:block;margin:2px 0">Pick a race / course set:
-   <select id="racecat" style="font-size:11px;width:100%"><option value="">&hellip;</option></select></label>
+ <label style="font-size:12px;display:block;margin:2px 0">1. Pick a club:
+   <select id="raceclub" style="font-size:11px;width:100%"><option value="">&hellip;</option></select></label>
+ <label style="font-size:12px;display:block;margin:2px 0">2. Pick its race / course set:
+   <select id="racecat" style="font-size:11px;width:100%" disabled><option value="">&mdash; pick a club first &mdash;</option></select></label>
  <div id="sbrcbox" style="margin:2px 0;padding:3px;border:1px dashed #bbb;border-radius:4px">
    <div style="color:#888;font-size:11px">South Bay Race Chart &mdash; pick a set above, then type a code:</div>
    <select id="courseset" style="font-size:11px;width:100%;margin:2px 0"></select>
@@ -3147,17 +3149,27 @@ const RACE_LINKS={};     // file -> NOR/SI/club links (from races.json)
   Promise.all([fetch('races.json').then(r=>r.json()),
                fetch('courses.json').then(r=>r.json()).catch(()=>({sets:[]}))])
    .then(([list,cj])=>{
-    sel.innerHTML='<option value="">&mdash; pick a race / course set &mdash;</option>';
+    // Two steps: pick a club, then only that club's races are listed. One long list of every race stopped
+    // being usable as clubs were added. Each club maps to the <option>s shown in the second list.
+    const clubSel=document.getElementById('raceclub'), byClub={};
     if(cj.sets && cj.sets.length){                               // South Bay Race Chart coded-course sets first
-      const og=document.createElement('optgroup'); og.label='South Bay Race Chart (type a code)';
-      cj.sets.forEach((s,i)=>{ const o=document.createElement('option'); o.value='sbrc:'+i;
+      byClub['South Bay Race Chart (type a code)']=cj.sets.map((s,i)=>{ const o=document.createElement('option'); o.value='sbrc:'+i;
         o.textContent=(s.club?s.club.replace(/^South Bay Race Chart - /,'')+' ':'')+'— '+s.startArea+' ('+Object.keys(s.courses).length+')';
-        og.appendChild(o); }); sel.appendChild(og); }
-    const byClub={}; list.forEach(r=>{ const k=r.club||'Other'; (byClub[k]=byClub[k]||[]).push(r); });   // then club races
-    Object.keys(byClub).sort().forEach(club=>{ const og=document.createElement('optgroup'); og.label=club;
-      byClub[club].forEach(r=>{ const o=document.createElement('option'); o.value='gpx:'+r.file; o.dataset.name=r.name;
-        if(r.links) RACE_LINKS[r.file]=r.links;
-        o.textContent=r.name.replace(/^20HC\s+/,'')+(r.year?' ('+r.year+')':''); og.appendChild(o); }); sel.appendChild(og); });
+        return o; }); }
+    list.forEach(r=>{ const o=document.createElement('option'); o.value='gpx:'+r.file; o.dataset.name=r.name;
+      if(r.links) RACE_LINKS[r.file]=r.links;
+      o.textContent=r.name.replace(/^20HC\s+/,'')+(r.year?' ('+r.year+')':'');
+      const k=r.club||'Other'; (byClub[k]=byClub[k]||[]).push(o); });
+    const clubs=Object.keys(byClub).sort((a,b)=>(/^South Bay/.test(b)-/^South Bay/.test(a))||a.localeCompare(b));
+    clubSel.innerHTML='<option value="">&mdash; pick a club &mdash;</option>';
+    clubs.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c+' ('+byClub[c].length+')'; clubSel.appendChild(o); });
+    const showClub=c=>{ sel.innerHTML=''; const first=document.createElement('option'); first.value='';
+      first.textContent=c?'— pick a race / course set —':'— pick a club first —'; sel.appendChild(first);
+      (byClub[c]||[]).forEach(o=>sel.appendChild(o)); sel.disabled=!c; sel.value='';
+      try{ c?localStorage.setItem('sa_club',c):localStorage.removeItem('sa_club'); }catch(e){} };
+    clubSel.addEventListener('change',e=>showClub(e.target.value));
+    let last=''; try{ last=localStorage.getItem('sa_club')||''; }catch(e){}       // reopen on the club used last time
+    if(byClub[last]){ clubSel.value=last; showClub(last); } else showClub('');
     // A loaded catalog race keeps its GPX text on the device (sa_races). Refresh that text from the site on every
     // start, so a corrected course reaches the chart without removing and re-adding the race. Uploaded files are untouched.
     const byName={}; list.forEach(r=>byName[r.name]=r);
@@ -3196,31 +3208,52 @@ let NBRACES=null;
 async function browseNB(){
   const box=document.getElementById('nblive'), filt=document.getElementById('nbfilter'), btn=document.getElementById('nbbrowse');
   if(box.style.display==='block'){ box.style.display='none'; filt.style.display='none'; btn.textContent='Browse all bay races (live) ▸'; return; }  // collapse
-  box.style.display='block'; btn.textContent='Hide bay races (live) ▾'; box.textContent='Loading live bay races from Clubspot…';
+  box.style.display='block'; btn.textContent='Hide bay races (live) ▾'; box.textContent='Loading live bay races from Clubspot and Yacht Scoring…';
   try{
     if(!NBRACES){ const since=new Date(Date.now()-864e5).toISOString();   // ~now onward -> drop races that already happened
-      NBRACES=await csQuery('regattas',{state:'RI',startDate:{$gte:{__type:'Date',iso:since}}},
-        {order:'startDate',limit:'300',keys:'name,city,startDate'}); }
+      const got=await Promise.allSettled([                               // either source may be down; show whatever answers
+        csQuery('regattas',{state:'RI',startDate:{$gte:{__type:'Date',iso:since}}},{order:'startDate',limit:'300',keys:'name,city,startDate'}),
+        ysEvents(since)]);
+      if(got.every(g=>g.status==='rejected')) throw got[0].reason;
+      NBSRC=(got[0].status==='fulfilled'?'Clubspot':'')+(got[0].status==='fulfilled'&&got[1].status==='fulfilled'?' + ':'')+(got[1].status==='fulfilled'?'Yacht Scoring':'');
+      NBRACES=[].concat(got[0].value||[],got[1].value||[]).sort((a,b)=>((a.startDate&&a.startDate.iso)||'').localeCompare((b.startDate&&b.startDate.iso)||'')); }
     filt.style.display='block'; renderNB();
-  }catch(e){ box.textContent='Could not reach Clubspot (need internet): '+e.message; }
+  }catch(e){ box.textContent='Could not reach Clubspot or Yacht Scoring (need internet): '+e.message; }
 }
+// ---- Yacht Scoring public API (keyless, CORS-open): events + their posted documents ----
+// The feed filters by exact state only, and clubs enter it as "RI", "Rhode Island" or leave it blank, so ask for
+// all three and keep a blank-state event only when its name or town is recognisably local.
+const YS_API='https://api.yachtscoring.com/v1/public/event';
+const YS_LOCAL=/newport|ida lewis|narragansett|block island|bristol|jamestown|twenty hundred|rhode|sakonnet|wickford|greenwich|barrington|conanicut|tiverton|point judith|warwick|providence/i;
+let NBSRC='';
+async function ysEvents(sinceIso){ const day=sinceIso.slice(0,10);
+  const q=st=>fetch(YS_API+'?page=1&size=300&sort=startDate.asc&endDate_gte='+day+'&state_eq='+encodeURIComponent(st))
+    .then(r=>{ if(!r.ok) throw new Error('Yacht Scoring '+r.status); return r.json(); }).then(j=>j.rows||[]);
+  const [ri,rhode,blank]=await Promise.all([q('RI'),q('Rhode Island'),q('')]);
+  return ri.concat(rhode,blank.filter(e=>YS_LOCAL.test((e.name||'')+' '+(e.city||''))))
+    .map(e=>({ysId:e.id, name:(e.name||'').trim(), city:(e.city||'').trim(), startDate:{iso:e.startDate}, end:e.endDate})); }
 const NB_JUNIOR=/opti|\b420\b|c420|i420|laser|ilca|sunfish|sea sprite|snipe|rs aero|df95|skiff|wingfoil|sabot|feva|\btera\b|youth|junior|clinic|team rac|girl power|nat earle|fleet 413|kids|o.?pen skiff|420 regatta/i;
 function renderNB(){
   const box=document.getElementById('nblive'), f=(document.getElementById('nbfilter').value||'').toLowerCase();
   const keel=document.getElementById('nbkeel').checked;
   box.innerHTML=''; const cut=Date.now()-864e5;
   const list=NBRACES.filter(r=>{ if(keel && NB_JUNIOR.test(r.name||'')) return false;
-    if(r.startDate&&r.startDate.iso&&Date.parse(r.startDate.iso)<cut) return false;   // drop races that already happened
+    const when=r.end||(r.startDate&&r.startDate.iso); if(when&&Date.parse(when)<cut) return false;   // drop races that already happened (a multi-day event stays until it ends)
     return !f || ((r.name||'')+' '+(r.city||'')).toLowerCase().indexOf(f)>=0; });
   const hdr=document.createElement('div'); hdr.style.color='#888'; hdr.style.margin='2px 0';
-  hdr.innerHTML=list.length+(keel?' keelboat/PHRF':'')+' <b>upcoming</b> bay races · tap "docs" for NOR/SI/course<br><span style="color:#aaa">(Clubspot only — 20HC &amp; Ida Lewis Distance are in the picker above)</span>'; box.appendChild(hdr);
+  hdr.innerHTML=list.length+(keel?' keelboat/PHRF':'')+' <b>upcoming</b> bay races · tap "docs" for NOR/SI/course<br><span style="color:#aaa">(live from '+NBSRC+')</span>'; box.appendChild(hdr);
   const ord={nor:0,sis:1};
   list.forEach(r=>{ const dt=(r.startDate&&r.startDate.iso||'').slice(0,10);
     const row=document.createElement('div'); row.style.borderTop='1px solid #eee'; row.style.padding='3px 0';
-    row.innerHTML='<b>'+dt+'</b> '+r.name+' <span style="color:#888">'+(r.city||'')+'</span> ';
+    row.innerHTML='<b>'+dt+'</b> '+r.name+' <span style="color:#888">'+(r.city||'')+'</span> <span style="color:#aaa;font-size:9px">'+(r.ysId?'Yacht Scoring':'Clubspot')+'</span> ';
     const b=document.createElement('button'); b.textContent='docs'; b.style.fontSize='10px'; b.style.marginLeft='3px';
     b.onclick=async()=>{ b.disabled=true; b.textContent='…';
-      try{ const docs=await csQuery('documents',{regattaObject:{__type:'Pointer',className:'regattas',objectId:r.objectId}},{limit:'40'});
+      try{ let docs;                                   // both sources reduced to {URL,type,name}
+        if(r.ysId){ const j=await (await fetch(YS_API+'/'+r.ysId+'/docs?size=200&sort=displayOrder.asc,docName.asc')).json();
+          docs=(j.rows||[]).map(d=>({URL:d.docFile, type:d.documentType==='SI'?'sis':d.documentType==='NOR'?'nor':(d.documentType||'doc').toLowerCase(),
+            name:d.docName+(d.amendmentNo?' (amendment '+d.amendmentNo+')':'')}));
+          docs.push({URL:'https://yachtscoring.com/emenu/'+r.ysId, type:'page', name:'Event page (entries, results)'}); }
+        else docs=await csQuery('documents',{regattaObject:{__type:'Pointer',className:'regattas',objectId:r.objectId}},{limit:'40'});
         const dl=document.createElement('div'); dl.style.marginLeft='12px'; const seen={};
         const uniq=docs.filter(x=>x.URL&&!seen[x.URL]&&(seen[x.URL]=1))
           .sort((a,c)=>((ord[a.type]===undefined?9:ord[a.type])-(ord[c.type]===undefined?9:ord[c.type])));
