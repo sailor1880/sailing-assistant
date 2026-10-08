@@ -698,6 +698,27 @@ svg.leaflet-image-layer.leaflet-interactive path {
  .leg span{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:3px;vertical-align:middle}
  .panel.hidden{display:none}
  @media (max-width:640px){ .panel{width:70vw;max-width:270px;font-size:14px} }
+ /* Menu legibility. The panel markup carries many small inline sizes and pale greys (some set from script, which
+    writes "font-size: 11px"); they are all lifted here in one place rather than edited line by line. */
+ .panel{font-size:15px;width:275px;color:#111}
+ .panel [style*="font-size:9px"],.panel [style*="font-size: 9px"]{font-size:12px!important}
+ .panel [style*="font-size:10px"],.panel [style*="font-size: 10px"]{font-size:13px!important}
+ .panel [style*="font-size:11px"],.panel [style*="font-size: 11px"]{font-size:14px!important}
+ .panel [style*="font-size:12px"],.panel [style*="font-size: 12px"]{font-size:15px!important}
+ .panel > b[style]{font-size:16px!important}
+ .panel [style*="color:#888"],.panel [style*="color: rgb(136, 136, 136)"],.panel [style*="color:#aaa"],.panel [style*="color: rgb(170, 170, 170)"],
+ .panel [style*="color:#666"],.panel [style*="color: rgb(102, 102, 102)"]{color:#3a3a3a!important}
+ .panel [style*="color:#555"],.panel [style*="color: rgb(85, 85, 85)"]{color:#222!important}
+ .panel select,.panel input:not([type=checkbox]):not([type=range]),.panel button{font-size:14px!important}
+ .note{font-size:13px;color:#222}
+ @media (max-width:640px){ .panel{width:84vw;max-width:340px;font-size:16px} }
+ /* Night mode: dark chart and dark menu to keep night vision. The chart tiles and the menu are colour-inverted
+    (hue kept, so red stays red and green stays green); course lines, buoy dots and the boat are left as they are. */
+ body.night #map{background:#0a1118}
+ body.night .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.8) contrast(.92)}
+ body.night .panel,body.night #collapse,body.night .leaflet-popup-content-wrapper,body.night .leaflet-popup-tip,
+ body.night .leaflet-tooltip,body.night .leaflet-control-zoom,body.night #notfornav,body.night #discmodal{filter:invert(1) hue-rotate(180deg)}
+ body.night .leaflet-control-attribution{opacity:.5}
  #notfornav{position:absolute;left:50%;bottom:3px;transform:translateX(-50%);z-index:1100;
    background:rgba(255,255,255,.85);color:#c1121f;font:bold 12px system-ui;letter-spacing:.6px;
    padding:2px 10px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none;white-space:nowrap}
@@ -729,6 +750,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <button id="collapse" title="Show/hide panel">&#9776;</button>
 <div class="panel" id="panel">
  <h3>Sailing Assistant</h3>
+ <button id="nightbtn" style="font-size:11px;width:100%;margin:0 0 4px;cursor:pointer">&#9790; Night mode</button>
  <div id="disctop" style="font-weight:bold;color:#c1121f;font-size:13px;margin:-4px 0 6px;cursor:pointer">&#9888; NOT FOR NAVIGATION</div>
  <b style="font-size:12px">Chart base</b>
  <div id="bases"></div>
@@ -3029,6 +3051,22 @@ document.getElementById('clubschk').addEventListener('change',e=>{
 
 // ---- Other races: import GPX -> per-route (course) checkboxes; honors Reverse toggle ----
 let racesRaw=[]; const RKEY='sa_races';
+// Race documents, live. A catalog race can name where its documents are posted (races.json "docs": {ys: event id}
+// for Yacht Scoring or {cs: regatta id} for Clubspot); the current NOR, SIs and amendments are then listed under
+// the loaded race, so a revised SI shows up without anyone editing the catalog.
+const DOCS_CACHE={};
+function raceDocs(src){ const key=JSON.stringify(src); if(DOCS_CACHE[key]) return DOCS_CACHE[key];
+  const p=(async()=>{ let d;
+    if(src.ys){ const j=await (await fetch('https://api.yachtscoring.com/v1/public/event/'+src.ys+'/docs?size=200&sort=displayOrder.asc,docName.asc')).json();
+      d=(j.rows||[]).map(x=>({url:x.docFile, type:x.documentType==='SI'?'SI':x.documentType==='NOR'?'NOR':'doc', name:x.docName+(x.amendmentNo?' (amendment '+x.amendmentNo+')':'')}));
+      d.push({url:'https://yachtscoring.com/emenu/'+src.ys, type:'page', name:'event page'}); }
+    else if(src.cs){ const r=await fetch('https://theclubspot.com/parse/classes/documents?'+new URLSearchParams({where:JSON.stringify({regattaObject:{__type:'Pointer',className:'regattas',objectId:src.cs}}),limit:'60'}),
+        {headers:{'X-Parse-Application-Id':'myclubspot2017'}});
+      d=((await r.json()).results||[]).map(x=>({url:x.URL, type:x.type==='sis'?'SI':x.type==='nor'?'NOR':'doc', name:x.name||'document'})); }
+    else d=[];
+    const seen={}, ord={NOR:0,SI:1,doc:2,page:3};
+    return d.filter(x=>x.url&&!seen[x.url]&&(seen[x.url]=1)).sort((a,b)=>ord[a.type]-ord[b.type]); })();
+  p.catch(()=>{ delete DOCS_CACHE[key]; }); return DOCS_CACHE[key]=p; }
 const CCOL=['#e6194b','#3cb44b','#4363d8','#f58231','#911eb4','#00b4d8','#f032e6','#7cb342','#e6ab02','#469990','#9a6324','#1f78b4','#b15928','#6a3d9a'];  // per-course colours (automatic)
 let races=[];   // {name,color,bounds,routes:[{name,pts,layer,on}], extra:[layer]}
 const racesOn=()=>document.getElementById('raceschk').checked;
@@ -3104,6 +3142,13 @@ function renderRaceList(){ const box=document.getElementById('racelist'); box.in
         const j=racesRaw.findIndex(x=>x.name===r.name); if(j>=0){ racesRaw[j].rev=r.rev; saveRaces(); }
         redrawRace(r); });
       h.appendChild(rv); }
+    const rawDoc=racesRaw.find(x=>x.name===r.name);
+    if(rawDoc&&rawDoc.docs){ const dl=document.createElement('div'); dl.style.cssText='font-size:10px;margin:1px 0 0 2px'; dl.textContent='documents…';   // live NOR / SI
+      raceDocs(rawDoc.docs).then(docs=>{ dl.textContent=''; if(!docs.length){ dl.textContent='(no documents posted)'; return; }
+        docs.forEach(x=>{ const a=document.createElement('a'); a.href=x.url; a.target='_blank'; a.rel='noopener'; a.style.display='block';
+          a.textContent=(x.type==='page'?'↗ ':'['+x.type+'] ')+x.name; dl.appendChild(a); }); })
+        .catch(()=>{ dl.textContent='(documents need internet)'; });
+      h.appendChild(dl); }
     if(r.links&&r.links.length){ const ls=document.createElement('div'); ls.style.cssText='font-size:10px;margin:1px 0 0 2px';  // NOR / SI / club links
       ls.innerHTML='&#128196; '+r.links.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener">'+l.name+' ↗</a>').join(' &middot; ');
       h.appendChild(ls); }
@@ -3146,6 +3191,7 @@ document.getElementById('raceschk').addEventListener('change',applyRaceVisibilit
   applyRaceVisibility(); renderRaceList(); })();
 // ---- Bundled race catalog (races.json manifest -> pick to load bundled GPX via the same path) ----
 const RACE_LINKS={};     // file -> NOR/SI/club links (from races.json)
+const RACE_DOCS={};      // file -> where the race's documents are posted (from races.json "docs")
 (function(){ const sel=document.getElementById('racecat'); if(!sel) return;
   Promise.all([fetch('races.json').then(r=>r.json()),
                fetch('courses.json').then(r=>r.json()).catch(()=>({sets:[]}))])
@@ -3158,7 +3204,7 @@ const RACE_LINKS={};     // file -> NOR/SI/club links (from races.json)
         o.textContent=(s.club?s.club.replace(/^South Bay Race Chart - /,'')+' ':'')+'— '+s.startArea+' ('+Object.keys(s.courses).length+')';
         return o; }); }
     list.forEach(r=>{ const o=document.createElement('option'); o.value='gpx:'+r.file; o.dataset.name=r.name;
-      if(r.links) RACE_LINKS[r.file]=r.links;
+      if(r.links) RACE_LINKS[r.file]=r.links; if(r.docs) RACE_DOCS[r.file]=r.docs;
       o.textContent=r.name.replace(/^20HC\s+/,'')+(r.year?' ('+r.year+')':'');
       const k=r.club||'Other'; (byClub[k]=byClub[k]||[]).push(o); });
     const clubs=Object.keys(byClub).sort((a,b)=>(/^South Bay/.test(b)-/^South Bay/.test(a))||a.localeCompare(b));
@@ -3176,7 +3222,9 @@ const RACE_LINKS={};     // file -> NOR/SI/club links (from races.json)
     const byName={}; list.forEach(r=>byName[r.name]=r);
     Promise.all(racesRaw.map(async raw=>{ const cat=byName[raw.name]; if(!cat) return false;
       try{ const res=await fetch(cat.file); if(!res.ok) return false; const text=await res.text();
-        if(text.indexOf('<gpx')<0||text===raw.text) return false; raw.text=text; raw.links=cat.links||raw.links; return true; }catch(e){ return false; } }))
+        const meta=JSON.stringify([cat.links||null,cat.docs||null]), had=JSON.stringify([raw.links||null,raw.docs||null]);
+        if(text.indexOf('<gpx')<0||(text===raw.text&&meta===had)) return false;
+        raw.text=text; raw.links=cat.links||null; raw.docs=cat.docs||null; return true; }catch(e){ return false; } }))
      .then(ch=>{ if(!ch.some(Boolean)) return; saveRaces();
        races.forEach(r=>{ r.routes.forEach(rt=>{ map.removeLayer(rt.layer); (rt.rounds||[]).forEach(x=>map.removeLayer(x.m)); }); r.extra.forEach(l=>map.removeLayer(l)); });
        races=[]; racesRaw.forEach((r,i)=>{ try{ races.push(buildRace(r.text,r.name,i,r.links,r.c0,r.rev)); }catch(e){} });
@@ -3190,7 +3238,7 @@ const RACE_LINKS={};     // file -> NOR/SI/club links (from races.json)
       e.target.value=''; return; }
     const file=val.slice(0,4)==='gpx:'?val.slice(4):val, name=e.target.selectedOptions[0].dataset.name||file;
     if(racesRaw.some(r=>r.name===name)){ alert(name+' is already loaded'); e.target.value=''; return; }
-    try{ const text=await (await fetch(file)).text(); const links=RACE_LINKS[file]||null; racesRaw.push({name,text,links}); saveRaces();
+    try{ const text=await (await fetch(file)).text(); const links=RACE_LINKS[file]||null; racesRaw.push({name,text,links,docs:RACE_DOCS[file]||null}); saveRaces();
       if(!document.getElementById('raceschk').checked) document.getElementById('raceschk').checked=true;
       addRace(text,name,racesRaw.length-1,true,links); renderRaceList(); }
     catch(err){ alert('Could not load '+name+': '+err); }
@@ -3455,6 +3503,12 @@ document.getElementById('trapchk').addEventListener('change',async e=>{
     trapLayer.addTo(map); }
     catch(err){ alert('Could not load fish traps (RI DEM): '+err); e.target.checked=false; } }
   else if(trapLayer) map.removeLayer(trapLayer); });
+
+// ---- Night mode (remembered) ----
+(function(){ const b=document.getElementById('nightbtn'); if(!b) return;
+  const set=on=>{ document.body.classList.toggle('night',on); b.innerHTML=on?'&#9728; Day mode':'&#9790; Night mode'; };
+  let on=false; try{ on=localStorage.getItem('sa_night')==='1'; }catch(e){} set(on);
+  b.addEventListener('click',()=>{ on=!on; set(on); try{ localStorage.setItem('sa_night',on?'1':'0'); }catch(e){} }); })();
 
 // ---- Collapsible menu sections: tap a section title to fold it away; the choice is remembered ----
 // Built at run time from the existing markup (a bold 12px title, then everything up to the next <hr>), so the
