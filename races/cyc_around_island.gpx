@@ -8,49 +8,49 @@
 <wpt lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><sym>Buoy</sym></wpt>
 <wpt lat="41.51664" lon="-71.33422"><name>R14 East Passage Bell 14 (Bishop Rock)</name><sym>Buoy</sym></wpt>
 <wpt lat="41.60811" lon="-71.36002"><name>G1 Despair Island (green)</name><sym>Buoy</sym></wpt>
-<wpt lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name><sym>Buoy</sym></wpt>
 <rte><name>O - 18.1 NM (N-&gt;S)</name>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 <rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>stbd</type></rtept>
 <rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>stbd</type></rtept>
 <rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name><type>stbd</type></rtept>
 <rtept lat="41.57639" lon="-71.36849"><name>Can 3 Quonset Ch Buoy 3 (NNE Conanicut Pt)</name><type>stbd</type></rtept>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 </rte>
 <rte><name>X - 18.1 NM (S-&gt;N)</name>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 <rtept lat="41.57639" lon="-71.36849"><name>Can 3 Quonset Ch Buoy 3 (NNE Conanicut Pt)</name><type>port</type></rtept>
 <rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt)</name><type>port</type></rtept>
 <rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>port</type></rtept>
 <rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>port</type></rtept>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 </rte>
 <rte><name>Z - 12.0 NM (S-&gt;N)</name>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 <rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><type>stbd</type></rtept>
 <rtept lat="41.51664" lon="-71.33422"><name>R14 East Passage Bell 14 (Bishop Rock)</name><type>stbd</type></rtept>
 <rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>stbd</type></rtept>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 </rte>
 <rte><name>P - 12.0 NM (N-&gt;S)</name>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 <rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>port</type></rtept>
 <rtept lat="41.51664" lon="-71.33422"><name>R14 East Passage Bell 14 (Bishop Rock)</name><type>port</type></rtept>
 <rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><type>port</type></rtept>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 </rte>
 <rte><name>T - 21.5 NM</name>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 <rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>stbd</type></rtept>
 <rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>stbd</type></rtept>
 <rtept lat="41.60811" lon="-71.36002"><name>G1 Despair Island (green)</name><type>stbd</type></rtept>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 </rte>
 <rte><name>U - 21.5 NM</name>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 <rtept lat="41.60811" lon="-71.36002"><name>G1 Despair Island (green)</name><type>port</type></rtept>
 <rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>port</type></rtept>
 <rtept lat="41.48344" lon="-71.35075"><name>Bell 11 The Dumplings</name><type>port</type></rtept>
-<rtept lat="41.50200" lon="-71.36300"><name>Start/Finish off CYC (RC)</name></rtept>
+<rtept lat="41.49800" lon="-71.36100"><name>Start/Finish off CYC, outer Jamestown harbor (RC, approx)</name></rtept>
 </rte>
 </gpx>
