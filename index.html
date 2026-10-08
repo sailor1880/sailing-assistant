@@ -743,7 +743,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div id="offlinemsg" style="font-size:11px;color:#0a7d2c;min-height:12px"></div><hr>
  <b style="font-size:12px">Additional chart layers</b>
  <label><input type="checkbox" id="skchk"> Seamarks (OpenSeaMap)</label>
- <label><input type="checkbox" id="aidschk" checked> NOAA aids &mdash; tap for info (Light List)</label>
+ <label><input type="checkbox" id="aidschk" checked> NOAA aids &mdash; tap for info</label> <span id="aidsmsg" style="font-size:10px"></span>
  <label><input type="checkbox" id="aquachk"> Aquaculture leases (RI&nbsp;DEM)</label>
  <label><input type="checkbox" id="trapchk"> Fish traps (RI&nbsp;DEM)</label>
  <label><input type="checkbox" id="sbchk"> South Bay Race Marks (labeled)</label>
@@ -3158,6 +3158,16 @@ const RACE_LINKS={};     // file -> NOR/SI/club links (from races.json)
       byClub[club].forEach(r=>{ const o=document.createElement('option'); o.value='gpx:'+r.file; o.dataset.name=r.name;
         if(r.links) RACE_LINKS[r.file]=r.links;
         o.textContent=r.name.replace(/^20HC\s+/,'')+(r.year?' ('+r.year+')':''); og.appendChild(o); }); sel.appendChild(og); });
+    // A loaded catalog race keeps its GPX text on the device (sa_races). Refresh that text from the site on every
+    // start, so a corrected course reaches the chart without removing and re-adding the race. Uploaded files are untouched.
+    const byName={}; list.forEach(r=>byName[r.name]=r);
+    Promise.all(racesRaw.map(async raw=>{ const cat=byName[raw.name]; if(!cat) return false;
+      try{ const res=await fetch(cat.file); if(!res.ok) return false; const text=await res.text();
+        if(text.indexOf('<gpx')<0||text===raw.text) return false; raw.text=text; raw.links=cat.links||raw.links; return true; }catch(e){ return false; } }))
+     .then(ch=>{ if(!ch.some(Boolean)) return; saveRaces();
+       races.forEach(r=>{ r.routes.forEach(rt=>{ map.removeLayer(rt.layer); (rt.rounds||[]).forEach(x=>map.removeLayer(x.m)); }); r.extra.forEach(l=>map.removeLayer(l)); });
+       races=[]; racesRaw.forEach((r,i)=>{ try{ races.push(buildRace(r.text,r.name,i,r.links,r.c0,r.rev)); }catch(e){} });
+       applyRaceVisibility(); renderRaceList(); });
   }).catch(()=>{ sel.innerHTML='<option value="">catalog unavailable</option>'; });
   sel.addEventListener('change',async e=>{ const val=e.target.value; if(!val) return;
     if(val.slice(0,5)==='sbrc:'){ const idx=+val.slice(5);                 // SBRC set -> drive the coded-course picker above
@@ -3227,7 +3237,10 @@ document.getElementById('nbbrowse').addEventListener('click',browseNB);
 document.getElementById('nbfilter').addEventListener('input',()=>{ if(NBRACES) renderNB(); });
 document.getElementById('nbkeel').addEventListener('change',()=>{ if(NBRACES) renderNB(); });
 
-// ---- NOAA aids (USCG Light List Vol 1, bundled aids.json, lazy-loaded, viewport-culled + canvas) ----
+// ---- NOAA aids: LIVE from NOAA ENC Direct (the data behind the current charts), fetched for the area in view ----
+// Online, the dots always come from NOAA. A stored copy is used only when NOAA cannot be reached: first the areas
+// the user saved with "Save chart offline", then the bundled 2025 Light List (aids.json) as a last resort.
+// An aid record is [lat, lon, lightListNo, name, characteristic, kind, lit, type]; the last three are set for live data.
 let AIDS=null; const aidsCanvas=L.canvas({padding:0.3,tolerance:14}), aidsLayer=L.layerGroup();  // tolerance = bigger tap target (mobile single-tap)
 const aidsOn=()=>document.getElementById('aidschk').checked;
 // Colour comes from the aid's NAME only. The characteristic column in aids.json is unreliable (checked against
@@ -3236,7 +3249,7 @@ const aidsOn=()=>document.getElementById('aidschk').checked;
 // channel), RW (safe water), Y (special purpose), WO (white-orange danger / regulatory), grey (unknown).
 function aidStyle(a){
   const nm=(a[3]||'').trim(), t=nm.toLowerCase(), last=nm.split(/\s+/).pop()||'';
-  const lit=/lighted|\blights?\b/.test(t);
+  const lit=a[6]!=null ? !!a[6] : /lighted|\blights?\b/.test(t);
   const num=/^[A-Za-z]{0,2}(\d{1,3})[A-Za-z]{0,2}$/.exec(last);
   let kind='grey';
   if(/hazard|danger|obstruction|no.?wake|speed|swim|exclusion/.test(t)) kind='WO';
@@ -3248,26 +3261,76 @@ function aidStyle(a){
     kind=/entrance|approach|\bbar\b|passage|beach|inlet/.test(t)?'RW':'RG';       //   harbour/entrance buoy = safe water, else junction
   if(a[5]) kind=a[5];                                  // charted colour baked in from NOAA ENC (tools/bake_aid_colours.js) wins over the name rules
   const S={ G:['#0a9b0a',null], R:['#e11',null], RG:['#e11','#0a9b0a'], GR:['#0a9b0a','#e11'], RW:['#fff','#e11'], Y:['#efc000',null],
-            WO:['#fff','#ff8c00'], BK:['#111','#e11'], grey:['#7a8a99',null] }[kind];   // RG = red band on top, GR = green on top
+            WO:['#fff','#ff8c00'], BK:['#111','#e11'], W:['#f4f4f4',null], grey:['#7a8a99',null] }[kind]||['#7a8a99',null];   // RG = red band on top, GR = green on top; W = white light
   return {kind, color:S[0], lit, safe:kind==='RW', ring: S[1]||(lit?'#c800c8':'#333'), r: lit?5:4, w: S[1]?3:(lit?2:1)};
 }
-function renderAids(){ aidsLayer.clearLayers(); if(!AIDS) return;
-  const b=map.getBounds().pad(0.2), s=b.getSouth(),n=b.getNorth(),w=b.getWest(),e=b.getEast();
+const ENCD='https://encdirect.noaa.gov/arcgis/rest/services/encdirect/', ENC_SVC={};
+// Layer numbers differ between the chart-scale services, so they are looked up by name once per service.
+function encLayers(svc){ return ENC_SVC[svc]||(ENC_SVC[svc]=fetch(ENCD+svc+'/MapServer?f=json').then(r=>r.json())
+  .then(j=>j.layers.filter(l=>/(Buoy|Beacon)_.*_point$|\.Light(_Float)?_point$/.test(l.name)).map(l=>l.id).join(','))
+  .catch(e=>{ delete ENC_SVC[svc]; throw e; })); }
+async function encIdentify(svc,b){ const ids=await encLayers(svc), env=[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].join(',');
+  const j=await (await fetch(ENCD+svc+'/MapServer/identify?f=json&geometryType=esriGeometryEnvelope&sr=4326&tolerance=0&imageDisplay=800,600,96'+
+    '&returnGeometry=true&returnFieldName=true&layers=all:'+ids+'&geometry='+env+'&mapExtent='+env)).json();
+  if(!j.results) throw new Error((j.error&&j.error.message)||'no results from NOAA'); return j.results; }
+const LITCHR={1:'F',2:'Fl',3:'LFl',4:'Q',5:'VQ',6:'UQ',7:'Iso',8:'Oc',9:'IQ',10:'IVQ',11:'IUQ',12:'Mo',13:'FFl',14:'Fl+LFl',15:'OcFl',16:'FLFl',
+  17:'Al.Oc',18:'Al.LFl',19:'Al.Fl',20:'Al.Gr',25:'Q+LFl',26:'VQ+LFl',27:'UQ+LFl',28:'Al',29:'Al.FFl'};
+const ENCCOL={1:'W',2:'Bk',3:'R',4:'G',5:'Bu',6:'Y',9:'Am',11:'Or'};
+function encKind(c){ const s=String(c||'').split(',').map(x=>x.trim()).filter(Boolean), h=x=>s.includes(x);   // S-57 COLOUR list -> dot kind
+  if(h('3')&&h('4')) return s[0]==='3'?'RG':'GR';          // banded junction buoy: first colour is the top band
+  if(h('3')&&h('1')) return 'RW'; if(h('6')) return 'Y'; if(h('11')) return 'WO'; if(h('2')&&h('3')) return 'BK';
+  return s[0]==='3'?'R':s[0]==='4'?'G':s[0]==='1'?'W':'grey'; }
+const nearM=(a,b)=>Math.hypot((a[0]-b[0])*111320,(a[1]-b[1])*111320*Math.cos(a[0]*Math.PI/180));
+function encToAids(results){ const out=[], lights=[];
+  results.forEach(r=>{ const at=r.attributes||{}, g=r.geometry; if(!g||g.y==null) return;
+    const v=k=>{ const x=at[k]; return (x==null||x==='Null'||String(x).trim()==='')?'':String(x).trim(); };
+    if(/\.Light_point$/.test(r.layerName)){ const grp=v('SIGGRP');
+      lights.push({ll:[g.y,g.x], name:v('OBJNAM'), col:v('COLOUR'), txt:(LITCHR[v('LITCHR')]||'Lt')+(grp&&grp!=='(1)'?grp:'')+' '+
+        v('COLOUR').split(',').map(c=>ENCCOL[c.trim()]||'').join('')+(v('SIGPER')?' '+(+v('SIGPER'))+'s':'')+(v('HEIGHT')?' '+(+v('HEIGHT'))+'m':'')+(v('VALNMR')?' '+(+v('VALNMR'))+'M':'')});
+      return; }
+    const type=r.layerName.replace(/^.*\./,'').replace(/_point$/,'').replace(/_/g,' ').replace(/ General$/,'')+(v('BOYSHP')?' ('+v('BOYSHP')+')':v('BCNSHP')?' ('+v('BCNSHP')+')':'');
+    out.push([g.y,g.x,'',v('OBJNAM')||type,'',encKind(v('COLOUR')),false,type]); });
+  lights.forEach(l=>{ let best=null,bd=25; out.forEach(a=>{ const d=nearM(a,l.ll); if(d<bd){ bd=d; best=a; } });   // a light sits on its buoy/beacon
+    if(best){ best[6]=true; if(!best[4].includes(l.txt)) best[4]=best[4]?best[4]+' / '+l.txt:l.txt; }
+    else out.push([l.ll[0],l.ll[1],'',l.name||'Light',l.txt,encKind(l.col),true,'Light']); });           // lighthouse / standalone light
+  return out; }
+function mergeAids(into,more){ more.forEach(m=>{ if(!into.some(a=>Math.abs(a[0]-m[0])<0.0006&&Math.abs(a[1]-m[1])<0.0008&&nearM(a,m)<40)) into.push(m); }); return into; }
+// Chart scale follows zoom, as on a real chart: harbour + approach detail when zoomed in, only the major aids when zoomed out.
+const aidBand=z=>z>=11?['enc_harbour','enc_approach']:z>=9?['enc_coastal']:['enc_general'];
+let aidsLive=null;     // last live answer {key,bounds,list}; reused while the view stays inside it, so small pans cost nothing
+async function loadAidsLive(view,z){ const band=aidBand(z), key=band.join();
+  if(aidsLive&&aidsLive.key===key&&aidsLive.bounds.contains(view)) return aidsLive.list;
+  const b=view.pad(0.35), res=await Promise.all(band.map(s=>encIdentify(s,b)));
+  const list=encToAids(res[0]); res.slice(1).forEach(r=>mergeAids(list,encToAids(r)));
+  aidsLive={key,bounds:b,list}; return list; }
+const AIDS_OFF='sa_aids_off';      // aids for areas the user saved with "Save chart offline"
+function savedAids(){ try{ return JSON.parse(localStorage.getItem(AIDS_OFF)||'null'); }catch(e){ return null; } }
+async function aidsFallback(){ const sv=savedAids(); if(sv&&sv.list&&sv.list.length) return {list:sv.list, note:'offline - aids saved '+sv.when};
+  if(!AIDS){ const j=await (await fetch('aids.json')).json(); AIDS=j.aids||[]; }
+  return {list:AIDS, note:'offline - 2025 Light List copy'}; }
+let aidsSeq=0;
+async function renderAids(){ const seq=++aidsSeq, msg=document.getElementById('aidsmsg'), view=map.getBounds();
+  let list, note='live from NOAA';
+  try{ list=await loadAidsLive(view,map.getZoom()); }
+  catch(e){ try{ const f=await aidsFallback(); list=f.list; note=f.note; }catch(e2){ list=[]; note='aids unavailable (offline, nothing saved)'; } }
+  if(seq!==aidsSeq||!aidsOn()) return;                 // a newer pan superseded this answer
+  aidsLayer.clearLayers();
+  const b=view.pad(0.2), s=b.getSouth(),n=b.getNorth(),w=b.getWest(),e=b.getEast();
   let cnt=0; const CAP=1600;
-  for(const a of AIDS){ if(a[0]<s||a[0]>n||a[1]<w||a[1]>e) continue;
+  for(const a of list){ if(a[0]<s||a[0]>n||a[1]<w||a[1]>e) continue;
     const st=aidStyle(a);
     L.circleMarker([a[0],a[1]],{renderer:aidsCanvas,radius:st.r,color:st.ring,weight:st.w,fillColor:st.color,fillOpacity:.95})
-      .bindPopup('<b>'+a[3]+'</b>'+(a[4]?'<br>'+a[4]:'')+(a[2]?'<br>Light List #'+a[2]:'')+'<br>'+a[0].toFixed(5)+', '+a[1].toFixed(5))
+      .bindPopup('<b>'+a[3]+'</b>'+(a[7]&&a[7]!==a[3]?'<br>'+a[7]:'')+(a[4]?'<br>'+a[4]:'')+(a[2]?'<br>Light List #'+a[2]:'')+
+        '<br>'+a[0].toFixed(5)+', '+a[1].toFixed(5)+'<br><small style="color:#666">'+note+'</small>')
       .addTo(aidsLayer);
     if(++cnt>=CAP) break; }
+  if(msg){ msg.textContent=note; msg.style.color=note==='live from NOAA'?'#0a7d2c':'#b35900'; }
 }
 let aidsTimer=null;
 map.on('moveend',()=>{ if(!aidsOn()) return; clearTimeout(aidsTimer); aidsTimer=setTimeout(renderAids,300); });
-document.getElementById('aidschk').addEventListener('change',async e=>{
-  if(e.target.checked){ try{ if(!AIDS){ const j=await (await fetch('aids.json')).json(); AIDS=j.aids||[]; }
-      aidsLayer.addTo(map); renderAids(); }
-    catch(err){ alert('Could not load NOAA aids (aids.json): '+err); e.target.checked=false; } }
-  else map.removeLayer(aidsLayer); });
+document.getElementById('aidschk').addEventListener('change',e=>{
+  if(e.target.checked){ aidsLayer.addTo(map); renderAids(); }
+  else{ map.removeLayer(aidsLayer); const m=document.getElementById('aidsmsg'); if(m) m.textContent=''; } });
 if(document.getElementById('aidschk').checked) document.getElementById('aidschk').dispatchEvent(new Event('change'));  // load aids on start (default on)
 
 // ---- PWA: register service worker + pre-cache ENC tiles for offline use ----
@@ -3309,7 +3372,12 @@ document.getElementById('offlinebtn').addEventListener('click',async ()=>{
   msg.textContent='Saving 0/'+urls.length+'...';
   for(const u of urls){ try{ const res=await fetch(u,{mode:'no-cors'}); await c.put(u,res); ok++; }catch(e){}
     if(++done%8===0||done===urls.length) msg.textContent='Saving '+done+'/'+urls.length+'...'; }
-  msg.textContent='Saved '+ok+' ENC tiles (zoom '+z0+'-'+zMax+') offline. Zoom in here works offline now.';
+  let nAids=0;                                         // the aids for this view go with the chart, so the dots work offline here too
+  try{ const got=await Promise.all(['enc_harbour','enc_approach'].map(s=>encIdentify(s,b)));
+    const fresh=encToAids(got[0]); mergeAids(fresh,encToAids(got[1])); nAids=fresh.length;
+    const old=((savedAids()||{}).list||[]).filter(a=>!b.contains([a[0],a[1]]));          // replace what was saved for this area, keep other areas
+    localStorage.setItem(AIDS_OFF,JSON.stringify({when:new Date().toISOString().slice(0,10),list:old.concat(fresh)})); }catch(e){}
+  msg.textContent='Saved '+ok+' ENC tiles (zoom '+z0+'-'+zMax+')'+(nAids?' and '+nAids+' aids':'')+' offline. Zoom in here works offline now.';
 });
 
 // ---- Aquaculture lease areas: authoritative RI DEM / RIGIS FeatureServer (live, CORS-ok, keyless) ----
