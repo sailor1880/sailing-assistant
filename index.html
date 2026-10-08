@@ -3302,10 +3302,16 @@ const ENCD='https://encdirect.noaa.gov/arcgis/rest/services/encdirect/', ENC_SVC
 function encLayers(svc){ return ENC_SVC[svc]||(ENC_SVC[svc]=fetch(ENCD+svc+'/MapServer?f=json').then(r=>r.json())
   .then(j=>j.layers.filter(l=>/(Buoy|Beacon)_.*_point$|\.Light(_Float)?_point$/.test(l.name)).map(l=>l.id).join(','))
   .catch(e=>{ delete ENC_SVC[svc]; throw e; })); }
-async function encIdentify(svc,b){ const ids=await encLayers(svc), env=[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].join(',');
+// NOAA answers at most 1000 features per request and silently drops the rest, so a full answer means "there is
+// more": split the box into quarters and ask again (a bay-wide view needs a few requests, a harbour view one).
+async function encIdentify(svc,b,depth){ const ids=await encLayers(svc), w=b.getWest(),s=b.getSouth(),e=b.getEast(),n=b.getNorth(), env=[w,s,e,n].join(',');
   const j=await (await fetch(ENCD+svc+'/MapServer/identify?f=json&geometryType=esriGeometryEnvelope&sr=4326&tolerance=0&imageDisplay=800,600,96'+
     '&returnGeometry=true&returnFieldName=true&layers=all:'+ids+'&geometry='+env+'&mapExtent='+env)).json();
-  if(!j.results) throw new Error((j.error&&j.error.message)||'no results from NOAA'); return j.results; }
+  if(!j.results) throw new Error((j.error&&j.error.message)||'no results from NOAA');
+  if(j.results.length<1000||(depth||0)>=4) return j.results;
+  const mx=(w+e)/2, my=(s+n)/2, q=(a,c,d,f)=>encIdentify(svc,L.latLngBounds([c,a],[f,d]),(depth||0)+1);
+  const parts=await Promise.all([q(w,s,mx,my),q(mx,s,e,my),q(w,my,mx,n),q(mx,my,e,n)]), seen={};
+  return [].concat(...parts).filter(r=>{ const k=r.layerId+':'+(r.attributes&&r.attributes.OBJECTID); return seen[k]?false:(seen[k]=1); }); }
 const LITCHR={1:'F',2:'Fl',3:'LFl',4:'Q',5:'VQ',6:'UQ',7:'Iso',8:'Oc',9:'IQ',10:'IVQ',11:'IUQ',12:'Mo',13:'FFl',14:'Fl+LFl',15:'OcFl',16:'FLFl',
   17:'Al.Oc',18:'Al.LFl',19:'Al.Fl',20:'Al.Gr',25:'Q+LFl',26:'VQ+LFl',27:'UQ+LFl',28:'Al',29:'Al.FFl'};
 const ENCCOL={1:'W',2:'Bk',3:'R',4:'G',5:'Bu',6:'Y',9:'Am',11:'Or'};
@@ -3328,8 +3334,9 @@ function encToAids(results){ const out=[], lights=[];
     else out.push([l.ll[0],l.ll[1],'',l.name||'Light',l.txt,encKind(l.col),true,'Light']); });           // lighthouse / standalone light
   return out; }
 function mergeAids(into,more){ more.forEach(m=>{ if(!into.some(a=>Math.abs(a[0]-m[0])<0.0006&&Math.abs(a[1]-m[1])<0.0008&&nearM(a,m)<40)) into.push(m); }); return into; }
-// Chart scale follows zoom, as on a real chart: harbour + approach detail when zoomed in, only the major aids when zoomed out.
-const aidBand=z=>z>=11?['enc_harbour','enc_approach']:z>=9?['enc_coastal']:['enc_general'];
+// Every charted aid (harbour + approach detail) from a bay-wide view inwards. Only when zoomed right out to a
+// whole-coast view does it drop to the major aids, as a small-scale chart does - and the status line says so.
+const aidBand=z=>z>=9?['enc_harbour','enc_approach']:z>=7?['enc_coastal']:['enc_general'];
 let aidsLive=null;     // last live answer {key,bounds,list}; reused while the view stays inside it, so small pans cost nothing
 async function loadAidsLive(view,z){ const band=aidBand(z), key=band.join();
   if(aidsLive&&aidsLive.key===key&&aidsLive.bounds.contains(view)) return aidsLive.list;
@@ -3344,7 +3351,7 @@ async function aidsFallback(){ const sv=savedAids(); if(sv&&sv.list&&sv.list.len
 let aidsSeq=0;
 async function renderAids(){ const seq=++aidsSeq, msg=document.getElementById('aidsmsg'), view=map.getBounds();
   let list, note='live from NOAA';
-  try{ list=await loadAidsLive(view,map.getZoom()); }
+  try{ list=await loadAidsLive(view,map.getZoom()); if(map.getZoom()<9) note='live from NOAA - major aids only, zoom in for all'; }
   catch(e){ try{ const f=await aidsFallback(); list=f.list; note=f.note; }catch(e2){ list=[]; note='aids unavailable (offline, nothing saved)'; } }
   if(seq!==aidsSeq||!aidsOn()) return;                 // a newer pan superseded this answer
   aidsLayer.clearLayers();
@@ -3357,12 +3364,12 @@ async function renderAids(){ const seq=++aidsSeq, msg=document.getElementById('a
         '<br>'+a[0].toFixed(5)+', '+a[1].toFixed(5)+'<br><small style="color:#666">'+note+'</small>')
       .addTo(aidsLayer);
     if(++cnt>=CAP) break; }
-  if(msg){ msg.textContent=note; msg.style.color=note==='live from NOAA'?'#0a7d2c':'#b35900'; }
+  if(msg){ msg.textContent=note; msg.style.color=/^live/.test(note)?'#0a7d2c':'#b35900'; }
 }
 let aidsTimer=null;
 map.on('moveend',()=>{ if(!aidsOn()) return; clearTimeout(aidsTimer); aidsTimer=setTimeout(renderAids,300); });
 document.getElementById('aidschk').addEventListener('change',e=>{
-  if(e.target.checked){ aidsLayer.addTo(map); renderAids(); }
+  if(e.target.checked){ aidsLayer.addTo(map); clearTimeout(aidsTimer); aidsTimer=setTimeout(renderAids,300); }   // short wait so the first request is for the settled view, not the start-up one
   else{ map.removeLayer(aidsLayer); const m=document.getElementById('aidsmsg'); if(m) m.textContent=''; } });
 if(document.getElementById('aidschk').checked) document.getElementById('aidschk').dispatchEvent(new Event('change'));  // load aids on start (default on)
 
