@@ -29,4 +29,8 @@
 <rtept lat="41.62528" lon="-71.21663"><name>RN16 Stone Bridge</name><type>stbd</type></rtept>
 <rtept lat="41.64739" lon="-71.21424"><name>GC17 N of Sakonnet R. Bridge</name><type>port</type></rtept>
 </rte>
+<rte><name>Tiverton Basin time stop - clock off RN16 to GC17, engine OK, 5 kt no wake (SI 9.2)</name>
+<rtept lat="41.62528" lon="-71.21663"><name>RN16 Stone Bridge - log time</name></rtept>
+<rtept lat="41.64739" lon="-71.21424"><name>GC17 N of Sakonnet R. Bridge - log time</name></rtept>
+</rte>
 </gpx>
