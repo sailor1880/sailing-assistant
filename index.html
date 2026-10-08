@@ -767,6 +767,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  </div>
  <button id="nbbrowse" style="font-size:11px;width:100%;margin:2px 0;cursor:pointer">&#128269; Browse all bay races (live)</button>
  <label style="font-size:11px"><input type="checkbox" id="nbkeel" checked> keelboat / PHRF / distance only (hide junior)</label>
+ <label style="font-size:11px"><input type="checkbox" id="nbpast"> include this season's past races (for their NOR / SI)</label>
  <input id="nbfilter" placeholder="filter by club / name / town" style="display:none;font-size:11px;width:100%;box-sizing:border-box;margin:2px 0">
  <div id="nblive" style="font-size:11px;max-height:44vh;overflow:auto"></div>
  <label style="font-size:12px;display:block;margin:2px 0">Add your own (GPX):
@@ -839,7 +840,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="savetrack" style="font-size:11px">Save track.gpx</button>
    <button id="clrtrack" style="font-size:11px">Clear track</button></div>
- <div class="note">Chart: <b>NOAA ENC Online</b>. Marks: exact <b>USCG Light List 2025</b>. Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; <a href="#" id="disclink" style="color:#0b6">Disclaimer</a> &middot; build <span id="buildstamp">&mdash;</span></span></div>
+ <div class="note">Chart: <b>NOAA ENC Online</b>. Aids: live from <b>NOAA ENC</b>. Wind = Open-Meteo 10&nbsp;m. <b>Current flow</b> blends NOAA tidal-current stations (in-bay) with an ocean model (offshore), tied to the time slider; for exact set/drift also see <a href="https://tidesandcurrents.noaa.gov/" target="_blank">NOAA Tides&amp;Currents</a>. <span style="color:#bbb">&middot; saved items are on <b>this device only</b> &middot; <a href="#" id="disclink" style="color:#0b6">Disclaimer</a> &middot; build <span id="buildstamp">&mdash;</span></span></div>
 </div>
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -3210,9 +3211,10 @@ async function browseNB(){
   if(box.style.display==='block'){ box.style.display='none'; filt.style.display='none'; btn.textContent='Browse all bay races (live) ▸'; return; }  // collapse
   box.style.display='block'; btn.textContent='Hide bay races (live) ▾'; box.textContent='Loading live bay races from Clubspot and Yacht Scoring…';
   try{
-    if(!NBRACES){ const since=new Date(Date.now()-864e5).toISOString();   // ~now onward -> drop races that already happened
+    if(!NBRACES){ const since=nbPast() ? new Date().getFullYear()+'-01-01T00:00:00.000Z'      // whole season, to reach a past race's documents
+                                       : new Date(Date.now()-864e5).toISOString();            // ~now onward -> drop races that already happened
       const got=await Promise.allSettled([                               // either source may be down; show whatever answers
-        csQuery('regattas',{state:'RI',startDate:{$gte:{__type:'Date',iso:since}}},{order:'startDate',limit:'300',keys:'name,city,startDate'}),
+        csQuery('regattas',{state:'RI',startDate:{$gte:{__type:'Date',iso:since}}},{order:'startDate',limit:'1000',keys:'name,city,startDate'}),
         ysEvents(since)]);
       if(got.every(g=>g.status==='rejected')) throw got[0].reason;
       NBSRC=(got[0].status==='fulfilled'?'Clubspot':'')+(got[0].status==='fulfilled'&&got[1].status==='fulfilled'?' + ':'')+(got[1].status==='fulfilled'?'Yacht Scoring':'');
@@ -3226,6 +3228,7 @@ async function browseNB(){
 const YS_API='https://api.yachtscoring.com/v1/public/event';
 const YS_LOCAL=/newport|ida lewis|narragansett|block island|bristol|jamestown|twenty hundred|rhode|sakonnet|wickford|greenwich|barrington|conanicut|tiverton|point judith|warwick|providence/i;
 let NBSRC='';
+const nbPast=()=>document.getElementById('nbpast').checked;
 async function ysEvents(sinceIso){ const day=sinceIso.slice(0,10);
   const q=st=>fetch(YS_API+'?page=1&size=300&sort=startDate.asc&endDate_gte='+day+'&state_eq='+encodeURIComponent(st))
     .then(r=>{ if(!r.ok) throw new Error('Yacht Scoring '+r.status); return r.json(); }).then(j=>j.rows||[]);
@@ -3238,10 +3241,10 @@ function renderNB(){
   const keel=document.getElementById('nbkeel').checked;
   box.innerHTML=''; const cut=Date.now()-864e5;
   const list=NBRACES.filter(r=>{ if(keel && NB_JUNIOR.test(r.name||'')) return false;
-    const when=r.end||(r.startDate&&r.startDate.iso); if(when&&Date.parse(when)<cut) return false;   // drop races that already happened (a multi-day event stays until it ends)
+    const when=r.end||(r.startDate&&r.startDate.iso); if(!nbPast()&&when&&Date.parse(when)<cut) return false;   // drop races that already happened (a multi-day event stays until it ends)
     return !f || ((r.name||'')+' '+(r.city||'')).toLowerCase().indexOf(f)>=0; });
   const hdr=document.createElement('div'); hdr.style.color='#888'; hdr.style.margin='2px 0';
-  hdr.innerHTML=list.length+(keel?' keelboat/PHRF':'')+' <b>upcoming</b> bay races · tap "docs" for NOR/SI/course<br><span style="color:#aaa">(live from '+NBSRC+')</span>'; box.appendChild(hdr);
+  hdr.innerHTML=list.length+(keel?' keelboat/PHRF':'')+' <b>'+(nbPast()?'this season\'s':'upcoming')+'</b> bay races · tap "docs" for NOR/SI/course<br><span style="color:#aaa">(live from '+NBSRC+')</span>'; box.appendChild(hdr);
   const ord={nor:0,sis:1};
   list.forEach(r=>{ const dt=(r.startDate&&r.startDate.iso||'').slice(0,10);
     const row=document.createElement('div'); row.style.borderTop='1px solid #eee'; row.style.padding='3px 0';
@@ -3269,6 +3272,8 @@ function renderNB(){
 document.getElementById('nbbrowse').addEventListener('click',browseNB);
 document.getElementById('nbfilter').addEventListener('input',()=>{ if(NBRACES) renderNB(); });
 document.getElementById('nbkeel').addEventListener('change',()=>{ if(NBRACES) renderNB(); });
+document.getElementById('nbpast').addEventListener('change',()=>{ NBRACES=null;                     // different date window -> ask both sources again
+  const box=document.getElementById('nblive'); if(box.style.display==='block'){ box.style.display='none'; browseNB(); } });
 
 // ---- NOAA aids: LIVE from NOAA ENC Direct (the data behind the current charts), fetched for the area in view ----
 // Online, the dots always come from NOAA. A stored copy is used only when NOAA cannot be reached: first the areas
@@ -3450,6 +3455,24 @@ document.getElementById('trapchk').addEventListener('change',async e=>{
     trapLayer.addTo(map); }
     catch(err){ alert('Could not load fish traps (RI DEM): '+err); e.target.checked=false; } }
   else if(trapLayer) map.removeLayer(trapLayer); });
+
+// ---- Collapsible menu sections: tap a section title to fold it away; the choice is remembered ----
+// Built at run time from the existing markup (a bold 12px title, then everything up to the next <hr>), so the
+// panel HTML stays flat and every control keeps its id. Folding only hides controls - layers stay as they were.
+(function(){ const panel=document.getElementById('panel'); if(!panel) return;
+  let saved={}; try{ saved=JSON.parse(localStorage.getItem('sa_sections')||'{}'); }catch(e){}
+  const OPEN_FIRST=['Additional chart layers','Races & courses'];                 // open on a first visit; the rest start folded
+  const heads=Array.from(panel.children).filter(el=>el.tagName==='B'&&/font-size:12px/.test(el.getAttribute('style')||''));
+  heads.forEach(h=>{ const key=h.textContent.trim(), body=document.createElement('div'), arrow=document.createElement('span');
+    for(let n=h.nextSibling; n && !(n.nodeType===1&&(n.tagName==='HR'||n.classList.contains('note')||heads.includes(n))); ){
+      const next=n.nextSibling; body.appendChild(n); n=next; }
+    h.after(body); h.prepend(arrow);
+    h.style.cssText+=';display:block;cursor:pointer;padding:3px 0;user-select:none'; arrow.style.cssText='display:inline-block;width:14px;color:#666';
+    const set=open=>{ body.style.display=open?'':'none'; arrow.textContent=open?'▾':'▸'; };
+    set(key in saved ? !!saved[key] : OPEN_FIRST.includes(key));
+    h.addEventListener('click',()=>{ const open=body.style.display==='none'; set(open); saved[key]=open;
+      try{ localStorage.setItem('sa_sections',JSON.stringify(saved)); }catch(e){} }); });
+})();
 
 // ---- Better Bay Alliance live chart (their page, new tab) ----
 document.getElementById('bbabtn').addEventListener('click',()=>window.open('https://betterbayalliance.org/live-chart-better-bay-alliance/','_blank'));
