@@ -21,52 +21,52 @@
   <wpt lat="41.0716667" lon="-71.1933333"><name>EZ07</name><desc>Cox Ledge Exclusion Zone boundary (SI Appendix A)</desc><sym>Danger Area</sym></wpt>
   <rte><name>Course A - 120 NM</name><desc>R4(p) VM1(p) VM2(p) R2(s); computed 123.9 NM</desc>
     <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
-    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name></rtept>
-    <rtept lat="40.6333333" lon="-71.6166667"><name>VM1</name></rtept>
-    <rtept lat="40.7166667" lon="-71.1833333"><name>VM2</name></rtept>
-    <rtept lat="41.3076925" lon="-71.4724533"><name>R2</name></rtept>
+    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name><type>port</type></rtept>
+    <rtept lat="40.6333333" lon="-71.6166667"><name>VM1</name><type>port</type></rtept>
+    <rtept lat="40.7166667" lon="-71.1833333"><name>VM2</name><type>port</type></rtept>
+    <rtept lat="41.3076925" lon="-71.4724533"><name>R2</name><type>stbd</type></rtept>
     <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
   </rte>
   <rte><name>Course B - 103 NM</name><desc>R4(p) R32(p) G5(s); computed 102.0 NM</desc>
     <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
-    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name></rtept>
-    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name></rtept>
-    <rtept lat="41.2101708" lon="-71.5338581"><name>G5</name></rtept>
+    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name><type>port</type></rtept>
+    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name><type>port</type></rtept>
+    <rtept lat="41.2101708" lon="-71.5338581"><name>G5</name><type>stbd</type></rtept>
     <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
   </rte>
   <rte><name>Course C - 93 NM</name><desc>R4(p) R32(p) R2(s); computed 91.4 NM</desc>
     <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
-    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name></rtept>
-    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name></rtept>
-    <rtept lat="41.3076925" lon="-71.4724533"><name>R2</name></rtept>
+    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name><type>port</type></rtept>
+    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name><type>port</type></rtept>
+    <rtept lat="41.3076925" lon="-71.4724533"><name>R2</name><type>stbd</type></rtept>
     <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
   </rte>
   <rte><name>Course D - 77.2 NM</name><desc>R4(p) BB(p) NB(s); computed 75.9 NM</desc>
     <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
-    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name></rtept>
-    <rtept lat="41.3969867" lon="-71.0346881"><name>BB</name></rtept>
-    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name></rtept>
+    <rtept lat="41.1454881" lon="-71.6224689"><name>R4</name><type>port</type></rtept>
+    <rtept lat="41.3969867" lon="-71.0346881"><name>BB</name><type>port</type></rtept>
+    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name><type>stbd</type></rtept>
     <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
   </rte>
   <rte><name>Course E - 70 NM</name><desc>G5(p) R32(p) NB(s); computed 71.2 NM</desc>
     <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
-    <rtept lat="41.2101708" lon="-71.5338581"><name>G5</name></rtept>
-    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name></rtept>
-    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name></rtept>
+    <rtept lat="41.2101708" lon="-71.5338581"><name>G5</name><type>port</type></rtept>
+    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name><type>port</type></rtept>
+    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name><type>stbd</type></rtept>
     <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
   </rte>
   <rte><name>Course F - 65 NM</name><desc>G1BI(p) BB(p) NB(s)  [NOR: 64.9 NM]; computed 64.4 NM</desc>
     <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
-    <rtept lat="41.2573131" lon="-71.5759328"><name>G1BI</name></rtept>
-    <rtept lat="41.3969867" lon="-71.0346881"><name>BB</name></rtept>
-    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name></rtept>
+    <rtept lat="41.2573131" lon="-71.5759328"><name>G1BI</name><type>port</type></rtept>
+    <rtept lat="41.3969867" lon="-71.0346881"><name>BB</name><type>port</type></rtept>
+    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name><type>stbd</type></rtept>
     <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
   </rte>
   <rte><name>Course G - 60 NM</name><desc>R2(p) R32(p) NB(s); computed 60.5 NM</desc>
     <rtept lat="41.4915000" lon="-71.3360000"><name>START</name></rtept>
-    <rtept lat="41.3076925" lon="-71.4724533"><name>R2</name></rtept>
-    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name></rtept>
-    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name></rtept>
+    <rtept lat="41.3076925" lon="-71.4724533"><name>R2</name><type>port</type></rtept>
+    <rtept lat="41.3680419" lon="-70.9569728"><name>R32</name><type>port</type></rtept>
+    <rtept lat="41.3833428" lon="-71.3893006"><name>NB</name><type>stbd</type></rtept>
     <rtept lat="41.4621761" lon="-71.3629200"><name>CH</name></rtept>
   </rte>
   <rte><name>Cox Ledge Exclusion Zone</name><desc>Obstruction - do not enter (SI Appendix A)</desc>
