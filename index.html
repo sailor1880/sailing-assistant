@@ -3596,12 +3596,14 @@ function mtCalc(){ let t0=null, prev=null, ded=0;    // leg and elapsed per mark
   return mt.marks.map((m,i)=>{ const e=mtEff(m), et=e?Date.parse(e):null, p=mt.marks[i-1]; if(i===0) t0=et;
     const off=!!p&&(mt.off||[]).some(o=>(same(p,o[0])&&same(m,o[1]))||(same(p,o[1])&&same(m,o[0])));
     const pe=p&&mtEff(p); if(off&&et!==null&&pe) ded+=et-Date.parse(pe);
-    const r={e,et,off,leg:(et!==null&&prev!==null)?mtDur(et-prev):'',tot:(et!==null&&t0!==null&&i>0)?mtDur(et-t0-ded):''};
+    const r={e,et,off,ded,leg:(et!==null&&prev!==null)?mtDur(et-prev):'',tot:(et!==null&&t0!==null&&i>0)?mtDur(et-t0-ded):''};
     if(et!==null) prev=et; return r; }); }
 const mtClock=iso=>{ const d=new Date(iso), t=d.toLocaleTimeString('en-GB');
   return d.toDateString()===new Date().toDateString()?t:(d.getMonth()+1)+'/'+d.getDate()+' '+t; };
 const mtDur=ms=>{ const s=Math.round(Math.abs(ms)/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60);
   return (ms<0?'-':'')+(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s%60).padStart(2,'0'); };
+function mtTotal(C){ let k=-1; C.forEach((r,i)=>{ if(r.tot) k=i; }); if(k<0) return null;      // elapsed at the last mark with a time
+  const m=mt.marks[k]; return {t:C[k].tot,ded:C[k].ded,done:m.k==='finish',at:m.n}; }
 function mtTarget(){ if(!mt) return -1;              // which mark the big button logs: the next one in order, or - with a GPS fix -
   const lastP=mt.marks.reduce((a,m,i)=>m.btn?i:a,-1); // the nearest not-yet-logged mark within 500 m (so a missed press does not shift every later one)
   let first=-1; for(let i=lastP+1;i<mt.marks.length;i++) if(!mt.marks[i].btn){ first=i; break; }
@@ -3636,7 +3638,7 @@ function mtRender(){ const box=document.getElementById('mtlist'), bar=document.g
       (m.btn?' · '+(Date.parse(m.btn)>=Date.parse(m.trk)?'+':'')+mtDur(Date.parse(m.btn)-Date.parse(m.trk)).replace(/^-/,'−')+' vs button':'')+'</td></tr>';
     h+='<tr'+(i===tgt?' style="background:#e9fbe9"':'')+'><td>'+xmlEsc(m.n)+sd+'</td><td data-e="'+i+'" title="tap to type or correct this time" style="cursor:pointer;text-decoration:underline dotted">'+tm+(m.ed?' <span style="font-size:10px;color:#c60">edited</span>':'')+'</td><td style="text-align:right;white-space:nowrap">'+leg+
       (tot?'<br><span style="font-size:10px;color:#555">'+tot+'</span>':'')+'</td><td><button data-i="'+i+'" style="font-size:10px;padding:1px 5px">'+(m.btn?'✕':'now')+'</button></td></tr>'+tk; });
-  box.innerHTML='<div style="font-size:10px;color:#888">mark · time (tap a time to type or fix it) · leg / elapsed'+((mt.off||[]).length?' (clock-stop stretch taken out)':'')+'</div>'+h+'</table>';
+  box.innerHTML='<div style="font-size:10px;color:#888">mark · time (tap a time to type or fix it) · leg / elapsed'+((mt.off||[]).length?' (clock-stop stretch taken out)':'')+'</div>'+h+(()=>{ const T=mtTotal(C); if(!T) return ''; return '<tr><td colspan="4" style="border-top:2px solid #333;padding-top:4px;font-size:15px"><b>'+(T.done?'Total time':'Elapsed so far')+': '+T.t+'</b>'+(T.done?'':' <span style="font-size:10px;color:#555">to '+xmlEsc(T.at)+'</span>')+(T.ded?'<br><span style="font-size:10px;color:#c60">clock-stop '+mtDur(T.ded)+' taken out</span>':'')+'</td></tr>'; })()+'</table>';
   box.querySelectorAll('td[data-e]').forEach(c=>c.onclick=()=>mtEdit(+c.dataset.e));
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{ const m=mt.marks[+b.dataset.i];
     if(m.btn){ if(!confirm('Clear the logged time for '+m.n+'?')) return; m.btn=null; m.ed=false; mtSave(); mtRender(); } else mtPress(+b.dataset.i); });
@@ -3708,7 +3710,7 @@ map.on('click',ev=>{ if(!trackPts.length||!trackLine||anyTapMode()) return;    /
     const rows=mt.marks.map((m,i)=>{ const e=C[i].e;
       const r=[i+1,m.n,m.side==='p'?'port':m.side==='s'?'stbd':'',loc(e),m.btn?(m.ed?'typed in':'button'):e?'track':'',loc(m.btn),loc(m.trk),m.trkD,C[i].leg,C[i].off?'clock off':'',C[i].tot];
       return r.map(q).join(','); });
-    const csv='﻿'+['mark number','mark name','side','time','time from','button time','track time','track closest approach (m)','leg','leg note','elapsed from start (clock-stop legs taken out)'].map(q).join(',')+'\r\n'+rows.join('\r\n')+'\r\n';
+    const csv='﻿'+['mark number','mark name','side','time','time from','button time','track time','track closest approach (m)','leg','leg note','elapsed from start (clock-stop legs taken out)'].map(q).join(',')+'\r\n'+rows.join('\r\n')+'\r\n'+(()=>{ const T=mtTotal(C); return T?['',T.done?'TOTAL TIME':'ELAPSED SO FAR','','','','','','','',T.ded?'clock-stop '+mtDur(T.ded)+' taken out':'',T.t].map(q).join(',')+'\r\n':''; })();
     const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
     a.download=gpxFileName('times '+mt.name)+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),3000); };
   mtFillPicker(); if(mt&&!mt.hide&&mtTarget()>=0) mtArm(); mtRender(); })();
