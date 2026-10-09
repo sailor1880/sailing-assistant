@@ -1,5 +1,5 @@
 /* Sailing Assistant service worker — live first: the network copy always wins; stored copies are only for offline */
-const APP='sa-app-v34', TILES='sa-tiles-v1', DATA='sa-data-v13';
+const APP='sa-app-v35', TILES='sa-tiles-v1', DATA='sa-data-v13';
 const SHELL=['./','index.html','windy.html','manifest.webmanifest','icon-192.png','icon-512.png','icon-180.png'];
 
 self.addEventListener('install', e=>{
