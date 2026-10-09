@@ -755,7 +755,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <iframe id="windyframe" style="flex:1 1 auto;width:100%;border:0" allow="fullscreen"></iframe>
 </div>
 <button id="collapse" title="Show/hide panel">&#9776;</button>
-<div id="mtbar"><span id="mtnext"></span><button id="mtbtn">MARK TIME</button></div>
+<div id="mtbar"><span id="mtnext"></span><button id="mtbtn">MARK TIME</button><a href="#" id="mtx" title="hide this button (times are kept)" style="font-size:22px;line-height:1;padding:6px 4px;color:#555;text-decoration:none">&#10005;</a></div>
 <div class="panel" id="panel">
  <h3>Sailing Assistant</h3>
  <button id="nightbtn" style="font-size:11px;width:100%;margin:0 0 4px;cursor:pointer">&#9790; Night mode</button>
@@ -858,11 +858,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <button id="aisembed" style="font-size:11px;margin:3px 0 0 18px;cursor:pointer;width:calc(100% - 18px)">Traffic map &mdash; no key needed</button>
  <hr><b style="font-size:12px">Mark times</b>
  <select id="mtcourse" style="width:100%;font-size:12px"><option value="">Pick the course you are sailing&hellip;</option></select>
+ <div id="mtstartbox" style="font-size:11px;margin-top:3px;display:none">Start / finish at:
+   <select id="mtstart" style="width:100%;font-size:12px"></select></div>
  <div id="mtlist" style="font-size:11px;margin-top:3px"></div>
  <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
    <button id="mtcheck" style="font-size:11px">Check against track</button>
    <button id="mtcsv" style="font-size:11px">Save times.csv</button>
-   <button id="mtclr" style="font-size:11px">Clear times</button></div>
+   <button id="mtclr" style="font-size:11px">Clear times</button>
+   <button id="mtshow" style="font-size:11px">Hide chart button</button>
+   <button id="mtend" style="font-size:11px">Close time sheet</button></div>
+ <div id="mtstat" style="font-size:10px;color:#555;margin-top:2px"></div>
  <div style="font-size:10px;color:#888;margin-top:2px">Load or draw the course first. Picking it here turns on your position and track recording.</div>
  <hr><b style="font-size:12px">Track &amp; route</b>
  <label><input type="checkbox" id="recchk"> Record my GPS track</label>
@@ -3571,7 +3576,10 @@ function mtSources(){ const out=[];                 // every course on the chart
     ix.forEach((i,j)=>{ const nm=((rt.names||[])[i]||'').trim(); if(/\(routing\)/i.test(nm)) return;   // routing points are not marks
       const sd=(rt.sides||[])[i]; ms.push({n:nm||('Point '+(j+1)),lat:rt.pts[i][0],lon:rt.pts[i][1],
         side:sd?(r.rev?flipSide(sd):sd):'',k:j===0?'start':j===ix.length-1?'finish':''}); });
-    if(ms.length>1) out.push({key:'race:'+r.name+'|'+rt.name+(r.rev?'|rev':''),name:(r.name===rt.name?'':r.name+' — ')+rt.name+(r.rev?' (reversed)':''),marks:ms}); }));
+    const a=ms[0], z=ms[ms.length-1];               // a loop (ends where it starts) may be started at any of its marks
+    if(ms.length>1) out.push({key:'race:'+r.name+'|'+rt.name+(r.rev?'|rev':''),name:(r.name===rt.name?'':r.name+' — ')+rt.name+(r.rev?' (reversed)':''),marks:ms,
+      loop:ms.length>3&&map.distance([a.lat,a.lon],[z.lat,z.lon])<30,
+      off:r.routes.filter(x=>x.kind==='untimed').map(x=>[x.pts[0],x.pts[x.pts.length-1]])}); }));
   return out; }
 function mtFillPicker(){ const sel=document.getElementById('mtcourse'), src=mtSources(); sel._src=src; sel.innerHTML='';
   const add=(v,t)=>{ const o=document.createElement('option'); o.value=v; o.textContent=t; sel.appendChild(o); };
@@ -3580,6 +3588,16 @@ function mtFillPicker(){ const sel=document.getElementById('mtcourse'), src=mtSo
   src.forEach(x=>add(x.key,x.name)); sel.value=mt?mt.key:''; }
 const mtNear=m=>m.prov&&Date.now()-Date.parse(m.trk)<120000;         // closest approach not settled yet: the boat is still at the mark
 const mtEff=m=>m.btn||(m.trk&&!mtNear(m)?m.trk:null);               // the time used for leg / elapsed arithmetic
+function mtRotate(k){ const ring=mt.marks.slice(0,-1), sd=mt.marks[mt.marks.length-1].side||ring[0].side;   // start the loop at mark k
+  ring[0].side=sd; const o=ring.slice(k).concat(ring.slice(0,k)).map(m=>({...m,k:'',trk:null,trkD:null,prov:false}));   // times already logged stay with their marks
+  o.push({...o[0],k:'finish',btn:null,ed:false}); o[0].k='start'; o[0].side=''; mt.marks=o; }
+function mtCalc(){ let t0=null, prev=null, ded=0;    // leg and elapsed per mark; a clock-stop stretch (e.g. Tiverton Basin) is left out of elapsed
+  const same=(m,p)=>map.distance([m.lat,m.lon],p)<30;
+  return mt.marks.map((m,i)=>{ const e=mtEff(m), et=e?Date.parse(e):null, p=mt.marks[i-1]; if(i===0) t0=et;
+    const off=!!p&&(mt.off||[]).some(o=>(same(p,o[0])&&same(m,o[1]))||(same(p,o[1])&&same(m,o[0])));
+    const pe=p&&mtEff(p); if(off&&et!==null&&pe) ded+=et-Date.parse(pe);
+    const r={e,et,off,leg:(et!==null&&prev!==null)?mtDur(et-prev):'',tot:(et!==null&&t0!==null&&i>0)?mtDur(et-t0-ded):''};
+    if(et!==null) prev=et; return r; }); }
 const mtClock=iso=>{ const d=new Date(iso), t=d.toLocaleTimeString('en-GB');
   return d.toDateString()===new Date().toDateString()?t:(d.getMonth()+1)+'/'+d.getDate()+' '+t; };
 const mtDur=ms=>{ const s=Math.round(Math.abs(ms)/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60);
@@ -3592,70 +3610,105 @@ function mtTarget(){ if(!mt) return -1;              // which mark the big butto
       const d=map.distance(lastBoatLL,[m.lat,m.lon]); if(d<bd){ bd=d; best=i; } } if(best>=0) return best; }
   return first; }
 function mtCheckTrack(){ if(!mt) return 0;          // closest approach of the track to each mark, taken in course order
-  const T=trackPts, R1=200, R2=500; let from=0, found=0;
+  const T=trackPts, R1=200, R2=500, R3=1200; let from=0, found=0;   // tight, wide, then very wide (a mark given a lot of room)
   const st=mt.marks[0];                             // a logged start: only the track from a minute before it counts
   if(st&&st.k==='start'&&st.btn){ const t0=Date.parse(st.btn)-60000; while(from<T.length&&Date.parse(T[from][2])<t0) from++; }
   mt.marks.forEach(m=>{ m.trk=null; m.trkD=null; m.prov=false; if(m.k==='start') return;   // a start is a gun time, not a place
-    for(const R of [R1,R2]){ let best=-1, bd=R, left=false;                              // tight first, then wide (approximate finish lines)
+    for(const R of [R1,R2,R3]){ let best=-1, bd=R, left=false;                              // tight first, then wide (approximate finish lines)
       for(let j=from;j<T.length;j++){ const d=map.distance([T[j][0],T[j][1]],[m.lat,m.lon]);
         if(d<bd){ bd=d; best=j; } else if(best>=0&&d>R){ left=true; break; } }
       if(best>=0){ m.trk=T[best][2]; m.trkD=Math.round(bd); m.prov=!left; from=best; found++; break; } } });   // prov: still inside the circle, may get closer
   mtSave(); return found; }
 function mtRender(){ const box=document.getElementById('mtlist'), bar=document.getElementById('mtbar');
-  if(!mt){ box.innerHTML=''; bar.style.display='none'; mtSig=''; return; }
-  const tgt=mtTarget(); let t0=null, prev=null, h='<table>';
-  mt.marks.forEach((m,i)=>{ const e=mtEff(m), et=e?Date.parse(e):null; if(i===0||(t0===null&&et!==null&&m.k==='start')) t0=et;
+  const stat=document.getElementById('mtstat'), sh=document.getElementById('mtshow');
+  if(!mt){ box.innerHTML=''; bar.style.display='none'; mtSig=''; stat.textContent=''; document.getElementById('mtstartbox').style.display='none'; mtWake(false); return; }
+  mtStatus(); sh.textContent=mt.hide?'Show chart button':'Hide chart button';
+  const tgt=mtTarget(), C=mtCalc(); let h='<table>';
+  { const sb=document.getElementById('mtstartbox'), ss=document.getElementById('mtstart'); sb.style.display=mt.loop?'':'none';
+    if(mt.loop){ ss.innerHTML=''; mt.marks.slice(0,-1).forEach((m,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=m.n; ss.appendChild(o); }); ss.value=0; } }
+  mt.marks.forEach((m,i)=>{ const e=C[i].e, leg=C[i].leg+(C[i].off&&C[i].leg?' <span style="font-size:10px;color:#c60">clock off</span>':''), tot=C[i].tot;
     const sd=m.side==='p'?' <b style="color:#d00000">P</b>':m.side==='s'?' <b style="color:#0a8f2f">S</b>':'';
     let tm= m.btn?'<b>'+mtClock(m.btn)+'</b>' : e?'<i>'+mtClock(e)+'</i>' : '<span style="color:#888">—</span>';
     let tk=''; if(m.trk) tk='<tr><td colspan="4" style="border-top:none;padding-top:0;font-size:10px;color:#555">track '+mtClock(m.trk)+' · '+m.trkD+' m'+(mtNear(m)?' (still near)':'')+
       (m.btn?' · '+(Date.parse(m.btn)>=Date.parse(m.trk)?'+':'')+mtDur(Date.parse(m.btn)-Date.parse(m.trk)).replace(/^-/,'−')+' vs button':'')+'</td></tr>';
-    const leg=(et!==null&&prev!==null)?mtDur(et-prev):'', tot=(et!==null&&t0!==null&&i>0)?mtDur(et-t0):'';
-    h+='<tr'+(i===tgt?' style="background:#e9fbe9"':'')+'><td>'+xmlEsc(m.n)+sd+'</td><td>'+tm+'</td><td style="text-align:right;white-space:nowrap">'+leg+
-      (tot?'<br><span style="font-size:10px;color:#555">'+tot+'</span>':'')+'</td><td><button data-i="'+i+'" style="font-size:10px;padding:1px 5px">'+(m.btn?'✕':'now')+'</button></td></tr>'+tk;
-    if(et!==null) prev=et; });
-  box.innerHTML='<div style="font-size:10px;color:#888">mark · time · leg / elapsed</div>'+h+'</table>';
+    h+='<tr'+(i===tgt?' style="background:#e9fbe9"':'')+'><td>'+xmlEsc(m.n)+sd+'</td><td data-e="'+i+'" title="tap to type or correct this time" style="cursor:pointer;text-decoration:underline dotted">'+tm+(m.ed?' <span style="font-size:10px;color:#c60">edited</span>':'')+'</td><td style="text-align:right;white-space:nowrap">'+leg+
+      (tot?'<br><span style="font-size:10px;color:#555">'+tot+'</span>':'')+'</td><td><button data-i="'+i+'" style="font-size:10px;padding:1px 5px">'+(m.btn?'✕':'now')+'</button></td></tr>'+tk; });
+  box.innerHTML='<div style="font-size:10px;color:#888">mark · time · leg / elapsed'+((mt.off||[]).length?' (clock-stop stretch taken out)':'')+'</div>'+h+'</table>';
+  box.querySelectorAll('td[data-e]').forEach(c=>c.onclick=()=>mtEdit(+c.dataset.e));
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{ const m=mt.marks[+b.dataset.i];
-    if(m.btn){ if(!confirm('Clear the logged time for '+m.n+'?')) return; m.btn=null; mtSave(); mtRender(); } else mtPress(+b.dataset.i); });
-  bar.style.display='flex'; const btn=document.getElementById('mtbtn'), nx=document.getElementById('mtnext');
+    if(m.btn){ if(!confirm('Clear the logged time for '+m.n+'?')) return; m.btn=null; m.ed=false; mtSave(); mtRender(); } else mtPress(+b.dataset.i); });
+  bar.style.display=mt.hide?'none':'flex'; const btn=document.getElementById('mtbtn'), nx=document.getElementById('mtnext');
   if(tgt<0){ nx.textContent='All marks logged'; btn.style.display='none'; }
   else { const m=mt.marks[tgt], d=lastBoatLL?map.distance(lastBoatLL,[m.lat,m.lon])/1852:null; btn.style.display='';
     nx.innerHTML='<span style="font-size:11px;color:#555">next</span><br><b>'+xmlEsc(m.n)+'</b>'+(d!==null?' · '+(d<0.2?Math.round(d*1852)+' m':d.toFixed(2)+' NM'):'');
     btn.textContent=m.k==='start'?'START':m.k==='finish'?'FINISH':'MARK TIME'; } }
-function mtPress(i){ if(!mt||i<0) return; mt.marks[i].btn=new Date().toISOString(); mtSave();
+function mtEdit(i){ const m=mt.marks[i], cur=mtEff(m), any=cur||(mt.marks.map(mtEff).find(Boolean));   // type a time for a missed mark, or correct one
+  const base=any?new Date(any):new Date(), dflt=(cur?new Date(cur):new Date()).toLocaleTimeString('en-GB');
+  const v=prompt('Time at '+m.n+' (24-hour, HH:MM:SS):',dflt); if(v===null) return;
+  const p=v.trim().match(/^(\d{1,2})[:.](\d{2})(?:[:.](\d{2}))?$/);
+  if(!p||+p[1]>23||+p[2]>59||+(p[3]||0)>59){ alert('Type the time as HH:MM:SS, for example 14:05:30'); return; }
+  base.setHours(+p[1],+p[2],+(p[3]||0),0); m.btn=base.toISOString(); m.ed=true; mtSave(); mtCheckTrack(); mtRender(); }
+function mtPress(i){ if(!mt||i<0) return; mt.marks[i].btn=new Date().toISOString(); mt.marks[i].ed=false; mtSave();
   try{ navigator.vibrate&&navigator.vibrate(80); }catch(e){}
   const b=document.getElementById('mtbtn'); b.classList.add('done'); setTimeout(()=>b.classList.remove('done'),700);
   mtCheckTrack(); mtRender(); }
 function mtOnFix(){ if(!mt) return; const now=Date.now();   // every GPS fix: refresh the distance; re-check the track every 5 s
   if(now-mtLast>5000&&trackPts.length){ mtLast=now; mtCheckTrack(); }
   const sig=mt.marks.map(m=>m.trk+(m.prov?'~':'')).join()+mtTarget();
-  if(sig!==mtSig){ mtSig=sig; mtRender(); }
+  mtStatus(); if(sig!==mtSig){ mtSig=sig; mtRender(); }
   else { const tgt=mtTarget(); if(tgt>=0){ const m=mt.marks[tgt], d=map.distance(lastBoatLL,[m.lat,m.lon])/1852, nx=document.getElementById('mtnext');
       nx.innerHTML='<span style="font-size:11px;color:#555">next</span><br><b>'+xmlEsc(m.n)+'</b> · '+(d<0.2?Math.round(d*1852)+' m':d.toFixed(2)+' NM'); } } }
-function mtArm(){ ['recchk','gpschk'].forEach(id=>{ const c=document.getElementById(id);      // timing needs the boat's position and a recorded track
+function mtStatus(){ const g=document.getElementById('gpschk').checked, r=document.getElementById('recchk').checked, last=trackPts.length?trackPts[trackPts.length-1][2]:null;
+  const bad=!g||!r||!last||Date.now()-Date.parse(last)>60000;      // why a pass may not be picked up: no position, not recording, or no recent fix
+  document.getElementById('mtstat').innerHTML='<span style="color:'+(bad?'#c00':'#0a7d2c')+'">'+(g?'position on':'POSITION OFF')+' · '+(r?'recording':'NOT RECORDING')+
+    ' · '+(last?'last track fix '+mtClock(last):'no track yet')+'</span>'+(bad?'<br>The track check needs position on, recording on, and the app open on screen.':''); }
+let mtLock=null;                                     // keep the screen awake while timing: a sleeping phone stops giving GPS fixes
+async function mtWake(on){ try{ if(on){ if(!mtLock&&navigator.wakeLock&&document.visibilityState==='visible'){ mtLock=await navigator.wakeLock.request('screen'); mtLock.addEventListener('release',()=>{ mtLock=null; }); } }
+    else if(mtLock){ const l=mtLock; mtLock=null; await l.release(); } }catch(e){} }
+document.addEventListener('visibilitychange',()=>{ if(mt&&document.visibilityState==='visible') mtWake(true); });
+function mtArm(){ mtWake(true); ['recchk','gpschk'].forEach(id=>{ const c=document.getElementById(id);      // timing needs the boat's position and a recorded track
   if(!c.checked){ c.checked=true; c.dispatchEvent(new Event('change',{bubbles:true})); } }); }
 document.getElementById('mtbtn').onclick=()=>mtPress(mtTarget());
+map.on('click',ev=>{ if(!trackPts.length||!trackLine||anyTapMode()) return;    // tap on the recorded track: when was the boat here?
+  const c=ev.containerPoint; let best=-1, bd=28;                                 // within 28 px of a recorded fix
+  for(let i=0;i<trackPts.length;i++){ const p=map.latLngToContainerPoint([trackPts[i][0],trackPts[i][1]]), d=Math.hypot(p.x-c.x,p.y-c.y); if(d<bd){ bd=d; best=i; } }
+  if(best<0||!trackPts[best][2]) return;
+  const iso=trackPts[best][2], box=document.createElement('div'); box.innerHTML='<b>Track time here</b><br>'+new Date(iso).toLocaleDateString()+' <b>'+new Date(iso).toLocaleTimeString('en-GB')+'</b>';
+  if(mt){ const sel=document.createElement('select'), b=document.createElement('button'); sel.style.cssText='display:block;margin:5px 0;max-width:210px;font-size:14px'; b.textContent='Use as time for this mark'; b.style.fontSize='14px';
+    let near=0, nd=1e12; mt.marks.forEach((m,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=(i+1)+'. '+m.n+(m.k?' ('+m.k+')':''); sel.appendChild(o);
+      const d=map.distance([trackPts[best][0],trackPts[best][1]],[m.lat,m.lon]); if(d<nd&&!(m.k==='finish'&&d===nd)){ nd=d; near=i; } });
+    sel.value=near; b.onclick=()=>{ const m=mt.marks[+sel.value]; m.btn=iso; m.ed=true; mtSave(); mtCheckTrack(); mtRender(); map.closePopup(); };
+    box.appendChild(sel); box.appendChild(b); }
+  L.popup().setLatLng([trackPts[best][0],trackPts[best][1]]).setContent(box).openOn(map); });
 (function(){ const sel=document.getElementById('mtcourse');
   ['pointerdown','focus','keydown'].forEach(ev=>sel.addEventListener(ev,()=>{ if(ev!=='keydown'||!sel._src) mtFillPicker(); }));
   sel.addEventListener('change',()=>{ const src=(sel._src||[]).find(x=>x.key===sel.value);
     if(mt&&sel.value===mt.key) return;
     if(mt&&mt.marks.some(m=>m.btn)&&!confirm('Start a new time sheet? The times logged for "'+mt.name+'" will be cleared (save them first with Save times.csv).')){ sel.value=mt.key; return; }
-    mt=src?{key:src.key,name:src.name,marks:src.marks.map(m=>({...m,btn:null,trk:null,trkD:null,prov:false}))}:null;
+    mt=src?{key:src.key,name:src.name,loop:!!src.loop,off:src.off||[],marks:src.marks.map(m=>({...m,btn:null,trk:null,trkD:null,prov:false}))}:null;
     mtSave(); if(mt){ mtArm(); mtCheckTrack(); } mtRender(); });
+  document.getElementById('mtstart').addEventListener('change',e=>{ const k=+e.target.value; if(!mt||!mt.loop||!k) return;
+    mtRotate(k); mtCheckTrack(); mtRender(); });
+  document.getElementById('mtx').onclick=e=>{ e.preventDefault(); if(mt){ mt.hide=true; mtSave(); mtRender(); } };
+  document.getElementById('mtshow').onclick=()=>{ if(mt){ mt.hide=!mt.hide; mtSave(); mtRender(); } };
+  document.getElementById('mtend').onclick=()=>{ if(!mt) return;
+    if(mt.marks.some(m=>m.btn||m.trk)&&!confirm('Close this time sheet? Its times will be removed - use Save times.csv first if you want them.')) return;
+    mt=null; mtSave(); mtFillPicker(); mtRender(); };
   document.getElementById('mtcheck').onclick=()=>{ if(!mt){ alert('Pick the course you are sailing first.'); return; }
     if(!trackPts.length){ alert('No track recorded yet. Turn on "Record my GPS track" (under Track & route).'); return; }
     const n=mtCheckTrack(); mtRender();
     alert('Track passes found for '+n+' of '+mt.marks.filter(m=>m.k!=='start').length+' marks.'+(mt.marks[0].btn?'':'\n\nNo start time is logged, so the whole recorded track was searched. Clear old tracks before a race, or log the start.')); };
   document.getElementById('mtclr').onclick=()=>{ if(!mt||!confirm('Clear all logged times for "'+mt.name+'"?')) return;
-    mt.marks.forEach(m=>{ m.btn=null; }); mtCheckTrack(); mtRender(); };
+    mt.marks.forEach(m=>{ m.btn=null; m.ed=false; }); mtCheckTrack(); mtRender(); };
   document.getElementById('mtcsv').onclick=()=>{ if(!mt){ alert('No times yet.'); return; }
-    const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"', loc=iso=>iso?new Date(iso).toLocaleString('sv'):''; let t0=null, prev=null;
-    const rows=mt.marks.map((m,i)=>{ const e=mtEff(m), et=e?Date.parse(e):null; if(i===0) t0=et;
-      const r=[i+1,m.n,m.side==='p'?'port':m.side==='s'?'stbd':'',loc(e),m.btn?'button':e?'track':'',loc(m.btn),loc(m.trk),m.trkD,(et!==null&&prev!==null)?mtDur(et-prev):'',(et!==null&&t0!==null&&i>0)?mtDur(et-t0):''];
-      if(et!==null) prev=et; return r.map(q).join(','); });
-    const csv='﻿'+['mark number','mark name','side','time','time from','button time','track time','track closest approach (m)','leg','elapsed from start'].map(q).join(',')+'\r\n'+rows.join('\r\n')+'\r\n';
+    const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"', loc=iso=>iso?new Date(iso).toLocaleString('sv'):'', C=mtCalc();
+    const rows=mt.marks.map((m,i)=>{ const e=C[i].e;
+      const r=[i+1,m.n,m.side==='p'?'port':m.side==='s'?'stbd':'',loc(e),m.btn?(m.ed?'typed in':'button'):e?'track':'',loc(m.btn),loc(m.trk),m.trkD,C[i].leg,C[i].off?'clock off':'',C[i].tot];
+      return r.map(q).join(','); });
+    const csv='﻿'+['mark number','mark name','side','time','time from','button time','track time','track closest approach (m)','leg','leg note','elapsed from start (clock-stop legs taken out)'].map(q).join(',')+'\r\n'+rows.join('\r\n')+'\r\n';
     const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
     a.download=gpxFileName('times '+mt.name)+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),3000); };
-  mtFillPicker(); mtRender(); })();
+  mtFillPicker(); if(mt&&!mt.hide&&mtTarget()>=0) mtArm(); mtRender(); })();
 
 // ---- Better Bay Alliance live chart (their page, new tab) ----
 document.getElementById('bbabtn').addEventListener('click',()=>window.open('https://betterbayalliance.org/live-chart-better-bay-alliance/','_blank'));
