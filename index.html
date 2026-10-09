@@ -719,6 +719,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
  body.night .panel,body.night #collapse,body.night .leaflet-popup-content-wrapper,body.night .leaflet-popup-tip,
  body.night .leaflet-tooltip,body.night .leaflet-control-zoom,body.night #notfornav,body.night #discmodal{filter:invert(1) hue-rotate(180deg)}
  body.night .leaflet-control-attribution{opacity:.5}
+ /* Mark-time bar: one big button on the chart, so a time can be logged without opening the menu */
+ #mtbar{position:absolute;left:8px;bottom:26px;z-index:1050;display:none;align-items:center;gap:8px;background:#fff;
+   border-radius:8px;padding:6px 8px;box-shadow:0 1px 5px rgba(0,0,0,.45);font-size:14px;max-width:calc(100vw - 16px)}
+ #mtbar button{font-size:17px;font-weight:bold;padding:10px 14px;border-radius:8px;border:2px solid #0a5;background:#0b6;color:#fff;cursor:pointer;white-space:nowrap}
+ #mtbar button.done{background:#fff;color:#0a5}
+ #mtlist table{border-collapse:collapse;width:100%} #mtlist td{padding:2px 3px;border-top:1px solid #ddd;vertical-align:top}
+ body.night #mtbar{filter:invert(1) hue-rotate(180deg)}
  #notfornav{position:absolute;left:50%;bottom:3px;transform:translateX(-50%);z-index:1100;
    background:rgba(255,255,255,.85);color:#c1121f;font:bold 12px system-ui;letter-spacing:.6px;
    padding:2px 10px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none;white-space:nowrap}
@@ -748,6 +755,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <iframe id="windyframe" style="flex:1 1 auto;width:100%;border:0" allow="fullscreen"></iframe>
 </div>
 <button id="collapse" title="Show/hide panel">&#9776;</button>
+<div id="mtbar"><span id="mtnext"></span><button id="mtbtn">MARK TIME</button></div>
 <div class="panel" id="panel">
  <h3>Sailing Assistant</h3>
  <button id="nightbtn" style="font-size:11px;width:100%;margin:0 0 4px;cursor:pointer">&#9790; Night mode</button>
@@ -848,6 +856,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <div id="aismsg" style="margin-left:18px;font-size:11px;color:#888">needs a free <b>aisstream.io</b> key</div>
  <div style="margin-left:18px;font-size:10px"><a href="#" id="aiskeybtn" style="color:#0b6">set / change aisstream key</a></div>
  <button id="aisembed" style="font-size:11px;margin:3px 0 0 18px;cursor:pointer;width:calc(100% - 18px)">Traffic map &mdash; no key needed</button>
+ <hr><b style="font-size:12px">Mark times</b>
+ <select id="mtcourse" style="width:100%;font-size:12px"><option value="">Pick the course you are sailing&hellip;</option></select>
+ <div id="mtlist" style="font-size:11px;margin-top:3px"></div>
+ <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
+   <button id="mtcheck" style="font-size:11px">Check against track</button>
+   <button id="mtcsv" style="font-size:11px">Save times.csv</button>
+   <button id="mtclr" style="font-size:11px">Clear times</button></div>
+ <div style="font-size:10px;color:#888;margin-top:2px">Load or draw the course first. Picking it here turns on your position and track recording.</div>
  <hr><b style="font-size:12px">Track &amp; route</b>
  <label><input type="checkbox" id="recchk"> Record my GPS track</label>
  <label><input type="checkbox" id="drawchk"> Draw a route (tap map)</label>
@@ -2450,7 +2466,7 @@ document.getElementById('gpschk').addEventListener('change',e=>{
       lastBoatLL=ll; updateHeadingLine();
       if(firstFix){ map.setView(ll,13); firstFix=false; }
       else if(document.getElementById('followchk').checked){ map.panTo(ll); }
-      recordFix(c);
+      recordFix(c); mtOnFix();
     }, err=>{
        const msg = err.code===1
          ? 'Location is blocked. On iPhone fix it in two places:\\n1) Settings > Privacy & Security > Location Services = ON, then scroll to Safari Websites = "While Using".\\n2) Open the site in Safari, tap "aA" at the left of the address bar > Website Settings > Location = Allow.\\nThen reload and tap My position again.'
@@ -2919,7 +2935,8 @@ function segDistM(p,a,b){ const R=6371000, toR=Math.PI/180, latm=(a[0]+b[0])/2*t
   return {d:Math.hypot(px-(ax+t*dx),py-(ay+t*dy))*R, inSeg}; }
 function fillCodes(idx){ curSetIdx=idx; const dl=document.getElementById('coursecodes'); dl.innerHTML='';
   Object.keys(COURSESETS[idx].courses).forEach(c=>{ const o=document.createElement('option'); o.value=c; dl.appendChild(o); }); }
-function clearCourseLine(){ if(courseLine){ map.removeLayer(courseLine); courseLine=null; } }
+let curCourseMarks=null;                          // the drawn coded course as an ordered mark list, for Mark times
+function clearCourseLine(){ if(courseLine){ map.removeLayer(courseLine); courseLine=null; } curCourseMarks=null; }
 // Rounding direction: a ring with an arrowhead around a mark. Red = leave to PORT (boat turns counter-clockwise
 // around it), green = leave to STARBOARD (clockwise). Not interactive, so it never takes a tap meant for the mark.
 function roundIcon(side){ const col=side==='p'?'#d00000':'#0a8f2f', d='M20.5 5.47A11 11 0 1 1 9.5 5.47';
@@ -2946,8 +2963,14 @@ function drawCourse(code){ const set=COURSESETS[curSetIdx], c=set.courses[code],
   if(set.finish){ const fm=M[set.finish.mark];                   // JYC: end AT mark F (finish = F -> dock)
     if(fm){ finPt=[fm.lat,fm.lon]; if(!(last && last[0]===set.finish.mark)){ nodes.push(finPt); parts.push(set.finish.mark+'(F)'); } } }
   else if(START && !(last&&last[1]==='fin')){ nodes.push(START); } // other sets: finish back at the start line
+  { const ms=[]; if(START) ms.push({n:sm?'Start at '+c.start:'Start',lat:START[0],lon:START[1],side:'',k:'start'});
+    c.seq.forEach(([mk,side])=>{ const m=M[mk]; if(m) ms.push({n:mk,lat:m.lat,lon:m.lon,side:side==='fin'?'':side,k:side==='fin'?'finish':''}); });
+    if(set.finish){ if(finPt){ if(last&&last[0]===set.finish.mark) ms[ms.length-1].k='finish';
+                               else ms.push({n:set.finish.mark,lat:finPt[0],lon:finPt[1],side:'',k:'finish'}); } }
+    else if(START && !(last&&last[1]==='fin')) ms.push({n:'Finish',lat:START[0],lon:START[1],side:'',k:'finish'});
+    curCourseMarks={name:(set.club||'Course')+' '+code,marks:ms}; }
   courseLine=L.layerGroup();
-  let landLegs=0;                                  // draw legs; red-dash any that appear to cross land
+  let landLegs=0;                                 // draw legs; red-dash any that appear to cross land
   for(let i=0;i<nodes.length-1;i++){ const a=nodes[i], b=nodes[i+1], bad=legCrossesLand(a,b); if(bad) landLegs++;
     const pl=L.polyline([a,b], bad?{color:'#ff3b30',weight:4,opacity:.95,dashArray:'8 5'}:{color:'#d500f9',weight:3,opacity:.9});
     if(bad) pl.bindTooltip('Leg may cross land - route around',{sticky:true}); pl.addTo(courseLine); }
@@ -3105,7 +3128,7 @@ function buildRace(text,name,idx,links,c0,rev){
   const race={name,color:col,bounds:b,routes:[],extra:[],links:links||null,rev:!!rev};
   const lh=raceLinksHtml(links);                       // NOR/SI/club links appended to every course popup
   let ncourse=0;
-  const addRoute=(pts,label,sides)=>{ if(pts.length>1){ const t=(label||'').toLowerCase(); let rc,layer,kind='course'; const pop='<b>'+(label||name)+'</b>'+lh;
+  const addRoute=(pts,label,sides,names)=>{ if(pts.length>1){ const t=(label||'').toLowerCase(); let rc,layer,kind='course'; const pop='<b>'+(label||name)+'</b>'+lh;
     if(/exclus|restrict|prohibit|keep ?out|danger|no.?go/.test(t)){        // exclusion zone -> filled polygon
       kind='ez'; rc='#c00'; layer=L.polygon(pts,{color:rc,weight:2,fillColor:rc,fillOpacity:0.15,dashArray:'4 3'}).bindPopup(pop); }
     else if(/untimed|time.?stop|clock.?stop/.test(t)){                     // timing gate (e.g. Tiverton Basin): wide amber band over that stretch
@@ -3117,8 +3140,8 @@ function buildRace(text,name,idx,links,c0,rev){
     const rounds=[];                                     // port/stbd rings, only where the file gives a side
     if(kind==='course'&&sides) pts.forEach((p,i)=>{ const s=sides[i]; if(!s||(i===pts.length-1&&i>0&&p[0]===pts[0][0]&&p[1]===pts[0][1])) return;  // closed loop: one ring on the shared start/finish mark
       rounds.push({side:s,m:roundMark(p,race.rev?flipSide(s):s)}); });
-    race.routes.push({name:label||('course '+(race.routes.length+1)),pts,layer,on:true,color:rc,kind,rounds}); } };
-  tag(xml,'rte').forEach(r=>{ const rp=tag(r,'rtept'); addRoute(collect(rp),nm(r),rp.map(gpxSide)); });
+    race.routes.push({name:label||('course '+(race.routes.length+1)),pts,layer,on:true,color:rc,kind,rounds,sides:sides||[],names:names||[]}); } };
+  tag(xml,'rte').forEach(r=>{ const rp=tag(r,'rtept'); addRoute(collect(rp),nm(r),rp.map(gpxSide),rp.map(nm)); });
   tag(xml,'trk').forEach(t=>{ let pts=[]; tag(t,'trkseg').forEach(sg=>pts=pts.concat(collect(tag(sg,'trkpt'))));
     if(pts.length>1) race.extra.push(L.polyline(pts,{color:col,weight:2,opacity:.7,dashArray:'4 3'}).bindPopup(nm(t)||name)); });
   tag(xml,'wpt').forEach(w=>{ const la=+w.getAttribute('lat'),lo=+w.getAttribute('lon'); b.push([la,lo]);
@@ -3533,6 +3556,106 @@ document.getElementById('trapchk').addEventListener('change',async e=>{
     h.addEventListener('click',()=>{ const open=body.style.display==='none'; set(open); saved[key]=open;
       try{ localStorage.setItem('sa_sections',JSON.stringify(saved)); }catch(e){} }); });
 })();
+
+// ---- Mark times: log the time each mark of the course is passed ----
+// Two independent sources per mark: "btn" = the MARK TIME button was pressed; "trk" = the recorded GPS track's closest
+// approach to the mark, found in course order. The button is the time of record; the track is the cross-check, and
+// stands in (shown in italics) for a mark whose button was never pressed.
+const MTKEY='sa_marktimes'; let mt=null, mtLast=0, mtSig='';   // mt={key,name,marks:[{n,lat,lon,side,k,btn,trk,trkD,prov}]}
+try{ mt=JSON.parse(localStorage.getItem(MTKEY)||'null'); }catch(e){}
+function mtSave(){ try{ mt?localStorage.setItem(MTKEY,JSON.stringify(mt)):localStorage.removeItem(MTKEY); }catch(e){} }
+function mtSources(){ const out=[];                 // every course on the chart right now: the coded course, and each shown race course
+  if(curCourseMarks) out.push({key:'code:'+curCourseMarks.name,name:curCourseMarks.name,marks:curCourseMarks.marks});
+  if(racesOn()) races.forEach(r=>r.routes.forEach(rt=>{ if(rt.kind!=='course'||!rt.on) return;
+    const ix=revPts(rt.pts.map((_,i)=>i),r.rev), ms=[];
+    ix.forEach((i,j)=>{ const nm=((rt.names||[])[i]||'').trim(); if(/\(routing\)/i.test(nm)) return;   // routing points are not marks
+      const sd=(rt.sides||[])[i]; ms.push({n:nm||('Point '+(j+1)),lat:rt.pts[i][0],lon:rt.pts[i][1],
+        side:sd?(r.rev?flipSide(sd):sd):'',k:j===0?'start':j===ix.length-1?'finish':''}); });
+    if(ms.length>1) out.push({key:'race:'+r.name+'|'+rt.name+(r.rev?'|rev':''),name:(r.name===rt.name?'':r.name+' — ')+rt.name+(r.rev?' (reversed)':''),marks:ms}); }));
+  return out; }
+function mtFillPicker(){ const sel=document.getElementById('mtcourse'), src=mtSources(); sel._src=src; sel.innerHTML='';
+  const add=(v,t)=>{ const o=document.createElement('option'); o.value=v; o.textContent=t; sel.appendChild(o); };
+  add('',src.length||mt?'Pick the course you are sailing…':'No course on the chart yet — load one above');
+  if(mt&&!src.some(x=>x.key===mt.key)) add(mt.key,mt.name);
+  src.forEach(x=>add(x.key,x.name)); sel.value=mt?mt.key:''; }
+const mtNear=m=>m.prov&&Date.now()-Date.parse(m.trk)<120000;         // closest approach not settled yet: the boat is still at the mark
+const mtEff=m=>m.btn||(m.trk&&!mtNear(m)?m.trk:null);               // the time used for leg / elapsed arithmetic
+const mtClock=iso=>{ const d=new Date(iso), t=d.toLocaleTimeString('en-GB');
+  return d.toDateString()===new Date().toDateString()?t:(d.getMonth()+1)+'/'+d.getDate()+' '+t; };
+const mtDur=ms=>{ const s=Math.round(Math.abs(ms)/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60);
+  return (ms<0?'-':'')+(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s%60).padStart(2,'0'); };
+function mtTarget(){ if(!mt) return -1;              // which mark the big button logs: the next one in order, or - with a GPS fix -
+  const lastP=mt.marks.reduce((a,m,i)=>m.btn?i:a,-1); // the nearest not-yet-logged mark within 500 m (so a missed press does not shift every later one)
+  let first=-1; for(let i=lastP+1;i<mt.marks.length;i++) if(!mt.marks[i].btn){ first=i; break; }
+  if(first<0) return -1;
+  if(lastBoatLL){ let best=-1, bd=500; for(let i=first;i<mt.marks.length;i++){ const m=mt.marks[i]; if(m.btn) continue;
+      const d=map.distance(lastBoatLL,[m.lat,m.lon]); if(d<bd){ bd=d; best=i; } } if(best>=0) return best; }
+  return first; }
+function mtCheckTrack(){ if(!mt) return 0;          // closest approach of the track to each mark, taken in course order
+  const T=trackPts, R1=200, R2=500; let from=0, found=0;
+  const st=mt.marks[0];                             // a logged start: only the track from a minute before it counts
+  if(st&&st.k==='start'&&st.btn){ const t0=Date.parse(st.btn)-60000; while(from<T.length&&Date.parse(T[from][2])<t0) from++; }
+  mt.marks.forEach(m=>{ m.trk=null; m.trkD=null; m.prov=false; if(m.k==='start') return;   // a start is a gun time, not a place
+    for(const R of [R1,R2]){ let best=-1, bd=R, left=false;                              // tight first, then wide (approximate finish lines)
+      for(let j=from;j<T.length;j++){ const d=map.distance([T[j][0],T[j][1]],[m.lat,m.lon]);
+        if(d<bd){ bd=d; best=j; } else if(best>=0&&d>R){ left=true; break; } }
+      if(best>=0){ m.trk=T[best][2]; m.trkD=Math.round(bd); m.prov=!left; from=best; found++; break; } } });   // prov: still inside the circle, may get closer
+  mtSave(); return found; }
+function mtRender(){ const box=document.getElementById('mtlist'), bar=document.getElementById('mtbar');
+  if(!mt){ box.innerHTML=''; bar.style.display='none'; mtSig=''; return; }
+  const tgt=mtTarget(); let t0=null, prev=null, h='<table>';
+  mt.marks.forEach((m,i)=>{ const e=mtEff(m), et=e?Date.parse(e):null; if(i===0||(t0===null&&et!==null&&m.k==='start')) t0=et;
+    const sd=m.side==='p'?' <b style="color:#d00000">P</b>':m.side==='s'?' <b style="color:#0a8f2f">S</b>':'';
+    let tm= m.btn?'<b>'+mtClock(m.btn)+'</b>' : e?'<i>'+mtClock(e)+'</i>' : '<span style="color:#888">—</span>';
+    let tk=''; if(m.trk) tk='<tr><td colspan="4" style="border-top:none;padding-top:0;font-size:10px;color:#555">track '+mtClock(m.trk)+' · '+m.trkD+' m'+(mtNear(m)?' (still near)':'')+
+      (m.btn?' · '+(Date.parse(m.btn)>=Date.parse(m.trk)?'+':'')+mtDur(Date.parse(m.btn)-Date.parse(m.trk)).replace(/^-/,'−')+' vs button':'')+'</td></tr>';
+    const leg=(et!==null&&prev!==null)?mtDur(et-prev):'', tot=(et!==null&&t0!==null&&i>0)?mtDur(et-t0):'';
+    h+='<tr'+(i===tgt?' style="background:#e9fbe9"':'')+'><td>'+xmlEsc(m.n)+sd+'</td><td>'+tm+'</td><td style="text-align:right;white-space:nowrap">'+leg+
+      (tot?'<br><span style="font-size:10px;color:#555">'+tot+'</span>':'')+'</td><td><button data-i="'+i+'" style="font-size:10px;padding:1px 5px">'+(m.btn?'✕':'now')+'</button></td></tr>'+tk;
+    if(et!==null) prev=et; });
+  box.innerHTML='<div style="font-size:10px;color:#888">mark · time · leg / elapsed</div>'+h+'</table>';
+  box.querySelectorAll('button').forEach(b=>b.onclick=()=>{ const m=mt.marks[+b.dataset.i];
+    if(m.btn){ if(!confirm('Clear the logged time for '+m.n+'?')) return; m.btn=null; mtSave(); mtRender(); } else mtPress(+b.dataset.i); });
+  bar.style.display='flex'; const btn=document.getElementById('mtbtn'), nx=document.getElementById('mtnext');
+  if(tgt<0){ nx.textContent='All marks logged'; btn.style.display='none'; }
+  else { const m=mt.marks[tgt], d=lastBoatLL?map.distance(lastBoatLL,[m.lat,m.lon])/1852:null; btn.style.display='';
+    nx.innerHTML='<span style="font-size:11px;color:#555">next</span><br><b>'+xmlEsc(m.n)+'</b>'+(d!==null?' · '+(d<0.2?Math.round(d*1852)+' m':d.toFixed(2)+' NM'):'');
+    btn.textContent=m.k==='start'?'START':m.k==='finish'?'FINISH':'MARK TIME'; } }
+function mtPress(i){ if(!mt||i<0) return; mt.marks[i].btn=new Date().toISOString(); mtSave();
+  try{ navigator.vibrate&&navigator.vibrate(80); }catch(e){}
+  const b=document.getElementById('mtbtn'); b.classList.add('done'); setTimeout(()=>b.classList.remove('done'),700);
+  mtCheckTrack(); mtRender(); }
+function mtOnFix(){ if(!mt) return; const now=Date.now();   // every GPS fix: refresh the distance; re-check the track every 5 s
+  if(now-mtLast>5000&&trackPts.length){ mtLast=now; mtCheckTrack(); }
+  const sig=mt.marks.map(m=>m.trk+(m.prov?'~':'')).join()+mtTarget();
+  if(sig!==mtSig){ mtSig=sig; mtRender(); }
+  else { const tgt=mtTarget(); if(tgt>=0){ const m=mt.marks[tgt], d=map.distance(lastBoatLL,[m.lat,m.lon])/1852, nx=document.getElementById('mtnext');
+      nx.innerHTML='<span style="font-size:11px;color:#555">next</span><br><b>'+xmlEsc(m.n)+'</b> · '+(d<0.2?Math.round(d*1852)+' m':d.toFixed(2)+' NM'); } } }
+function mtArm(){ ['recchk','gpschk'].forEach(id=>{ const c=document.getElementById(id);      // timing needs the boat's position and a recorded track
+  if(!c.checked){ c.checked=true; c.dispatchEvent(new Event('change',{bubbles:true})); } }); }
+document.getElementById('mtbtn').onclick=()=>mtPress(mtTarget());
+(function(){ const sel=document.getElementById('mtcourse');
+  ['pointerdown','focus','keydown'].forEach(ev=>sel.addEventListener(ev,()=>{ if(ev!=='keydown'||!sel._src) mtFillPicker(); }));
+  sel.addEventListener('change',()=>{ const src=(sel._src||[]).find(x=>x.key===sel.value);
+    if(mt&&sel.value===mt.key) return;
+    if(mt&&mt.marks.some(m=>m.btn)&&!confirm('Start a new time sheet? The times logged for "'+mt.name+'" will be cleared (save them first with Save times.csv).')){ sel.value=mt.key; return; }
+    mt=src?{key:src.key,name:src.name,marks:src.marks.map(m=>({...m,btn:null,trk:null,trkD:null,prov:false}))}:null;
+    mtSave(); if(mt){ mtArm(); mtCheckTrack(); } mtRender(); });
+  document.getElementById('mtcheck').onclick=()=>{ if(!mt){ alert('Pick the course you are sailing first.'); return; }
+    if(!trackPts.length){ alert('No track recorded yet. Turn on "Record my GPS track" (under Track & route).'); return; }
+    const n=mtCheckTrack(); mtRender();
+    alert('Track passes found for '+n+' of '+mt.marks.filter(m=>m.k!=='start').length+' marks.'+(mt.marks[0].btn?'':'\n\nNo start time is logged, so the whole recorded track was searched. Clear old tracks before a race, or log the start.')); };
+  document.getElementById('mtclr').onclick=()=>{ if(!mt||!confirm('Clear all logged times for "'+mt.name+'"?')) return;
+    mt.marks.forEach(m=>{ m.btn=null; }); mtCheckTrack(); mtRender(); };
+  document.getElementById('mtcsv').onclick=()=>{ if(!mt){ alert('No times yet.'); return; }
+    const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"', loc=iso=>iso?new Date(iso).toLocaleString('sv'):''; let t0=null, prev=null;
+    const rows=mt.marks.map((m,i)=>{ const e=mtEff(m), et=e?Date.parse(e):null; if(i===0) t0=et;
+      const r=[i+1,m.n,m.side==='p'?'port':m.side==='s'?'stbd':'',loc(e),m.btn?'button':e?'track':'',loc(m.btn),loc(m.trk),m.trkD,(et!==null&&prev!==null)?mtDur(et-prev):'',(et!==null&&t0!==null&&i>0)?mtDur(et-t0):''];
+      if(et!==null) prev=et; return r.map(q).join(','); });
+    const csv='﻿'+['mark number','mark name','side','time','time from','button time','track time','track closest approach (m)','leg','elapsed from start'].map(q).join(',')+'\r\n'+rows.join('\r\n')+'\r\n';
+    const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download=gpxFileName('times '+mt.name)+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),3000); };
+  mtFillPicker(); mtRender(); })();
 
 // ---- Better Bay Alliance live chart (their page, new tab) ----
 document.getElementById('bbabtn').addEventListener('click',()=>window.open('https://betterbayalliance.org/live-chart-better-bay-alliance/','_blank'));
