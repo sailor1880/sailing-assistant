@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="sailing-assistant" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>Bristol 250th Anniversary Pursuit Race</name><desc>From the Bristol 250th Anniversary Pursuit Race Course Sheet (posted on Yacht Scoring), 6.6 miles. Start between the RC boat and a starting mark immediately W of the Middle Ground RG nun in Bristol Harbor. Leave to port, in order: the RG bell SW of Poppasquash Point, RG "SP" bell SE of Homestead, G "3" bell S of Hog Island, RN "2" SW of Bristol Point. Finish between the flagpole and a finish mark W of the Herreshoff Marine Museum. Start and finish positions are approximate; the point off Hog Island Rock is routing only.</desc></metadata>
+<wpt lat="41.66116" lon="-71.28115"><name>RG Middle Ground nun (start just W of it)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.64664" lon="-71.29956"><name>RG PP Popasquash Point bell</name><sym>Buoy</sym></wpt>
+<wpt lat="41.61542" lon="-71.29320"><name>RG SP Sandy Point junction bell</name><sym>Buoy</sym></wpt>
+<wpt lat="41.62987" lon="-71.27150"><name>G3 Mount Hope Bay Approach bell (S of Hog I.)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.64115" lon="-71.26586"><name>RN2 Bristol Point Rock</name><sym>Buoy</sym></wpt>
+<rte><name>Pursuit course - 6.6 NM</name>
+<rtept lat="41.66116" lon="-71.28260"><name>Start W of Middle Ground (approx)</name></rtept>
+<rtept lat="41.64664" lon="-71.29956"><name>RG PP Popasquash Point bell</name><type>port</type></rtept>
+<rtept lat="41.61542" lon="-71.29320"><name>RG SP Sandy Point junction bell</name><type>port</type></rtept>
+<rtept lat="41.62987" lon="-71.27150"><name>G3 Mount Hope Bay Approach bell</name><type>port</type></rtept>
+<rtept lat="41.64115" lon="-71.26586"><name>RN2 Bristol Point Rock</name><type>port</type></rtept>
+<rtept lat="41.64700" lon="-71.27250"><name>Off Hog Island Rock (routing)</name></rtept>
+<rtept lat="41.66000" lon="-71.27550"><name>Finish W of Herreshoff Marine Museum (approx)</name></rtept>
+</rte>
+</gpx>

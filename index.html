@@ -779,7 +779,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
  <label style="font-size:12px;display:block;margin:2px 0">2. Pick its race / course set:
    <select id="racecat" style="font-size:11px;width:100%" disabled><option value="">&mdash; pick a club first &mdash;</option></select></label>
  <div id="sbrcbox" style="margin:2px 0;padding:3px;border:1px dashed #bbb;border-radius:4px">
-   <div style="color:#888;font-size:11px">South Bay Race Chart &mdash; pick a set above, then type a code:</div>
+   <div style="color:#888;font-size:11px">Coded courses (South Bay Race Chart, RIYC) &mdash; pick a set, then type a code:</div>
    <select id="courseset" style="font-size:11px;width:100%;margin:2px 0"></select>
    <input id="coursepick" list="coursecodes" placeholder="type a code &mdash; e.g. 18, A5, W3" autocomplete="off" spellcheck="false" style="font-size:12px;width:100%;box-sizing:border-box">
    <datalist id="coursecodes"></datalist>
@@ -2933,35 +2933,39 @@ const flipSide=s=>s==='p'?'s':'p';
 function drawCourse(code){ const set=COURSESETS[curSetIdx], c=set.courses[code], info=document.getElementById('courseinfo');
   if(!c){ info.textContent=''; return; }
   clearCourseLine();
+  // A set normally uses the South Bay marks; a club set (e.g. RIYC) brings its own marks, and each of its courses
+  // names the government mark its start line is laid at.
+  const M=set.marks||sbMarksData, sm=c.start&&M[c.start], START=sm?[sm.lat,sm.lon]:set.start;
   const parts=[], missing=[], nodes=[];           // nodes = ordered [lat,lon] incl start & finish
-  if(set.start) nodes.push(set.start);
-  c.seq.forEach(([mk,side])=>{ const m=sbMarksData[mk];
+  if(START) nodes.push(START);
+  c.seq.forEach(([mk,side])=>{ const m=M[mk];
     if(m){ nodes.push([m.lat,m.lon]); parts.push(mk+'('+(side==='fin'?'F':side)+')'); }
     else { missing.push(mk); parts.push(mk+'?'); } });
   const last=c.seq[c.seq.length-1];
   let finPt=null;
-  if(set.finish){ const fm=sbMarksData[set.finish.mark];                   // JYC: end AT mark F (finish = F -> dock)
+  if(set.finish){ const fm=M[set.finish.mark];                   // JYC: end AT mark F (finish = F -> dock)
     if(fm){ finPt=[fm.lat,fm.lon]; if(!(last && last[0]===set.finish.mark)){ nodes.push(finPt); parts.push(set.finish.mark+'(F)'); } } }
-  else if(set.start && !(last&&last[1]==='fin')){ nodes.push(set.start); } // other sets: finish back at the start line
+  else if(START && !(last&&last[1]==='fin')){ nodes.push(START); } // other sets: finish back at the start line
   courseLine=L.layerGroup();
   let landLegs=0;                                  // draw legs; red-dash any that appear to cross land
   for(let i=0;i<nodes.length-1;i++){ const a=nodes[i], b=nodes[i+1], bad=legCrossesLand(a,b); if(bad) landLegs++;
     const pl=L.polyline([a,b], bad?{color:'#ff3b30',weight:4,opacity:.95,dashArray:'8 5'}:{color:'#d500f9',weight:3,opacity:.9});
     if(bad) pl.bindTooltip('Leg may cross land - route around',{sticky:true}); pl.addTo(courseLine); }
-  c.seq.forEach(([mk,side])=>{ const m=sbMarksData[mk]; if(!m) return;   // course marks (magenta)
+  c.seq.forEach(([mk,side])=>{ const m=M[mk]; if(!m) return;   // course marks (magenta)
     L.circleMarker([m.lat,m.lon],{radius:5,color:'#6a0080',weight:2,fillColor:'#e040fb',fillOpacity:1})
-      .bindTooltip(mk+(side==='fin'?' (finish)':side==='p'?' (port)':' (stbd)'),{direction:'top'}).addTo(courseLine);
+      .bindTooltip(mk+(m.name&&set.marks?' - '+m.name:'')+(side==='fin'?' (finish)':side==='p'?' (port)':' (stbd)'),{direction:'top'}).addTo(courseLine);
     if(side==='p'||side==='s') roundMark([m.lat,m.lon],side).addTo(courseLine); });
   const inCourse=new Set(c.seq.map(x=>x[0])); if(set.finish) inCourse.add(set.finish.mark);   // OTHER marks lying on a leg
   const flagged=new Set();
-  Object.keys(sbMarksData).forEach(mk=>{ if(inCourse.has(mk)) return; const m=sbMarksData[mk];
+  if(c.start) inCourse.add(c.start);
+  Object.keys(M).forEach(mk=>{ if(inCourse.has(mk)) return; const m=M[mk];
     for(let i=0;i<nodes.length-1;i++){ const r=segDistM([m.lat,m.lon],nodes[i],nodes[i+1]);
       if(r.inSeg && r.d<200){ flagged.add(mk);
         L.circleMarker([m.lat,m.lon],{radius:6,color:'#7a3b00',weight:2,fillColor:'#ff9500',fillOpacity:1})
           .bindTooltip('Mark '+mk+' on your track - honor correct side, do not pass inside',{direction:'top'}).addTo(courseLine);
         break; } } });
-  if(set.start) L.circleMarker(set.start,{radius:6,color:'#fff',weight:2,fillColor:'#22c55e',fillOpacity:1})
-    .bindTooltip('Start: '+set.startArea,{direction:'top'}).addTo(courseLine);
+  if(START) L.circleMarker(START,{radius:6,color:'#fff',weight:2,fillColor:'#22c55e',fillOpacity:1})
+    .bindTooltip(sm?'Start / finish line at '+c.start+(sm.name?' - '+sm.name:''):'Start: '+set.startArea,{direction:'top'}).addTo(courseLine);
   if(set.finish && finPt && set.finish.dock){                              // finish line: F -> Jamestown dock
     L.polyline([finPt,set.finish.dock],{color:'#0033cc',weight:4,dashArray:'6 4'})
       .bindTooltip(set.finish.name+(set.finish.dockApprox?' (dock approx)':''),{direction:'top'}).addTo(courseLine);
@@ -2971,7 +2975,7 @@ function drawCourse(code){ const set=COURSESETS[curSetIdx], c=set.courses[code],
   let warn=''; if(flagged.size) warn+='<br><span style="color:#c60">on track (honor side): '+[...flagged].join(', ')+'</span>';
   if(landLegs) warn+='<br><span style="color:#c00">'+landLegs+' leg(s) may cross land (1km grid, approx)</span>';
   info.innerHTML='<b>'+code+'</b>: '+parts.join(' &rarr; ')+' &middot; <b>'+(c.dist||'?')+' NM</b>'
-    +(set.finish?' &middot; finish at '+set.finish.mark:'')
+    +(set.finish?' &middot; finish at '+set.finish.mark:'')+(sm?' &middot; start at '+c.start:'')+(c.note?'<br><span style="color:#555">'+c.note+'</span>':'')
     +(missing.length?'<br><span style="color:#c00">unplaced marks: '+missing.join(', ')+'</span>':'')+warn;
   const fb=nodes.slice(); if(set.finish&&set.finish.dock) fb.push(set.finish.dock);
   if(fb.length>1) map.fitBounds(fb,{padding:[40,40]});
@@ -3199,10 +3203,11 @@ const RACE_DOCS={};      // file -> where the race's documents are posted (from 
     // Two steps: pick a club, then only that club's races are listed. One long list of every race stopped
     // being usable as clubs were added. Each club maps to the <option>s shown in the second list.
     const clubSel=document.getElementById('raceclub'), byClub={};
-    if(cj.sets && cj.sets.length){                               // South Bay Race Chart coded-course sets first
-      byClub['South Bay Race Chart (type a code)']=cj.sets.map((s,i)=>{ const o=document.createElement('option'); o.value='sbrc:'+i;
-        o.textContent=(s.club?s.club.replace(/^South Bay Race Chart - /,'')+' ':'')+'— '+s.startArea+' ('+Object.keys(s.courses).length+')';
-        return o; }); }
+    (cj.sets||[]).forEach((s,i)=>{ const o=document.createElement('option'); o.value='sbrc:'+i;      // coded-course sets ("type a code")
+      const sb=/^South Bay Race Chart/.test(s.club||''), k=sb?'South Bay Race Chart (type a code)':(s.club||'Other');
+      o.textContent=sb ? (s.club.replace(/^South Bay Race Chart( - )?/,'')+' — '+s.startArea+' ('+Object.keys(s.courses).length+')').replace(/^ — /,'— ')
+                       : 'Coded courses — type a code ('+Object.keys(s.courses).length+')';
+      (byClub[k]=byClub[k]||[]).push(o); });
     list.forEach(r=>{ const o=document.createElement('option'); o.value='gpx:'+r.file; o.dataset.name=r.name;
       if(r.links) RACE_LINKS[r.file]=r.links; if(r.docs) RACE_DOCS[r.file]=r.docs;
       o.textContent=r.name.replace(/^20HC\s+/,'')+(r.year?' ('+r.year+')':'');
@@ -3234,7 +3239,8 @@ const RACE_DOCS={};      // file -> where the race's documents are posted (from 
     if(val.slice(0,5)==='sbrc:'){ const idx=+val.slice(5);                 // SBRC set -> drive the coded-course picker above
       await loadCourseSets(); document.getElementById('courseset').value=idx; fillCodes(idx);
       const cp=document.getElementById('coursepick'); cp.value=''; try{cp.scrollIntoView({block:'nearest'});}catch(_){} cp.focus();
-      document.getElementById('courseinfo').innerHTML='<b>South Bay Race Chart</b> &mdash; type a course code above (e.g. 18, A5, W3)';
+      const cs=COURSESETS[idx], eg=Object.keys(cs.courses).slice(0,3).join(', ');
+      document.getElementById('courseinfo').innerHTML='<b>'+(cs.club||'Course set')+'</b> &mdash; type a course code above (e.g. '+eg+')';
       e.target.value=''; return; }
     const file=val.slice(0,4)==='gpx:'?val.slice(4):val, name=e.target.selectedOptions[0].dataset.name||file;
     if(racesRaw.some(r=>r.name===name)){ alert(name+' is already loaded'); e.target.value=''; return; }

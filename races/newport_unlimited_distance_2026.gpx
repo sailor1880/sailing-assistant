@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="sailing-assistant" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>Newport Unlimited 2026 distance race</name><desc>Newport Unlimited 2026 (NAASA / NEMA, Aug 15-16, 2026) distance race standard courses. Source: SI Appendix A - Distance Race (v1.0 final; the posted v1.1 file is the main SI, which refers to this appendix) and Sailing Instructions v1.1. Start: same line as the buoy races, rendezvous immediately S of Gould Island (approximate point). First mark for every course: RG EP Bell approx 0.4 NM NNE of the Newport Bridge centre span, left to port unless the course designation carries a lower-case s prefix (then starboard). Finish: line between an RC vessel and RG EP Bell. All marks to port except where noted (RG PI nun to starboard on DH). Any course may be signalled in reverse with -R (marks on the opposite side) - not drawn. Islands named as marks (Hope, Conanicut) are left to port; they are drawn with (routing) points, which are not marks. Cautions: shallow area 0.3 NM SSW of Hope Island; S of Dyer Island is shallow well beyond visible land. Newport Bridge only via the three centre spans, Jamestown Bridge only via the centre span (other bridge sections are obstructions); keep clear of the Navy security zone (do not pass E of the line from 200 yd W of the Coddington Cove breakwater light through R14 bell to the red-green can off Coasters Harbor Island). Windward/leeward buoy courses are not included.</desc></metadata>
+<wpt lat="41.52450" lon="-71.34400"><name>RC line immediately S of Gould Island (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.51127" lon="-71.34717"><name>RG EP Bell N of Newport Bridge (first mark)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.61542" lon="-71.29320"><name>RG SP Bell NNE of Sandy Point, Prudence I.</name><sym>Buoy</sym></wpt>
+<wpt lat="41.67593" lon="-71.34741"><name>RGR Nun Fork Rock N of Prudence I.</name><sym>Buoy</sym></wpt>
+<wpt lat="41.66096" lon="-71.37275"><name>R8 Bell W of Patience Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.58745" lon="-71.29741"><name>G7 Can Dyer Island East Shoal</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57637" lon="-71.32781"><name>RG PI Nun S of Prudence Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.60810" lon="-71.36002"><name>G1 Despair Island Lighted Buoy</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57784" lon="-71.36128"><name>R2 Bell NE of Conanicut Point</name><sym>Buoy</sym></wpt>
+<wpt lat="41.44396" lon="-71.40262"><name>GR NR Bell off Beavertail Point</name><sym>Buoy</sym></wpt>
+<rte><name>Course P - Prudence 21.2 NM</name>
+<rtept lat="41.52450" lon="-71.34400"><name>RC line immediately S of Gould Island (approx)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>RG EP Bell N of Newport Bridge (first mark)</name><type>port</type></rtept>
+<rtept lat="41.60000" lon="-71.29700"><name>E of Sandy Point (routing)</name></rtept>
+<rtept lat="41.61542" lon="-71.29320"><name>RG SP Bell NNE of Sandy Point, Prudence I.</name><type>port</type></rtept>
+<rtept lat="41.67593" lon="-71.34741"><name>RGR Nun Fork Rock N of Prudence I.</name><type>port</type></rtept>
+<rtept lat="41.66096" lon="-71.37275"><name>R8 Bell W of Patience Island</name><type>port</type></rtept>
+<rtept lat="41.59150" lon="-71.38150"><name>SW of Hope Island, outside buoy R2 (routing)</name></rtept>
+<rtept lat="41.57900" lon="-71.36000"><name>NE of Conanicut Point (routing)</name></rtept>
+<rtept lat="41.56600" lon="-71.34100"><name>E of Conanicut Point (routing)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>Finish - RG EP Bell N of Newport Bridge (line to RC vessel)</name></rtept>
+</rte>
+<rte><name>Course DH - Dyer Hope 19.5 NM</name>
+<rtept lat="41.52450" lon="-71.34400"><name>RC line immediately S of Gould Island (approx)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>RG EP Bell N of Newport Bridge (first mark)</name><type>port</type></rtept>
+<rtept lat="41.57900" lon="-71.29250"><name>E of Dyer Island (routing)</name></rtept>
+<rtept lat="41.58745" lon="-71.29741"><name>G7 Can Dyer Island East Shoal</name><type>port</type></rtept>
+<rtept lat="41.59150" lon="-71.30050"><name>N of Dyer Island (routing)</name></rtept>
+<rtept lat="41.58100" lon="-71.30850"><name>W of Dyer Island (routing)</name></rtept>
+<rtept lat="41.57500" lon="-71.31800"><name>SE of Prudence Island (routing)</name></rtept>
+<rtept lat="41.57637" lon="-71.32781"><name>RG PI Nun S of Prudence Island</name><type>stbd</type></rtept>
+<rtept lat="41.57700" lon="-71.33600"><name>SW of Prudence Island (routing)</name></rtept>
+<rtept lat="41.60810" lon="-71.36002"><name>G1 Despair Island Lighted Buoy</name><type>port</type></rtept>
+<rtept lat="41.61100" lon="-71.36800"><name>NW of Despair Island (routing)</name></rtept>
+<rtept lat="41.60000" lon="-71.37700"><name>W of Hope Island (island left to port) (routing)</name></rtept>
+<rtept lat="41.59150" lon="-71.38150"><name>SW of Hope Island, outside buoy R2 (routing)</name></rtept>
+<rtept lat="41.57900" lon="-71.36000"><name>NE of Conanicut Point (routing)</name></rtept>
+<rtept lat="41.56600" lon="-71.34100"><name>E of Conanicut Point (routing)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>Finish - RG EP Bell N of Newport Bridge (line to RC vessel)</name></rtept>
+</rte>
+<rte><name>Course J - Jamestown 18.7 NM</name>
+<rtept lat="41.52450" lon="-71.34400"><name>RC line immediately S of Gould Island (approx)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>RG EP Bell N of Newport Bridge (first mark)</name><type>port</type></rtept>
+<rtept lat="41.57784" lon="-71.36128"><name>R2 Bell NE of Conanicut Point</name><type>port</type></rtept>
+<rtept lat="41.58000" lon="-71.37300"><name>N of Conanicut Point (island left to port) (routing)</name></rtept>
+<rtept lat="41.56800" lon="-71.38700"><name>NW of Conanicut Island (routing)</name></rtept>
+<rtept lat="41.54500" lon="-71.39500"><name>West Passage N of Jamestown Bridge (routing)</name></rtept>
+<rtept lat="41.53000" lon="-71.39950"><name>West Passage at Jamestown Bridge - use centre span (routing)</name></rtept>
+<rtept lat="41.50300" lon="-71.41500"><name>W of Dutch Island (routing)</name></rtept>
+<rtept lat="41.49200" lon="-71.41600"><name>West Passage SW of Dutch Island (routing)</name></rtept>
+<rtept lat="41.48000" lon="-71.41100"><name>West Passage S of Dutch Island (routing)</name></rtept>
+<rtept lat="41.45500" lon="-71.40350"><name>West Passage W of Beavertail (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40262"><name>GR NR Bell off Beavertail Point</name><type>port</type></rtept>
+<rtept lat="41.44200" lon="-71.39000"><name>SE of Beavertail Point (routing)</name></rtept>
+<rtept lat="41.46550" lon="-71.36900"><name>East Passage W of Castle Hill (routing)</name></rtept>
+<rtept lat="41.48100" lon="-71.34950"><name>E of The Dumplings (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport Pell Bridge centre span (routing)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>Finish - RG EP Bell N of Newport Bridge (line to RC vessel)</name></rtept>
+</rte>
+<rte><name>Course H - Hope 13.3 NM</name>
+<rtept lat="41.52450" lon="-71.34400"><name>RC line immediately S of Gould Island (approx)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>RG EP Bell N of Newport Bridge (first mark)</name><type>port</type></rtept>
+<rtept lat="41.56600" lon="-71.34100"><name>E of Conanicut Point (routing)</name></rtept>
+<rtept lat="41.60200" lon="-71.35500"><name>E of Despair Island (routing)</name></rtept>
+<rtept lat="41.60810" lon="-71.36002"><name>G1 Despair Island Lighted Buoy</name><type>port</type></rtept>
+<rtept lat="41.61100" lon="-71.36800"><name>NW of Despair Island (routing)</name></rtept>
+<rtept lat="41.60000" lon="-71.37700"><name>W of Hope Island (island left to port) (routing)</name></rtept>
+<rtept lat="41.59150" lon="-71.38150"><name>SW of Hope Island, outside buoy R2 (routing)</name></rtept>
+<rtept lat="41.57900" lon="-71.36000"><name>NE of Conanicut Point (routing)</name></rtept>
+<rtept lat="41.56600" lon="-71.34100"><name>E of Conanicut Point (routing)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>Finish - RG EP Bell N of Newport Bridge (line to RC vessel)</name></rtept>
+</rte>
+<rte><name>Course D - Dyer 11.5 NM</name>
+<rtept lat="41.52450" lon="-71.34400"><name>RC line immediately S of Gould Island (approx)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>RG EP Bell N of Newport Bridge (first mark)</name><type>port</type></rtept>
+<rtept lat="41.57900" lon="-71.29250"><name>E of Dyer Island (routing)</name></rtept>
+<rtept lat="41.58745" lon="-71.29741"><name>G7 Can Dyer Island East Shoal</name><type>port</type></rtept>
+<rtept lat="41.59150" lon="-71.30050"><name>N of Dyer Island (routing)</name></rtept>
+<rtept lat="41.58100" lon="-71.30850"><name>W of Dyer Island (routing)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>Finish - RG EP Bell N of Newport Bridge (line to RC vessel)</name></rtept>
+</rte>
+<rte><name>Course BH - Beaverhead 8.9 NM</name>
+<rtept lat="41.52450" lon="-71.34400"><name>RC line immediately S of Gould Island (approx)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>RG EP Bell N of Newport Bridge (first mark)</name><type>port</type></rtept>
+<rtept lat="41.57784" lon="-71.36128"><name>R2 Bell NE of Conanicut Point</name><type>port</type></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>Finish - RG EP Bell N of Newport Bridge (line to RC vessel)</name></rtept>
+</rte>
+</gpx>

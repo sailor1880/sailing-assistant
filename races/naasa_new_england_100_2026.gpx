@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="sailing-assistant" xmlns="http://www.topografix.com/GPX/1/1">
+<metadata><name>New England 100 (NAASA) 2026 - Published Courses</name><desc>Source: 2026 New England 100 Published Courses, as amended (Amendment 8/21: Course 9A G1 to starboard), NAASA, 21-22 Aug 2026. Start: line between the RC boat and an orange mark, in Potter's Cove - drawn at Potter Cove on the Jamestown side just north of the Newport Bridge (position approximate; the RC sets the line). Finish: line between the RC boat displaying an orange flag and R12, SW of Rose Island. Cautions: DO NOT SAIL BETWEEN THE NEWPORT BRIDGE AND ROSE ISLAND. Bridges are gates: Pell Newport Bridge under the 3 center spans, all other bridges under the center span. Round government marks within 10 boat lengths (not R12 or bridge supports). Coddington Cove / Coasters Harbor naval exclusionary zone is an obstruction. Courses 2 and 4: direction announced the morning of the race - drawn in one direction only. The RC may modify, shorten or add courses each morning. Points named (routing) only keep the drawn line in navigable water and are not marks of the course. Published distances are approximate; courses 6, 7, 8 and 9 measure well short of the published figure.</desc></metadata>
+<wpt lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span</name><sym>Buoy</sym></wpt>
+<wpt lat="41.52749" lon="-71.39749"><name>Jamestown (Verrazzano) Bridge center span</name><sym>Buoy</sym></wpt>
+<wpt lat="41.63990" lon="-71.25785"><name>Mt Hope Bridge center span</name><sym>Buoy</sym></wpt>
+<wpt lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><sym>Buoy</sym></wpt>
+<wpt lat="41.44435" lon="-71.42045"><name>G3 Whale Rock Gong</name><sym>Buoy</sym></wpt>
+<wpt lat="41.30769" lon="-71.47245"><name>R2 Point Judith</name><sym>Buoy</sym></wpt>
+<wpt lat="41.50836" lon="-71.40220"><name>R8 Dutch Island Bell</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57639" lon="-71.36849"><name>G3 Quonset Ch Buoy 3 (N end of Jamestown)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.51127" lon="-71.34717"><name>GR EP East Passage Junction Bell</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57558" lon="-71.31638"><name>G WR21 East Passage Wreck (SE of Prudence)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><sym>Buoy</sym></wpt>
+<wpt lat="41.62987" lon="-71.27150"><name>G3 Bell Mt Hope Bay Approach (E of Hog Island Shoal Lt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.63241" lon="-71.27325"><name>Hog Island Shoal Light</name><sym>Buoy</sym></wpt>
+<wpt lat="41.63104" lon="-71.28930"><name>RN2 Hog Island SW Point</name><sym>Buoy</sym></wpt>
+<wpt lat="41.68552" lon="-71.19921"><name>R8 Bell Mt Hope Bay (E of Spar Island)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.69421" lon="-71.18773"><name>R10 Bell Mt Hope Bay (Fall River)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.64116" lon="-71.26586"><name>RN2 Bristol Point Rock</name><sym>Buoy</sym></wpt>
+<wpt lat="41.66117" lon="-71.28115"><name>RGN Middle Ground (N of Hog Island)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.67589" lon="-71.34757"><name>RGN Fork Rock (N of Prudence)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.66094" lon="-71.37280"><name>R8 Bell Patience Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.59258" lon="-71.37984"><name>R2 Hope Island</name><sym>Buoy</sym></wpt>
+<wpt lat="41.60811" lon="-71.36002"><name>G1 Despair Island (NE of Hope Island)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.58391" lon="-71.39305"><name>R6 Quonset Channel (SE of Quonset Pt)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.59047" lon="-71.30432"><name>R24 Bell East Passage (NW of Dyer Island)</name><sym>Buoy</sym></wpt>
+<wpt lat="41.44298" lon="-71.36369"><name>R4 Gong Brenton Reef</name><sym>Buoy</sym></wpt>
+<wpt lat="41.46219" lon="-71.21516"><name>R2A Bell Sakonnet River</name><sym>Buoy</sym></wpt>
+<rte><name>1 - Point Judith and Around Jamestown ~34 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>stbd</type></rtept>
+<rtept lat="41.30769" lon="-71.47245"><name>R2 Point Judith</name><type>stbd</type></rtept>
+<rtept lat="41.44400" lon="-71.41500"><name>West Passage entrance, open water (routing)</name></rtept>
+<rtept lat="41.50000" lon="-71.41400"><name>West Passage W of Dutch Island, open water (routing)</name></rtept>
+<rtept lat="41.50836" lon="-71.40220"><name>R8 Dutch Island Bell (routing)</name></rtept>
+<rtept lat="41.52749" lon="-71.39749"><name>Jamestown (Verrazzano) Bridge center span (routing)</name></rtept>
+<rtept lat="41.53500" lon="-71.39361"><name>R10 West Passage (routing)</name></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.57639" lon="-71.36849"><name>G3 Quonset Ch Buoy 3 (N end of Jamestown)</name><type>stbd</type></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>1A - Point Judith to Dutch Island ~32 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>stbd</type></rtept>
+<rtept lat="41.30769" lon="-71.47245"><name>R2 Point Judith</name><type>stbd</type></rtept>
+<rtept lat="41.44400" lon="-71.41500"><name>West Passage entrance, open water (routing)</name></rtept>
+<rtept lat="41.50000" lon="-71.41400"><name>West Passage W of Dutch Island, open water (routing)</name></rtept>
+<rtept lat="41.50836" lon="-71.40220"><name>R8 Dutch Island Bell</name></rtept>
+<rtept lat="41.50000" lon="-71.41400"><name>West Passage W of Dutch Island, open water (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>port</type></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>1B - Dutch Island ~18 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>stbd</type></rtept>
+<rtept lat="41.50000" lon="-71.41400"><name>West Passage W of Dutch Island, open water (routing)</name></rtept>
+<rtept lat="41.50836" lon="-71.40220"><name>R8 Dutch Island Bell</name></rtept>
+<rtept lat="41.50000" lon="-71.41400"><name>West Passage W of Dutch Island, open water (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>port</type></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>2 - Around Jamestown ~18 NM (direction TBA, drawn clockwise)</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
+<rtept lat="41.50000" lon="-71.41400"><name>West Passage W of Dutch Island, open water (routing)</name></rtept>
+<rtept lat="41.50836" lon="-71.40220"><name>R8 Dutch Island Bell (routing)</name></rtept>
+<rtept lat="41.52749" lon="-71.39749"><name>Jamestown (Verrazzano) Bridge center span (routing)</name></rtept>
+<rtept lat="41.53500" lon="-71.39361"><name>R10 West Passage (routing)</name></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.57639" lon="-71.36849"><name>G3 Quonset Ch Buoy 3 (N end of Jamestown)</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>3 - Whale Rock ~14 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
+<rtept lat="41.44435" lon="-71.42045"><name>G3 Whale Rock Gong</name><type>port</type></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>port</type></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.51127" lon="-71.34717"><name>GR EP East Passage Junction Bell</name><type>port</type></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>4 - Figure Eight Jamestown/Prudence/Patience ~35 NM (direction TBA, drawn Jamestown clockwise first)</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name></rtept>
+<rtept lat="41.50000" lon="-71.41400"><name>West Passage W of Dutch Island, open water (routing)</name></rtept>
+<rtept lat="41.50836" lon="-71.40220"><name>R8 Dutch Island Bell (routing)</name></rtept>
+<rtept lat="41.52749" lon="-71.39749"><name>Jamestown (Verrazzano) Bridge center span (routing)</name></rtept>
+<rtept lat="41.53500" lon="-71.39361"><name>R10 West Passage (routing)</name></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.57639" lon="-71.36849"><name>G3 Quonset Ch Buoy 3 (N end of Jamestown)</name></rtept>
+<rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name></rtept>
+<rtept lat="41.57558" lon="-71.31638"><name>G WR21 East Passage Wreck (SE of Prudence) (routing)</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.67589" lon="-71.34757"><name>RGN Fork Rock (N of Prudence)</name></rtept>
+<rtept lat="41.66094" lon="-71.37280"><name>R8 Bell Patience Island</name></rtept>
+<rtept lat="41.60000" lon="-71.35400"><name>Open water E of Hope and Despair Islands (routing)</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>5 - Ocean, Around Jamestown ~35 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.44298" lon="-71.36369"><name>R4 Gong Brenton Reef</name><type>port</type></rtept>
+<rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point Whistle (routing)</name></rtept>
+<rtept lat="41.45445" lon="-71.24489"><name>G1 Bell Cormorant Reef (routing)</name></rtept>
+<rtept lat="41.46219" lon="-71.21516"><name>R2A Bell Sakonnet River</name><type>port</type></rtept>
+<rtept lat="41.45445" lon="-71.24489"><name>G1 Bell Cormorant Reef (routing)</name></rtept>
+<rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point Whistle (routing)</name></rtept>
+<rtept lat="41.44298" lon="-71.36369"><name>R4 Gong Brenton Reef</name><type>stbd</type></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>stbd</type></rtept>
+<rtept lat="41.50000" lon="-71.41400"><name>West Passage W of Dutch Island, open water (routing)</name></rtept>
+<rtept lat="41.50836" lon="-71.40220"><name>R8 Dutch Island Bell (routing)</name></rtept>
+<rtept lat="41.52749" lon="-71.39749"><name>Jamestown (Verrazzano) Bridge center span (routing)</name></rtept>
+<rtept lat="41.53500" lon="-71.39361"><name>R10 West Passage (routing)</name></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.57639" lon="-71.36849"><name>G3 Quonset Ch Buoy 3 (N end of Jamestown)</name><type>stbd</type></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>5A - Ocean Short Course ~26 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.44298" lon="-71.36369"><name>R4 Gong Brenton Reef</name><type>port</type></rtept>
+<rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point Whistle (routing)</name></rtept>
+<rtept lat="41.45445" lon="-71.24489"><name>G1 Bell Cormorant Reef (routing)</name></rtept>
+<rtept lat="41.46219" lon="-71.21516"><name>R2A Bell Sakonnet River</name><type>port</type></rtept>
+<rtept lat="41.45445" lon="-71.24489"><name>G1 Bell Cormorant Reef (routing)</name></rtept>
+<rtept lat="41.43241" lon="-71.36298"><name>R2 Brenton Point Whistle (routing)</name></rtept>
+<rtept lat="41.44298" lon="-71.36369"><name>R4 Gong Brenton Reef</name><type>stbd</type></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>stbd</type></rtept>
+<rtept lat="41.44435" lon="-71.42045"><name>G3 Whale Rock Gong</name><type>port</type></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>port</type></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>6 - Mt Hope Bay ~41 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.52200" lon="-71.34500"><name>Open water S of Gould Island (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.62987" lon="-71.27150"><name>G3 Bell Mt Hope Bay Approach (E of Hog Island Shoal Lt) (routing)</name></rtept>
+<rtept lat="41.63990" lon="-71.25785"><name>Mt Hope Bridge center span (routing)</name></rtept>
+<rtept lat="41.68552" lon="-71.19921"><name>R8 Bell Mt Hope Bay (E of Spar Island)</name><type>port</type></rtept>
+<rtept lat="41.63990" lon="-71.25785"><name>Mt Hope Bridge center span (routing)</name></rtept>
+<rtept lat="41.64116" lon="-71.26586"><name>RN2 Bristol Point Rock (routing)</name></rtept>
+<rtept lat="41.64400" lon="-71.27000"><name>Channel between Hog Island and Bristol Point (routing)</name></rtept>
+<rtept lat="41.66117" lon="-71.28115"><name>RGN Middle Ground (N of Hog Island)</name><type>port</type></rtept>
+<rtept lat="41.64800" lon="-71.29450"><name>Open water W of Hog Island (routing)</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>6A - Mt Hope Bay Short Course ~21 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.52200" lon="-71.34500"><name>Open water S of Gould Island (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.62987" lon="-71.27150"><name>G3 Bell Mt Hope Bay Approach (E of Hog Island Shoal Lt) (routing)</name></rtept>
+<rtept lat="41.64400" lon="-71.27000"><name>Channel between Hog Island and Bristol Point (routing)</name></rtept>
+<rtept lat="41.66117" lon="-71.28115"><name>RGN Middle Ground (N of Hog Island)</name><type>port</type></rtept>
+<rtept lat="41.64800" lon="-71.29450"><name>Open water W of Hog Island (routing)</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>7 - Quonset/Around Prudence ~38 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.52200" lon="-71.34500"><name>Open water S of Gould Island (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.57558" lon="-71.31638"><name>G WR21 East Passage Wreck (SE of Prudence)</name><type>port</type></rtept>
+<rtept lat="41.57400" lon="-71.32800"><name>Open water S of Prudence PI buoy (routing)</name></rtept>
+<rtept lat="41.58391" lon="-71.39305"><name>R6 Quonset Channel (SE of Quonset Pt)</name><type>stbd</type></rtept>
+<rtept lat="41.66094" lon="-71.37280"><name>R8 Bell Patience Island</name><type>stbd</type></rtept>
+<rtept lat="41.67589" lon="-71.34757"><name>RGN Fork Rock (N of Prudence)</name><type>stbd</type></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>7A - Hope/Despair Short Course ~18 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.52200" lon="-71.34500"><name>Open water S of Gould Island (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.57558" lon="-71.31638"><name>G WR21 East Passage Wreck (SE of Prudence)</name><type>port</type></rtept>
+<rtept lat="41.57400" lon="-71.32800"><name>Open water S of Prudence PI buoy (routing)</name></rtept>
+<rtept lat="41.58391" lon="-71.39305"><name>R6 Quonset Channel (SE of Quonset Pt)</name><type>stbd</type></rtept>
+<rtept lat="41.60600" lon="-71.37900"><name>Open water W of Hope Island (routing)</name></rtept>
+<rtept lat="41.61600" lon="-71.36600"><name>Open water N of Hope and Despair Islands (routing)</name></rtept>
+<rtept lat="41.60811" lon="-71.36002"><name>G1 Despair Island (NE of Hope Island)</name><type>stbd</type></rtept>
+<rtept lat="41.60000" lon="-71.35400"><name>Open water E of Hope and Despair Islands (routing)</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>8 - Hog Island Light/Around Jamestown ~40 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.52200" lon="-71.34500"><name>Open water S of Gould Island (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.62987" lon="-71.27150"><name>G3 Bell Mt Hope Bay Approach (E of Hog Island Shoal Lt)</name><type>port</type></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.57558" lon="-71.31638"><name>G WR21 East Passage Wreck (SE of Prudence)</name><type>stbd</type></rtept>
+<rtept lat="41.57400" lon="-71.32800"><name>Open water S of Prudence PI buoy (routing)</name></rtept>
+<rtept lat="41.57639" lon="-71.36849"><name>G3 Quonset Ch Buoy 3 (N end of Jamestown)</name><type>port</type></rtept>
+<rtept lat="41.57903" lon="-71.38276"><name>G5 Quonset Ch Buoy 5 (NW Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.53500" lon="-71.39361"><name>R10 West Passage (routing)</name></rtept>
+<rtept lat="41.52749" lon="-71.39749"><name>Jamestown (Verrazzano) Bridge center span (routing)</name></rtept>
+<rtept lat="41.50836" lon="-71.40220"><name>R8 Dutch Island Bell (routing)</name></rtept>
+<rtept lat="41.50000" lon="-71.41400"><name>West Passage W of Dutch Island, open water (routing)</name></rtept>
+<rtept lat="41.44396" lon="-71.40257"><name>GR NR Newton Rock</name><type>port</type></rtept>
+<rtept lat="41.44500" lon="-71.39400"><name>Open water SE of Beavertail (routing)</name></rtept>
+<rtept lat="41.47177" lon="-71.37082"><name>G7 Gong East Passage (routing)</name></rtept>
+<rtept lat="41.47450" lon="-71.35450"><name>East Passage off Bull Point, open water (S of Gong 9) (routing)</name></rtept>
+<rtept lat="41.48344" lon="-71.35075"><name>G11 Bell The Dumplings (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>8A - Hog Island Light Short Course ~17 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.52200" lon="-71.34500"><name>Open water S of Gould Island (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.62987" lon="-71.27150"><name>G3 Bell Mt Hope Bay Approach (E of Hog Island Shoal Lt)</name><type>port</type></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>9 - Patience/Prudence/Fall River/Bristol ~47 NM</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.54000" lon="-71.35450"><name>East Passage W of Gould Island, open water (routing)</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.59258" lon="-71.37984"><name>R2 Hope Island</name></rtept>
+<rtept lat="41.66094" lon="-71.37280"><name>R8 Bell Patience Island</name></rtept>
+<rtept lat="41.67589" lon="-71.34757"><name>RGN Fork Rock (N of Prudence)</name><type>stbd</type></rtept>
+<rtept lat="41.63104" lon="-71.28930"><name>RN2 Hog Island SW Point</name><type>port</type></rtept>
+<rtept lat="41.63241" lon="-71.27325"><name>Hog Island Shoal Light</name><type>port</type></rtept>
+<rtept lat="41.63990" lon="-71.25785"><name>Mt Hope Bridge center span (routing)</name></rtept>
+<rtept lat="41.69421" lon="-71.18773"><name>R10 Bell Mt Hope Bay (Fall River)</name><type>port</type></rtept>
+<rtept lat="41.63990" lon="-71.25785"><name>Mt Hope Bridge center span (routing)</name></rtept>
+<rtept lat="41.64116" lon="-71.26586"><name>RN2 Bristol Point Rock</name><type>stbd</type></rtept>
+<rtept lat="41.64400" lon="-71.27000"><name>Channel between Hog Island and Bristol Point (routing)</name></rtept>
+<rtept lat="41.66117" lon="-71.28115"><name>RGN Middle Ground (N of Hog Island)</name><type>port</type></rtept>
+<rtept lat="41.64800" lon="-71.29450"><name>Open water W of Hog Island (routing)</name></rtept>
+<rtept lat="41.61540" lon="-71.29321"><name>RG SP Sandy Point Junction Bell (routing)</name></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+<rte><name>9A - North Island Weave Short Course ~18 NM (as amended)</name>
+<rtept lat="41.51600" lon="-71.35850"><name>Start area, Potter Cove (approx)</name></rtept>
+<rtept lat="41.54000" lon="-71.35450"><name>East Passage W of Gould Island, open water (routing)</name></rtept>
+<rtept lat="41.57785" lon="-71.36128"><name>R2 Quonset Ch Bell 2 (NE Conanicut Pt) (routing)</name></rtept>
+<rtept lat="41.59258" lon="-71.37984"><name>R2 Hope Island (routing)</name></rtept>
+<rtept lat="41.60600" lon="-71.37900"><name>Open water W of Hope Island (routing)</name></rtept>
+<rtept lat="41.61600" lon="-71.36600"><name>Open water N of Hope and Despair Islands (routing)</name></rtept>
+<rtept lat="41.60811" lon="-71.36002"><name>G1 Despair Island (NE of Hope Island)</name><type>stbd</type></rtept>
+<rtept lat="41.60000" lon="-71.35400"><name>Open water E of Hope and Despair Islands (routing)</name></rtept>
+<rtept lat="41.58000" lon="-71.34500"><name>Open water SW of Prudence (routing)</name></rtept>
+<rtept lat="41.57638" lon="-71.32781"><name>RGN PI Prudence Southend</name><type>port</type></rtept>
+<rtept lat="41.57558" lon="-71.31638"><name>G WR21 East Passage Wreck (SE of Prudence) (routing)</name></rtept>
+<rtept lat="41.59047" lon="-71.30432"><name>R24 Bell East Passage (NW of Dyer Island)</name><type>stbd</type></rtept>
+<rtept lat="41.52972" lon="-71.33541"><name>G17 East Passage (E of Gould I.) (routing)</name></rtept>
+<rtept lat="41.50500" lon="-71.34891"><name>Newport (Pell) Bridge center span (routing)</name></rtept>
+<rtept lat="41.49451" lon="-71.34468"><name>Finish at R12 Rose Island</name></rtept>
+</rte>
+</gpx>
