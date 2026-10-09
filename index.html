@@ -755,6 +755,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <iframe id="windyframe" style="flex:1 1 auto;width:100%;border:0" allow="fullscreen"></iframe>
 </div>
 <button id="collapse" title="Show/hide panel">&#9776;</button>
+<div id="mtdark" style="display:none;position:fixed;inset:0;z-index:99999;background:#000;color:#3a3a3a;font-size:20px;text-align:center;align-items:center;justify-content:center;flex-direction:column;gap:14px;user-select:none;-webkit-user-select:none;touch-action:none"><div id="mtdarktxt"></div><div style="font-size:14px">double-tap to wake</div></div>
 <div id="mtbar"><span id="mtnext"></span><button id="mtbtn">MARK TIME</button><a href="#" id="mtx" title="hide this button (times are kept)" style="font-size:22px;line-height:1;padding:6px 4px;color:#555;text-decoration:none">&#10005;</a></div>
 <div class="panel" id="panel">
  <h3>Sailing Assistant</h3>
@@ -867,6 +868,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
    <button id="mtclr" style="font-size:11px">Clear times</button>
    <button id="mtshow" style="font-size:11px">Hide chart button</button>
    <button id="mtend" style="font-size:11px">Close time sheet</button></div>
+ <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">
+   <button id="mtdarkbtn" style="font-size:11px">Dark screen (keeps tracking)</button>
+   <button id="mtaddtrk" style="font-size:11px">Add a track file (.gpx)</button>
+   <input type="file" id="mtfile" accept=".gpx,application/gpx+xml,text/xml" style="display:none"></div>
  <div id="mtstat" style="font-size:10px;color:#555;margin-top:2px"></div>
  <div style="font-size:10px;color:#888;margin-top:2px">Load or draw the course first. Picking it here turns on your position and track recording.</div>
  <hr><b style="font-size:12px">Track &amp; route</b>
@@ -2678,18 +2683,21 @@ map.setView([41.52,-71.34],11);   // default view: Narragansett Bay (East Passag
 // ---- Record GPS track (auto-saves to this device via localStorage) ----
 let trackPts=[], trackLine=null; const TKEY='sa_track';
 const TKEY_OLD='solotwin_track';   // pre-rename key; a track saved under it is moved across once, below
+function trackSegs(){ const out=[]; let seg=null, prev=null;      // a gap of over 2 minutes between fixes starts a new piece of line
+  trackPts.forEach(p=>{ const t=p[2]?Date.parse(p[2]):null; if(!seg||(t!==null&&prev!==null&&t-prev>120000)){ seg=[]; out.push(seg); }
+    seg.push([p[0],p[1]]); if(t!==null) prev=t; }); return out; }
 function ensureTrackLine(){ if(!trackLine) trackLine=L.polyline([],{color:'#ff8800',weight:3,opacity:.85}).addTo(map); }
 function recordFix(c){
   if(!document.getElementById('recchk').checked) return;
   trackPts.push([+c.latitude.toFixed(6),+c.longitude.toFixed(6),new Date().toISOString()]);
-  ensureTrackLine(); trackLine.addLatLng([c.latitude,c.longitude]);
+  ensureTrackLine(); trackLine.setLatLngs(trackSegs());
   try{ localStorage.setItem(TKEY,JSON.stringify(trackPts)); }catch(e){}
 }
 (function(){ try{
     if(localStorage.getItem(TKEY)===null && localStorage.getItem(TKEY_OLD)!==null){   // one-time move, keeps the track
       localStorage.setItem(TKEY,localStorage.getItem(TKEY_OLD)); localStorage.removeItem(TKEY_OLD); }
     trackPts=JSON.parse(localStorage.getItem(TKEY)||'[]'); }catch(e){ trackPts=[]; }
-  if(trackPts.length){ ensureTrackLine(); trackLine.setLatLngs(trackPts.map(p=>[p[0],p[1]])); } })();
+  if(trackPts.length){ ensureTrackLine(); trackLine.setLatLngs(trackSegs()); } })();
 document.getElementById('clrtrack').onclick=()=>{ if(!confirm('Erase the recorded track?')) return;
   trackPts=[]; if(trackLine){ map.removeLayer(trackLine); trackLine=null; } try{ localStorage.removeItem(TKEY); }catch(e){} };
 
@@ -3666,11 +3674,36 @@ function mtOnFix(){ if(!mt) return; const now=Date.now();   // every GPS fix: re
 function mtStatus(){ const g=document.getElementById('gpschk').checked, r=document.getElementById('recchk').checked, last=trackPts.length?trackPts[trackPts.length-1][2]:null;
   const bad=!g||!r||!last||Date.now()-Date.parse(last)>60000;      // why a pass may not be picked up: no position, not recording, or no recent fix
   document.getElementById('mtstat').innerHTML='<span style="color:'+(bad?'#c00':'#0a7d2c')+'">'+(g?'position on':'POSITION OFF')+' · '+(r?'recording':'NOT RECORDING')+
-    ' · '+(last?'last track fix '+mtClock(last):'no track yet')+'</span>'+(bad?'<br>The track check needs position on, recording on, and the app open on screen.':''); }
+    ' · '+(last?'last track fix '+mtClock(last):'no track yet')+'</span> · '+(mtLock?'screen kept awake':'<span style="color:#c00">screen may sleep</span>')+(bad?'<br>The track check needs position on, recording on, and the app open on screen.':''); }
 let mtLock=null;                                     // keep the screen awake while timing: a sleeping phone stops giving GPS fixes
-async function mtWake(on){ try{ if(on){ if(!mtLock&&navigator.wakeLock&&document.visibilityState==='visible'){ mtLock=await navigator.wakeLock.request('screen'); mtLock.addEventListener('release',()=>{ mtLock=null; }); } }
+async function mtWake(on){ try{ if(on){ if(!mtLock&&navigator.wakeLock&&document.visibilityState==='visible'){ mtLock=await navigator.wakeLock.request('screen'); mtLock.addEventListener('release',()=>{ mtLock=null; }); if(mt) mtStatus(); } }
     else if(mtLock){ const l=mtLock; mtLock=null; await l.release(); } }catch(e){} }
-document.addEventListener('visibilitychange',()=>{ if(mt&&document.visibilityState==='visible') mtWake(true); });
+document.addEventListener('visibilitychange',()=>{ if((mt||mtDarkOn)&&document.visibilityState==='visible') mtWake(true); });
+// Dark screen: a web app gets no GPS once the phone is locked, so instead of locking, black the screen out. The app stays
+// in front and keeps recording; the black screen ignores stray touches and uses little battery.
+let mtDarkOn=false, mtDarkTap=0, mtDarkTimer=null;
+function mtDark(on){ const el=document.getElementById('mtdark'); mtDarkOn=on; el.style.display=on?'flex':'none'; clearInterval(mtDarkTimer);
+  if(on){ mtWake(true); const tick=()=>{ const last=trackPts.length?trackPts[trackPts.length-1][2]:null, tg=mt?mtTarget():-1, m=tg>=0?mt.marks[tg]:null;
+      document.getElementById('mtdarktxt').innerHTML=new Date().toLocaleTimeString('en-GB')+'<br><span style="font-size:14px">'+
+        (document.getElementById('recchk').checked&&document.getElementById('gpschk').checked?'recording':'NOT RECORDING')+(last?' · last fix '+mtClock(last):'')+
+        (m&&lastBoatLL?'<br>next '+xmlEsc(m.n)+' · '+(map.distance(lastBoatLL,[m.lat,m.lon])/1852).toFixed(2)+' NM':'')+'</span>'; };
+    tick(); mtDarkTimer=setInterval(tick,1000); } }
+document.getElementById('mtdark').addEventListener('pointerdown',e=>{ e.preventDefault(); const t=Date.now(); if(t-mtDarkTap<450) mtDark(false); mtDarkTap=t; });
+document.getElementById('mtdarkbtn').onclick=()=>{ ['recchk','gpschk'].forEach(id=>{ const c=document.getElementById(id); if(!c.checked){ c.checked=true; c.dispatchEvent(new Event('change',{bubbles:true})); } }); mtDark(true); };
+// Add a track file: fixes recorded by another app (one that keeps running with the phone locked) fill the gaps in this track.
+document.getElementById('mtaddtrk').onclick=()=>document.getElementById('mtfile').click();
+document.getElementById('mtfile').addEventListener('change',async e=>{ const f=e.target.files[0]; e.target.value=''; if(!f) return;
+  try{ const xml=new DOMParser().parseFromString(await f.text(),'application/xml'), add=[];
+    Array.from(xml.getElementsByTagNameNS('*','trkpt')).forEach(p=>{ const t=p.getElementsByTagNameNS('*','time')[0], la=+p.getAttribute('lat'), lo=+p.getAttribute('lon');
+      if(t&&isFinite(la)&&isFinite(lo)&&!isNaN(Date.parse(t.textContent))) add.push([+la.toFixed(6),+lo.toFixed(6),new Date(t.textContent.trim()).toISOString()]); });
+    if(!add.length){ alert('No timed track points in that file. It needs a GPX track (trkpt) with times.'); return; }
+    const seen=new Set(trackPts.map(p=>p[2].slice(0,19))), before=trackPts.length;
+    add.forEach(p=>{ const k=p[2].slice(0,19); if(!seen.has(k)){ seen.add(k); trackPts.push(p); } });
+    trackPts.sort((a,b)=>a[2]<b[2]?-1:a[2]>b[2]?1:0);
+    try{ localStorage.setItem(TKEY,JSON.stringify(trackPts)); }catch(err){}
+    ensureTrackLine(); trackLine.setLatLngs(trackSegs()); const found=mt?mtCheckTrack():null; mtRender();
+    alert('Added '+(trackPts.length-before)+' track points from the file ('+add.length+' in it).'+(found!==null?'\nTrack passes now found for '+found+' marks.':''));
+  }catch(err){ alert('Could not read that file: '+err.message); } });
 function mtArm(){ mtWake(true); ['recchk','gpschk'].forEach(id=>{ const c=document.getElementById(id);      // timing needs the boat's position and a recorded track
   if(!c.checked){ c.checked=true; c.dispatchEvent(new Event('change',{bubbles:true})); } }); }
 document.getElementById('mtbtn').onclick=()=>mtPress(mtTarget());
