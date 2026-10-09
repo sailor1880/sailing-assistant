@@ -3622,6 +3622,9 @@ function mtCheckTrack(){ if(!mt) return 0;          // closest approach of the t
 function mtRender(){ const box=document.getElementById('mtlist'), bar=document.getElementById('mtbar');
   const stat=document.getElementById('mtstat'), sh=document.getElementById('mtshow');
   if(!mt){ box.innerHTML=''; bar.style.display='none'; mtSig=''; stat.textContent=''; document.getElementById('mtstartbox').style.display='none'; mtWake(false); return; }
+  if(mt.loop===undefined&&mt.marks.length>1){ const a=mt.marks[0], z=mt.marks[mt.marks.length-1];   // a sheet begun in an older version: work out what it lacks
+    mt.loop=mt.marks.length>3&&map.distance([a.lat,a.lon],[z.lat,z.lon])<30; mtSave(); }
+  if(mt.off===undefined){ let src=null; try{ src=mtSources().find(x=>x.key===mt.key); }catch(e){} if(src){ mt.off=src.off||[]; mtSave(); } }
   mtStatus(); sh.textContent=mt.hide?'Show chart button':'Hide chart button';
   const tgt=mtTarget(), C=mtCalc(); let h='<table>';
   { const sb=document.getElementById('mtstartbox'), ss=document.getElementById('mtstart'); sb.style.display=mt.loop?'':'none';
@@ -3633,7 +3636,7 @@ function mtRender(){ const box=document.getElementById('mtlist'), bar=document.g
       (m.btn?' · '+(Date.parse(m.btn)>=Date.parse(m.trk)?'+':'')+mtDur(Date.parse(m.btn)-Date.parse(m.trk)).replace(/^-/,'−')+' vs button':'')+'</td></tr>';
     h+='<tr'+(i===tgt?' style="background:#e9fbe9"':'')+'><td>'+xmlEsc(m.n)+sd+'</td><td data-e="'+i+'" title="tap to type or correct this time" style="cursor:pointer;text-decoration:underline dotted">'+tm+(m.ed?' <span style="font-size:10px;color:#c60">edited</span>':'')+'</td><td style="text-align:right;white-space:nowrap">'+leg+
       (tot?'<br><span style="font-size:10px;color:#555">'+tot+'</span>':'')+'</td><td><button data-i="'+i+'" style="font-size:10px;padding:1px 5px">'+(m.btn?'✕':'now')+'</button></td></tr>'+tk; });
-  box.innerHTML='<div style="font-size:10px;color:#888">mark · time · leg / elapsed'+((mt.off||[]).length?' (clock-stop stretch taken out)':'')+'</div>'+h+'</table>';
+  box.innerHTML='<div style="font-size:10px;color:#888">mark · time (tap a time to type or fix it) · leg / elapsed'+((mt.off||[]).length?' (clock-stop stretch taken out)':'')+'</div>'+h+'</table>';
   box.querySelectorAll('td[data-e]').forEach(c=>c.onclick=()=>mtEdit(+c.dataset.e));
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{ const m=mt.marks[+b.dataset.i];
     if(m.btn){ if(!confirm('Clear the logged time for '+m.n+'?')) return; m.btn=null; m.ed=false; mtSave(); mtRender(); } else mtPress(+b.dataset.i); });
